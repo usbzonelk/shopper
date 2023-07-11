@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/usbzonelk/shopper#readme",
   "dependencies": {
+    "mongoose": "^7.3.2",
     "nodemon": "^3.0.1"
   }
 }
