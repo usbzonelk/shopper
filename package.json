@@ -1,0 +1,23 @@
+{
+  "name": "shopper_nodejs",
+  "version": "1.0.0",
+  "description": "nodejs Backend of an ecommerce website",
+  "main": "./src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usbzonelk/shopper.git"
+  },
+  "author": "usbzonelk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/usbzonelk/shopper/issues"
+  },
+  "homepage": "https://github.com/usbzonelk/shopper#readme",
+  "dependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
