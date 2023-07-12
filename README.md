@@ -28,7 +28,7 @@
   - **models**: Defines the Mongoose models that represent the data
    structures in the MongoDB database.
    
--   **resolvers**: Contains the GraphQL resolver functions that handle the
+  - **resolvers**: Contains the GraphQL resolver functions that handle the
    GraphQL queries and mutations.
    
  -  **schemas**: Defines the GraphQL schemas using the GraphQL schema

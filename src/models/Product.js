@@ -1,7 +1,16 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-  name: String,
+  title: String,
+  slug: String,
+  price: Float32Array,
+  discount: Float32Array,
+  instock: Int16Array,
+  description: String,
+  warrantyMonths: Int16Array,
+  type: String,
+  coverPhoto: String,
+  photos: [String],
 });
 
 const Product = mongoose.model("Product", productSchema);
@@ -13,6 +22,6 @@ const Product = mongoose.model("Product", productSchema);
   console.log(greeting);
 };
  */
-const laptop = new Product({ name: "Laptop" });
+const laptop = new Product({ title: "Laptop" });
 
 await laptop.save();
