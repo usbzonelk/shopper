@@ -1,6 +1,7 @@
 const mongoUSER = "bartyslr";
 const mongoPass = "W4MZeyrsSEFJnilc";
 const dbName = "shopper";
+const collectionName = "shopperx";
 
 const mongoose = require("mongoose");
 
@@ -11,8 +12,59 @@ async function connectToDatabase() {
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-      }
+      },
+      { collection: collectionName }
     );
+
+    const productSchema = new mongoose.Schema({
+      title: String,
+      slug: String,
+      price: Number,
+      discount: Number,
+      instock: Number,
+      description: String,
+      warrantyMonths: Number,
+      type: String,
+      coverPhoto: String,
+      photos: [String],
+    });
+
+    /* productSchema.methods.speak = function speak() {
+        const greeting = this.name
+          ? "Meow name is " + this.name
+          : "I don't have a name";
+        console.log(greeting);
+      };
+       */
+
+    const laptopSchema = new mongoose.Schema({
+      info: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "night",
+      },
+    });
+
+    const Laptop = mongoose.model("Laptop", laptopSchema);
+    const Night = mongoose.model("night", productSchema);
+
+    const proddf = new Night({
+      title: "String",
+      slug: "String",
+      price: 1200,
+      discount: 45,
+      instock: 45.2,
+      description: "String",
+      warrantyMonths: 45,
+      type: "String",
+      coverPhoto: "String",
+      photos: ["String"],
+    });
+
+    const laptop = new Laptop({
+      info: proddf,
+    });
+    await proddf.save();
+    await laptop.save();
 
     console.log("Connected to the database");
   } catch (error) {
