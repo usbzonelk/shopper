@@ -55,8 +55,17 @@ const saveNewProduct = async (productTypeAttributes, productDetails) => {
     coverPhoto: String,
     photos: [String],
   };
+
+  const additionalAttributes = productTypeAttributes.fields;
+  if (additionalAttributes) {
+    for (const attribute of additionalAttributes) {
+      newProductProperties[attribute["name"]] = [attribute["type"]];
+    }
+  }
+
   const productSchema = new mongoose.Schema(newProductProperties);
   const Product = mongoose.model("Product", productSchema);
+
   const newProduct = new Product(productDetails);
   await newProduct.save();
 };
