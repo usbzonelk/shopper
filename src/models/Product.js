@@ -1,10 +1,3 @@
-/*
-Product creation method:
- 1. create new productType by giving its exclusive field values
- 2. when adding new product of that product type, inject the common values 
-    when adding the new product
-*/
-
 const mongoose = require("mongoose");
 
 const productTypesSchema = new mongoose.Schema({
@@ -19,19 +12,6 @@ const productTypesSchema = new mongoose.Schema({
 });
 
 const ProductType = mongoose.model("producttypes", productTypesSchema);
-
-/////
-
-/* productSchema.methods.speak = function speak() {
-  const greeting = this.name
-    ? "Meow name is " + this.name
-    : "I don't have a name";
-  console.log(greeting);
-}; */
-
-const Product = mongoose.model("Product", productSchema);
-
-await laptopSchema.save();
 
 const saveNewProductType = async (adminID, typeName, newTypeProperties) => {
   const newType = new ProductType({
@@ -59,7 +39,7 @@ const saveNewProduct = async (productTypeAttributes, productDetails) => {
   const additionalAttributes = productTypeAttributes.fields;
   if (additionalAttributes) {
     for (const attribute of additionalAttributes) {
-      newProductProperties[attribute["name"]] = [attribute["type"]];
+      newProductProperties[attribute["name"]] = [attribute["value"]];
     }
   }
 
