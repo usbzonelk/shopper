@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const productTypesSchema = new mongoose.Schema({
-  adminId: { type: String, required: true },
-  slugtype: { type: String, required: true },
+  slugtype: String,
+  adminId: String,
   fields: [
     {
       name: { type: String, required: true },
@@ -13,13 +13,20 @@ const productTypesSchema = new mongoose.Schema({
 
 const ProductType = mongoose.model("producttypes", productTypesSchema);
 
-const saveNewProductType = async (adminID, typeName, newTypeProperties) => {
-  const newType = new ProductType({
-    adminID: adminID,
+const saveNewProductType = async (adminId, typeName, newTypeProperties) => {
+  console.log({
+    adminId: adminId,
     slugtype: typeName,
     fields: newTypeProperties,
   });
-  await newType.save();
+
+  const savedType = await ProductType.create({
+    adminId: adminId,
+    slugtype: typeName,
+    fields: newTypeProperties,
+  });
+
+  console.log(savedType);
 };
 
 const saveNewProduct = async (productTypeAttributes, productDetails) => {
@@ -47,8 +54,9 @@ const saveNewProduct = async (productTypeAttributes, productDetails) => {
   const Product = mongoose.model("Product", productSchema);
 
   const newProduct = new Product(productDetails);
-  await newProduct.save();
+  const savedProduct = await newProduct.save();
+  
+  console.log(savedProduct);
 };
 
-module.exports = saveNewProductType;
-module.exports = saveNewProduct;
+module.exports = { saveNewProductType, saveNewProduct };
