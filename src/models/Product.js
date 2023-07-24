@@ -68,19 +68,13 @@ const newProductManager = {
   },
 
   getAllProducts: async function () {
-    const productSchema = this.productModel();
-    let data;
-    await productSchema
-      .find({})
-      .then((allProducts) => {
-        data = allProducts;
-      })
-      .catch((err) => {
-        data = err;
-      })
-      .then(() => {
-        return data;
-      });
+    try {
+      const productSchema = this.productModel();
+      const allProducts = await productSchema.find({});
+      return allProducts;
+    } catch (err) {
+      return err;
+    }
   },
 };
 

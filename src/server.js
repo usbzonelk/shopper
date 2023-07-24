@@ -9,4 +9,9 @@ async function dd() {
   return await Product.newProductManager.getAllProducts();
 }
 
-console.log(dd());
+async function zz() {
+  const yy = await dd();
+  console.log(yy);
+}
+
+zz();
