@@ -29,8 +29,8 @@ const saveNewProductType = async (adminId, typeName, newTypeProperties) => {
   console.log(savedType);
 };
 
-const saveNewProduct = async (productTypeAttributes, productDetails) => {
-  const newProductProperties = {
+const newProductManager = {
+  newProductProperties: {
     title: String,
     slug: String,
     price: Number,
@@ -41,22 +41,47 @@ const saveNewProduct = async (productTypeAttributes, productDetails) => {
     type: String,
     coverPhoto: String,
     photos: [String],
-  };
+  },
 
-  const additionalAttributes = productTypeAttributes.fields;
-  if (additionalAttributes) {
-    for (const attribute of additionalAttributes) {
-      newProductProperties[attribute["name"]] = [attribute["value"]];
+  productSchema: function () {
+    return new mongoose.Schema(this.newProductProperties);
+  },
+  productModel: function () {
+    return mongoose.model("Product", this.productSchema());
+  },
+
+  saveNewProduct: async function (productTypeAttributes, productDetails) {
+    const additionalAttributes = productTypeAttributes.fields;
+    if (additionalAttributes) {
+      for (const attribute of additionalAttributes) {
+        this.newProductProperties[attribute["name"]] = [attribute["value"]];
+      }
     }
-  }
 
-  const productSchema = new mongoose.Schema(newProductProperties);
-  const Product = mongoose.model("Product", productSchema);
+    const Product = this.productModel();
 
-  const newProduct = new Product(productDetails);
-  const savedProduct = await newProduct.save();
-  
-  console.log(savedProduct);
+    const newProduct = new Product(productDetails);
+
+    const savedProduct = await newProduct.save();
+
+    console.log(savedProduct);
+  },
+
+  getAllProducts: async function () {
+    const productSchema = this.productModel();
+    let data;
+    await productSchema
+      .find({})
+      .then((allProducts) => {
+        data = allProducts;
+      })
+      .catch((err) => {
+        data = err;
+      })
+      .then(() => {
+        return data;
+      });
+  },
 };
 
-module.exports = { saveNewProductType, saveNewProduct };
+module.exports = { saveNewProductType, newProductManager };
