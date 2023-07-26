@@ -83,10 +83,24 @@ const newProductManager = {
     const getMatchedProduct = await productSchema.findOne(params);
     return getMatchedProduct;
   },
+
   getManyProducts: async function (params) {
     const productSchema = this.productModel();
-    const getMatchedProduct = await productSchema.find(params);
-    return getMatchedProduct;
+    const getMatchedProducts = await productSchema.find(params);
+    return getMatchedProducts;
+  },
+
+  editOneProduct: async function (searchProduct, newProductInfo) {
+    const productSchema = this.productModel();
+    const updatedProduct = await productSchema.findOneAndUpdate(
+      searchProduct,
+      newProductInfo,
+      {
+        new: true,
+      }
+    );
+
+    return updatedProduct;
   },
 };
 

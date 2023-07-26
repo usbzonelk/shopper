@@ -5,12 +5,3 @@ console.log("Server fired up!");
 
 connectToDatabase();
 
-const uu = async () => {
-  const yy = await Product.newProductManager.getManyProducts({
-    title: "String",
-    slug: "String",
-  });
-  console.log(yy);
-};
-
-uu();
