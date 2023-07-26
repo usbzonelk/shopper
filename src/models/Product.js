@@ -1,32 +1,78 @@
 const mongoose = require("mongoose");
 
-const productTypesSchema = new mongoose.Schema({
-  slugtype: String,
-  adminId: String,
-  fields: [
-    {
-      name: { type: String, required: true },
-      value: { type: mongoose.Schema.Types.Mixed, required: true },
-    },
-  ],
-});
+const newProductTypeManager = {
+  productTypesSchema: function () {
+    return new mongoose.Schema({
+      slugtype: String,
+      adminId: String,
+      fields: [
+        {
+          name: { type: String, required: true },
+          value: { type: mongoose.Schema.Types.Mixed, required: true },
+        },
+      ],
+    });
+  },
 
-const ProductType = mongoose.model("producttypes", productTypesSchema);
+  productTypeModel: function () {
+    return mongoose.model("producttypes", this.productTypesSchema());
+  },
 
-const saveNewProductType = async (adminId, typeName, newTypeProperties) => {
-  console.log({
-    adminId: adminId,
-    slugtype: typeName,
-    fields: newTypeProperties,
-  });
+  saveNewProductType: async function (adminId, typeName, newTypeProperties) {
+    const savedType = await ProductType.create({
+      adminId: adminId,
+      slugtype: typeName,
+      fields: newTypeProperties,
+    });
 
-  const savedType = await ProductType.create({
-    adminId: adminId,
-    slugtype: typeName,
-    fields: newTypeProperties,
-  });
+    return savedType;
+  },
 
-  console.log(savedType);
+  getAllProductTypes: async function () {
+    try {
+      const productTypeSchema = this.productTypeModel();
+      const allProductTypes = await productTypeSchema.find({});
+      return allProductTypes;
+    } catch (err) {
+      return err;
+    }
+  },
+
+  getOneProductType: async function (params) {
+    const productTypeSchema = this.productTypeModel();
+    const getMatchedProduct = await productTypeSchema.findOne(params);
+    return getMatchedProduct;
+  },
+
+  getManyProductTypes: async function (params) {
+    const productTypeSchema = this.productTypeModel();
+    const getMatchedProductTypes = await productTypeSchema.find(params);
+    return getMatchedProductTypes;
+  },
+
+  editOneProductType: async function (searchProductType, newProductTypeInfo) {
+    const productTypeSchema = this.productTypeModel();
+    const updatedProductType = await productTypeSchema.findOneAndUpdate(
+      searchProductType,
+      newProductTypeInfo,
+      {
+        new: true,
+      }
+    );
+
+    return updatedProductType;
+  },
+  deleteOneProductType: async function (params) {
+    const productTypeSchema = this.productTypeModel();
+    const deletedProductType = await productTypeSchema.deleteOne(params);
+    return deletedProductType;
+  },
+
+  deleteManyProductTypes: async function (params) {
+    const productTypeSchema = this.productTypeModel();
+    const deletedProductTypes = await productTypeSchema.deleteMany(params);
+    return deletedProductTypes;
+  },
 };
 
 const newProductManager = {
@@ -120,4 +166,7 @@ const newProductManager = {
   },
 };
 
-module.exports = { saveNewProductType, newProductManager };
+module.exports = {
+  newProductManager,
+  newProductTypeManager,
+};
