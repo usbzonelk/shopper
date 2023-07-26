@@ -102,6 +102,17 @@ const newProductManager = {
 
     return updatedProduct;
   },
+  deleteOneProduct: async function (params) {
+    const productSchema = this.productModel();
+    const deletedProduct = await productSchema.deleteOne(params);
+    return deletedProduct;
+  },
+
+  deleteManyProducts: async function (params) {
+    const productSchema = this.productModel();
+    const deletedProducts = await productSchema.deleteMany(params);
+    return deletedProducts;
+  },
 };
 
 module.exports = { saveNewProductType, newProductManager };
