@@ -43,23 +43,28 @@ const newProductManager = {
     photos: [String],
   },
 
-  productSchema: function () {
-    return new mongoose.Schema(this.newProductProperties);
+  productSchema: function (schema) {
+    return new mongoose.Schema(schema);
   },
 
-  productModel: function () {
-    return mongoose.model("Product", this.productSchema());
+  productModel: function (schema = this.newProductProperties) {
+    return mongoose.model("Product", this.productSchema(schema));
   },
 
   saveNewProduct: async function (productTypeAttributes, productDetails) {
-    const additionalAttributes = productTypeAttributes.fields;
+    const newProductProperties = { ...this.newProductProperties };
+    const additionalAttributes = productTypeAttributes;
     if (additionalAttributes) {
       for (const attribute of additionalAttributes) {
-        this.newProductProperties[attribute["name"]] = [attribute["value"]];
+        if (attribute["value"] == "String") {
+          newProductProperties[attribute["name"]] = String;
+        } else if (attribute["value"] == "Number") {
+          newProductProperties[attribute["name"]] = Number;
+        }
       }
     }
 
-    const Product = this.productModel();
+    const Product = this.productModel(newProductProperties);
 
     const newProduct = new Product(productDetails);
 
