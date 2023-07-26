@@ -46,6 +46,7 @@ const newProductManager = {
   productSchema: function () {
     return new mongoose.Schema(this.newProductProperties);
   },
+
   productModel: function () {
     return mongoose.model("Product", this.productSchema());
   },
@@ -75,6 +76,17 @@ const newProductManager = {
     } catch (err) {
       return err;
     }
+  },
+
+  getOneProduct: async function (params) {
+    const productSchema = this.productModel();
+    const getMatchedProduct = await productSchema.findOne(params);
+    return getMatchedProduct;
+  },
+  getManyProducts: async function (params) {
+    const productSchema = this.productModel();
+    const getMatchedProduct = await productSchema.find(params);
+    return getMatchedProduct;
   },
 };
 

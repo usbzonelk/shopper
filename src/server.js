@@ -5,13 +5,12 @@ console.log("Server fired up!");
 
 connectToDatabase();
 
-async function dd() {
-  return await Product.newProductManager.getAllProducts();
-}
-
-async function zz() {
-  const yy = await dd();
+const uu = async () => {
+  const yy = await Product.newProductManager.getManyProducts({
+    title: "String",
+    slug: "String",
+  });
   console.log(yy);
-}
+};
 
-zz();
+uu();
