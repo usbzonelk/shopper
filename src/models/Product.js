@@ -19,13 +19,18 @@ const newProductTypeManager = {
   },
 
   saveNewProductType: async function (adminId, typeName, newTypeProperties) {
-    const savedType = await ProductType.create({
+    const productTypeInfo = {
       adminId: adminId,
       slugtype: typeName,
       fields: newTypeProperties,
-    });
+    };
+    const ProductType = this.productTypeModel(productTypeInfo);
 
-    return savedType;
+    const newProductType = new ProductType(productTypeInfo);
+
+    const savedProductType = await newProductType.save();
+
+    return savedProductType;
   },
 
   getAllProductTypes: async function () {
@@ -116,7 +121,7 @@ const newProductManager = {
 
     const savedProduct = await newProduct.save();
 
-    console.log(savedProduct);
+    return savedProduct;
   },
 
   getAllProducts: async function () {
