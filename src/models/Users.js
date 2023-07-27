@@ -34,10 +34,6 @@ const usersManager = {
         type: Date,
         default: Date.now,
       },
-      salt: {
-        type: String,
-        required: true,
-      },
       status: {
         type: String,
         required: true,
@@ -59,7 +55,6 @@ const usersManager = {
       phoneNumber: phone,
       registrationDate: new Date(),
       address: address,
-      salt: hashedPass.salt,
     };
     const User = this.userModel();
 
@@ -103,6 +98,23 @@ const usersManager = {
     );
 
     return updatedUser;
+  },
+  validateUserPassword: async function (email, password) {
+    const userModel = this.userModel();
+    const getMatchedUser = await userModel
+      .find({ email: email })
+      .select("password");
+    const validity = await bcrypt.validateUser(
+      password,
+      getMatchedUser.password
+    );
+    return validity;
+  },
+
+  validateEmail: async function (email) {
+    const userModel = this.userModel();
+    const isEmailStored = await userModel.find({ email: email });
+    return !isEmailStored;
   },
 };
 
