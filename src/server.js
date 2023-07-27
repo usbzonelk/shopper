@@ -4,3 +4,7 @@ const Product = require("./models/Product");
 console.log("Server fired up!");
 
 connectToDatabase();
+
+const uu = async () => {};
+
+uu();
