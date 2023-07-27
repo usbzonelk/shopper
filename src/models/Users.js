@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("../utils/bcrypt");
 
 const usersManager = {
   userSchema: function () {
@@ -33,6 +34,15 @@ const usersManager = {
         type: Date,
         default: Date.now,
       },
+      salt: {
+        type: String,
+        required: true,
+      },
+      status: {
+        type: String,
+        required: true,
+        trim: true,
+      },
     });
   },
 
@@ -41,13 +51,15 @@ const usersManager = {
   },
 
   createNewUser: async function (email, password, fullName, phone, address) {
+    const hashedPass = await bcrypt.hashPassword(password);
     const userInfo = {
       email: email,
-      password: password,
+      password: hashedPass.pass,
       fullName: fullName,
       phoneNumber: phone,
       registrationDate: new Date(),
       address: address,
+      salt: hashedPass.salt,
     };
     const User = this.userModel();
 
@@ -58,50 +70,39 @@ const usersManager = {
     return savedUser;
   },
 
-  getAllProductTypes: async function () {
+  getAllUsers: async function () {
     try {
-      const productTypeSchema = this.productTypeModel();
-      const allProductTypes = await productTypeSchema.find({});
-      return allProductTypes;
+      const userModel = this.userModel();
+      const allUsers = await userModel.find({});
+      return allUsers;
     } catch (err) {
       return err;
     }
   },
 
-  getOneProductType: async function (params) {
-    const productTypeSchema = this.productTypeModel();
-    const getMatchedProduct = await productTypeSchema.findOne(params);
-    return getMatchedProduct;
+  getOneUserInfo: async function (params) {
+    const userModel = this.userModel();
+    const getMatchedUser = await userModel.findOne(params);
+    return getMatchedUser;
   },
 
-  getManyProductTypes: async function (params) {
-    const productTypeSchema = this.productTypeModel();
-    const getMatchedProductTypes = await productTypeSchema.find(params);
-    return getMatchedProductTypes;
+  getManyUsers: async function (params) {
+    const userModel = this.userModel();
+    const getMatchedUsers = await userModel.find(params);
+    return getMatchedUsers;
   },
 
-  editOneProductType: async function (searchProductType, newProductTypeInfo) {
-    const productTypeSchema = this.productTypeModel();
-    const updatedProductType = await productTypeSchema.findOneAndUpdate(
-      searchProductType,
-      newProductTypeInfo,
+  editOneUser: async function (searchUser, newUserInfo) {
+    const userModel = this.userModel();
+    const updatedUser = await userModel.findOneAndUpdate(
+      searchUser,
+      newUserInfo,
       {
         new: true,
       }
     );
 
-    return updatedProductType;
-  },
-  deleteOneProductType: async function (params) {
-    const productTypeSchema = this.productTypeModel();
-    const deletedProductType = await productTypeSchema.deleteOne(params);
-    return deletedProductType;
-  },
-
-  deleteManyProductTypes: async function (params) {
-    const productTypeSchema = this.productTypeModel();
-    const deletedProductTypes = await productTypeSchema.deleteMany(params);
-    return deletedProductTypes;
+    return updatedUser;
   },
 };
 
