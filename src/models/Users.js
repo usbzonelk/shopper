@@ -55,6 +55,7 @@ const usersManager = {
       phoneNumber: phone,
       registrationDate: new Date(),
       address: address,
+      status: "unverified",
     };
     const User = this.userModel();
 
@@ -99,6 +100,7 @@ const usersManager = {
 
     return updatedUser;
   },
+  
   validateUserPassword: async function (email, password) {
     const userModel = this.userModel();
     const getMatchedUser = await userModel
