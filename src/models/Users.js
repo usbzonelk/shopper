@@ -100,11 +100,11 @@ const usersManager = {
 
     return updatedUser;
   },
-  
+
   validateUserPassword: async function (email, password) {
     const userModel = this.userModel();
     const getMatchedUser = await userModel
-      .find({ email: email })
+      .findOne({ email: email })
       .select("password");
     const validity = await bcrypt.validateUser(
       password,

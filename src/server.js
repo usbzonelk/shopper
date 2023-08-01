@@ -1,5 +1,5 @@
 const connectToDatabase = require("./config/database");
-const Cart = require("./models/Cart");
+const usr = require("./models/Users");
 
 console.log("Server fired up!");
 
