@@ -6,8 +6,10 @@ console.log("Server fired up!");
 connectToDatabase();
 
 const uu = async () => {
+    /*
     const yy = await usr.usersManager.getAllUsers();
     console.log(yy);
+    */
 };
 
 uu();
