@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const newProductTypeManager = {
   productTypesSchema: function () {
     return new mongoose.Schema({
-      slugtype: String,
+      slugtype: { type: String, required: true, unique: true },
       adminId: String,
       fields: [
         {
@@ -83,7 +83,7 @@ const newProductTypeManager = {
 const newProductManager = {
   newProductProperties: {
     title: String,
-    slug: String,
+    slug: { type: String, required: true, unique: true },
     price: Number,
     discount: Number,
     instock: Number,
