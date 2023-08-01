@@ -111,6 +111,16 @@ const cartManager = {
     return updatedCart;
   },
 
+  changeQty: async function (mail, itemToRemove, changedQty) {
+    const cartSchema = this.cartModel();
+    const updatedCart = await cartSchema.findOneAndUpdate(
+      { email: mail, "items.product": itemToRemove },
+      { $set: { "items.$.quantity": changedQty } },
+      { new: true }
+    );
+    return updatedCart;
+  },
+
   deleteOneCart: async function (params) {
     const cartSchema = this.cartModel();
     const deletedCart = await cartSchema.deleteOne(params);
