@@ -69,7 +69,15 @@ const usersManager = {
   getAllUsers: async function () {
     try {
       const userModel = this.userModel();
-      const allUsers = await userModel.find({});
+      const allUsers = await userModel
+        .find({})
+        .select([
+          "email",
+          "fullName",
+          "phoneNumber",
+          "status",
+          "registrationDate",
+        ]);
       return allUsers;
     } catch (err) {
       return err;
@@ -118,6 +126,7 @@ const usersManager = {
     const isEmailStored = await userModel.find({ email: email });
     return !isEmailStored;
   },
+  
 };
 
 module.exports = {
