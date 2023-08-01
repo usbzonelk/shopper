@@ -94,10 +94,11 @@ const cartManager = {
   },
 
   addProductsToCart: async function (mail, newItems) {
+    console.log(newItems);
     const cartSchema = this.cartModel();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
-      { $push: { items: { $in: newItems } } }
+      { $push: { items: { $each: newItems } } }
     );
     return updatedCart;
   },
@@ -106,15 +107,15 @@ const cartManager = {
     const cartSchema = this.cartModel();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
-      { $pull: { items: { $in: itemsToRemove } } }
+      { $pull: { items: { product: { $in: itemsToRemove } } } }
     );
     return updatedCart;
   },
 
-  changeQty: async function (mail, itemToRemove, changedQty) {
+  changeQty: async function (mail, itemToFind, changedQty) {
     const cartSchema = this.cartModel();
     const updatedCart = await cartSchema.findOneAndUpdate(
-      { email: mail, "items.product": itemToRemove },
+      { email: mail, "items.product": itemToFind },
       { $set: { "items.$.quantity": changedQty } },
       { new: true }
     );

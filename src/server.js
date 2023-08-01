@@ -1,10 +1,12 @@
 const connectToDatabase = require("./config/database");
-const Product = require("./models/Product");
+const Cart = require("./models/Cart");
 
 console.log("Server fired up!");
 
 connectToDatabase();
 
-const uu = async () => {};
+const uu = async () => {
+  
+};
 
 uu();
