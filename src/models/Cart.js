@@ -93,20 +93,20 @@ const cartManager = {
     return updatedProductType;
   },
 
-  addProductToCart: async function (mail, newItem) {
+  addProductsToCart: async function (mail, newItems) {
     const cartSchema = this.cartModel();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
-      { $push: { items: newItem } }
+      { $push: { items: { $in: newItems } } }
     );
     return updatedCart;
   },
 
-  removeItemFromCart: async function (mail, itemToRemove) {
+  removeItemsFromCart: async function (mail, itemsToRemove) {
     const cartSchema = this.cartModel();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
-      { $pull: { items: itemToRemove } }
+      { $pull: { items: { $in: itemsToRemove } } }
     );
     return updatedCart;
   },
