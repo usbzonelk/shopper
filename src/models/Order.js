@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const ordersManager = {
   orderProperties: {
     orderNumber: {
-      type: String,
+      type: Number,
       required: true,
       unique: true,
     },
@@ -50,13 +50,27 @@ const ordersManager = {
   },
 
   saveNewOrder: async function (orderInfo) {
-    const Order = this.orderModel(orderInfo);
+    const newOrderInfo = orderInfo;
 
-    const newOrder = new Order(orderInfo);
+    const orderSchema = this.orderModel();
+    const latestOrder = await orderSchema
+      .findOne()
+      .sort({ createdAt: -1 })
+      .select("orderNumber");
 
-    const savedOrder = await newOrder.save();
+    if (latestOrder) {
+      newOrderInfo.orderNumber = latestOrder.orderNumber + 1;
+    } else {
+      newOrderInfo.orderNumber = 100;
+    }
+    try {
+      const newOrder = new orderSchema(newOrderInfo);
 
-    return savedOrder;
+      const savedOrder = await newOrder.save();
+      return savedOrder;
+    } catch (err) {
+      return err;
+    }
   },
 
   getAllOrders: async function () {
@@ -74,7 +88,14 @@ const ordersManager = {
     const getMatchedOrder = await orderSchema.findOne(params);
     return getMatchedOrder;
   },
-
+  getLatestOrder: async function () {
+    const orderSchema = this.orderModel();
+    const latestOrder = await orderSchema
+      .findOne()
+      .sort({ createdAt: -1 })
+      .select("orderNumber");
+    return latestOrder;
+  },
   getManyOrders: async function (params, selection = "") {
     const orderSchema = this.orderModel();
     let getMatchedOrders = null;
@@ -88,4 +109,3 @@ const ordersManager = {
 };
 
 module.exports = { ordersManager };
-
