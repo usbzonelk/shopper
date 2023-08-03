@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const cartManager = {
+  cartModelGenerated: null,
+
   cartSchema: function () {
     return new mongoose.Schema({
       email: {
@@ -31,7 +33,10 @@ const cartManager = {
   },
 
   cartModel: function () {
-    return mongoose.model("carts", this.cartSchema());
+    if (!this.cartModelGenerated) {
+      this.cartModelGenerated = mongoose.model("carts", this.cartSchema());
+    }
+    return this.cartModelGenerated;
   },
 
   generateNewItem: async function (slug, qty, discount) {
