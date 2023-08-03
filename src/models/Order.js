@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const ordersManager = {
+  orderModelGenerated: null,
+
   orderProperties: {
     orderNumber: {
       type: Number,
@@ -46,7 +48,13 @@ const ordersManager = {
   },
 
   orderModel: function (schema = this.orderProperties) {
-    return mongoose.model("orders", this.orderSchema(schema));
+    if (!this.orderModelGenerated) {
+      this.orderModelGenerated = mongoose.model(
+        "orders",
+        this.orderSchema(schema)
+      );
+    }
+    return this.orderModelGenerated;
   },
 
   saveNewOrder: async function (orderInfo) {

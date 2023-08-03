@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("../utils/bcrypt");
 
 const usersManager = {
+  generatedUserModel: null,
+
   userSchema: function () {
     return new mongoose.Schema({
       email: {
@@ -43,7 +45,10 @@ const usersManager = {
   },
 
   userModel: function () {
-    return mongoose.model("users", this.userSchema());
+    if (!this.generatedUserModel) {
+      this.generatedUserModel = mongoose.model("users", this.userSchema());
+    }
+    return this.generatedUserModel;
   },
 
   createNewUser: async function (email, password, fullName, phone, address) {
@@ -126,7 +131,6 @@ const usersManager = {
     const isEmailStored = await userModel.find({ email: email });
     return !isEmailStored;
   },
-  
 };
 
 module.exports = {
