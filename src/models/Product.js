@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const newProductTypeManager = {
+  productTypesModelGenerated: null,
+
   productTypesSchema: function () {
     return new mongoose.Schema({
       slugtype: { type: String, required: true, unique: true },
@@ -15,7 +17,13 @@ const newProductTypeManager = {
   },
 
   productTypeModel: function () {
-    return mongoose.model("producttypes", this.productTypesSchema());
+    !this.productTypesModelGenerated
+      ? (this.productTypesModelGenerated = mongoose.model(
+          "producttypes",
+          this.productTypesSchema()
+        ))
+      : null;
+    return this.productTypesModelGenerated;
   },
 
   saveNewProductType: async function (adminId, typeName, newTypeProperties) {
