@@ -43,13 +43,17 @@ const cartManager = {
     return itemInfo;
   },
 
-  createNewCart: async function (email, products) {
+  createNewCart: async function (
+    email,
+    products,
+    schema = this.cartModel.bind(cartManager)
+  ) {
     const newCartDetails = {
       email: email,
       items: products,
       addedAt: new Date(),
     };
-    const Cart = this.cartModel(newCartDetails);
+    const Cart = schema(newCartDetails);
 
     const newCart = new Cart(newCartDetails);
 
@@ -58,9 +62,9 @@ const cartManager = {
     return savedCart;
   },
 
-  getAllCarts: async function () {
+  getAllCarts: async function (schema = this.cartModel.bind(cartManager)) {
     try {
-      const cartSchema = this.cartModel();
+      const cartSchema = schema();
       const allCarts = await cartSchema.find({});
       return allCarts;
     } catch (err) {
@@ -68,34 +72,31 @@ const cartManager = {
     }
   },
 
-  getOneCart: async function (params) {
-    const cartSchema = this.cartModel();
+  getOneCart: async function (
+    params,
+    schema = this.cartModel.bind(cartManager)
+  ) {
+    const cartSchema = schema();
     const getMatchedCart = await cartSchema.findOne(params);
     return getMatchedCart;
   },
 
-  getManyCarts: async function (params) {
-    const cartSchema = this.cartModel();
+  getManyCarts: async function (
+    params,
+    schema = this.cartModel.bind(cartManager)
+  ) {
+    const cartSchema = schema();
     const getMatchedCarts = await cartSchema.findOne(params);
     return getMatchedCarts;
   },
 
-  editOneCart: async function (email, newProductTypeInfo) {
-    const productTypeSchema = this.productTypeModel();
-    const updatedProductType = await productTypeSchema.findOneAndUpdate(
-      email,
-      newProductTypeInfo,
-      {
-        new: true,
-      }
-    );
-
-    return updatedProductType;
-  },
-
-  addProductsToCart: async function (mail, newItems) {
+  addProductsToCart: async function (
+    mail,
+    newItems,
+    schema = this.cartModel.bind(cartManager)
+  ) {
     console.log(newItems);
-    const cartSchema = this.cartModel();
+    const cartSchema = schema();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
       { $push: { items: { $each: newItems } } }
@@ -103,8 +104,12 @@ const cartManager = {
     return updatedCart;
   },
 
-  removeItemsFromCart: async function (mail, itemsToRemove) {
-    const cartSchema = this.cartModel();
+  removeItemsFromCart: async function (
+    mail,
+    itemsToRemove,
+    schema = this.cartModel.bind(cartManager)
+  ) {
+    const cartSchema = schema();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
       { $pull: { items: { product: { $in: itemsToRemove } } } }
@@ -112,8 +117,13 @@ const cartManager = {
     return updatedCart;
   },
 
-  changeQty: async function (mail, itemToFind, changedQty) {
-    const cartSchema = this.cartModel();
+  changeQty: async function (
+    mail,
+    itemToFind,
+    changedQty,
+    schema = this.cartModel.bind(cartManager)
+  ) {
+    const cartSchema = schema();
     const updatedCart = await cartSchema.findOneAndUpdate(
       { email: mail, "items.product": itemToFind },
       { $set: { "items.$.quantity": changedQty } },
@@ -122,14 +132,20 @@ const cartManager = {
     return updatedCart;
   },
 
-  deleteOneCart: async function (params) {
-    const cartSchema = this.cartModel();
+  deleteOneCart: async function (
+    params,
+    schema = this.cartModel.bind(cartManager)
+  ) {
+    const cartSchema = schema();
     const deletedCart = await cartSchema.deleteOne(params);
     return deletedCart;
   },
 
-  deleteManyCarts: async function (params) {
-    const cartSchema = this.cartModel();
+  deleteManyCarts: async function (
+    params,
+    schema = this.cartModel.bind(cartManager)
+  ) {
+    const cartSchema = schema();
     const deletedCarts = await cartSchema.deleteMany(params);
     return deletedCarts;
   },
