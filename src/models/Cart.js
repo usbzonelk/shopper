@@ -12,8 +12,12 @@ const cartManager = {
       items: [
         {
           product: {
-            type: String,
-            required: true,
+            slug: { type: String, required: true },
+            title: {
+              type: String,
+              required: true,
+            },
+            photo: { type: String, required: true },
           },
           quantity: {
             type: Number,
