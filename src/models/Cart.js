@@ -43,9 +43,9 @@ const cartManager = {
     return this.cartModelGenerated;
   },
 
-  generateNewItem: async function (slug, qty, discount) {
+  generateNewItem: async function (product, qty, discount) {
     const itemInfo = {
-      product: slug,
+      product: product,
       quantity: qty,
       discount: discount,
     };
@@ -121,7 +121,7 @@ const cartManager = {
     const cartSchema = schema();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
-      { $pull: { items: { product: { $in: itemsToRemove } } } }
+      { $pull: { items: { "product.slug": { $in: itemsToRemove } } } }
     );
     return updatedCart;
   },
@@ -134,7 +134,7 @@ const cartManager = {
   ) {
     const cartSchema = schema();
     const updatedCart = await cartSchema.findOneAndUpdate(
-      { email: mail, "items.product": itemToFind },
+      { email: mail, "items.product.slug": itemToFind },
       { $set: { "items.$.quantity": changedQty } },
       { new: true }
     );
