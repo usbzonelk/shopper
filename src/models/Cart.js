@@ -99,12 +99,32 @@ const cartManager = {
     return getMatchedCarts;
   },
 
+  isInTheCart: async function (
+    mail,
+    itemToFind,
+    schema = this.cartModel.bind(cartManager)
+  ) {
+    const cartSchema = schema();
+    const isInTheCart = await cartSchema.findOne({
+      email: mail,
+      "items.product.slug": itemToFind,
+    });
+    return isInTheCart ? true : false;
+  },
+
   addProductsToCart: async function (
     mail,
     newItems,
     schema = this.cartModel.bind(cartManager)
   ) {
     const cartSchema = schema();
+
+    const updatedQty = await cartSchema.findOneAndUpdate(
+      { email: mail, "items.product.slug": { $in: itemsToRemove } },
+      { $set: { "items.$.quantity": changedQty } },
+      { new: true }
+    );
+
     const updatedCart = await cartSchema.findOneAndUpdate(
       { email: mail },
       { $push: { items: { $each: newItems } } },
