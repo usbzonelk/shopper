@@ -104,11 +104,11 @@ const cartManager = {
     newItems,
     schema = this.cartModel.bind(cartManager)
   ) {
-    console.log(newItems);
     const cartSchema = schema();
-    const updatedCart = await cartSchema.updateOne(
+    const updatedCart = await cartSchema.findOneAndUpdate(
       { email: mail },
-      { $push: { items: { $each: newItems } } }
+      { $push: { items: { $each: newItems } } },
+      { new: true }
     );
     return updatedCart;
   },
@@ -121,7 +121,8 @@ const cartManager = {
     const cartSchema = schema();
     const updatedCart = await cartSchema.updateOne(
       { email: mail },
-      { $pull: { items: { "product.slug": { $in: itemsToRemove } } } }
+      { $pull: { items: { "product.slug": { $in: itemsToRemove } } } },
+      { new: true }
     );
     return updatedCart;
   },

@@ -20,4 +20,23 @@ const generateNewCart = async (email, products = {}) => {
   }
 };
 
-module.exports = { generateNewCart };
+const addItemsToCart = async (email, products) => {
+  const cartSchema = await cartManager.cartModel.bind(cartManager);
+  let addItem = null;
+  const outputMsg = {};
+
+  try {
+    addItem = await cartManager.addProductsToCart(email, products, cartSchema);
+    outputMsg.cart = addItem;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully updated the cart";
+  } catch (err) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = err.message;
+  }
+
+  return outputMsg;
+};
+
+module.exports = { generateNewCart, addItemsToCart };
