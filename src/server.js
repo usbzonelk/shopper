@@ -8,24 +8,7 @@ console.log("Server fired up!");
 connectToDatabase();
 
 const uu = async () => {
-  const yy = await carty.cartManager.addProductsToCart("asd00@lk.lk", [
-    {
-      product: {
-        slug: "44",
-        title: "444",
-        photo: "",
-      },
-      quantity: 99,
-    },
-    {
-      product: {
-        slug: "asw",
-        title: "dad4",
-        photo: "",
-      },
-      quantity: 12,
-    },
-  ]);
+  const yy = await carts.changeQty("asd00@lk.lk", "asw", 145);
   console.log(yy);
 };
 
