@@ -8,7 +8,24 @@ console.log("Server fired up!");
 connectToDatabase();
 
 const uu = async () => {
-  const yy = await carty.cartManager.isInTheCart("asd00@lk.lk", ["pk0y"]);
+  const yy = await carty.cartManager.addProductsToCart("asd00@lk.lk", [
+    {
+      product: {
+        slug: "44",
+        title: "444",
+        photo: "",
+      },
+      quantity: 99,
+    },
+    {
+      product: {
+        slug: "asw",
+        title: "dad4",
+        photo: "",
+      },
+      quantity: 12,
+    },
+  ]);
   console.log(yy);
 };
 

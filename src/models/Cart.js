@@ -119,15 +119,16 @@ const cartManager = {
   ) {
     const cartSchema = schema();
 
-    const updatedQty = await cartSchema.findOneAndUpdate(
-      { email: mail, "items.product.slug": { $in: itemsToRemove } },
-      { $set: { "items.$.quantity": changedQty } },
-      { new: true }
-    );
+    const updatedCart = newItems.forEach(async (item) => {
+      await cartSchema.findOneAndUpdate(
+        { email: mail, "items.product.slug": item.product.slug },
+        { $inc: { "items.$.quantity": item.quantity } }
+      );
+    });
 
-    const updatedCart = await cartSchema.findOneAndUpdate(
+    const addedCart = await cartSchema.findOneAndUpdate(
       { email: mail },
-      { $push: { items: { $each: newItems } } },
+      { $addToSet: { items: { $each: newItems } } },
       { new: true }
     );
     return updatedCart;
