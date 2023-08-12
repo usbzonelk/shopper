@@ -32,18 +32,22 @@ const newProductTypeManager = {
     newTypeProperties,
     schema = this.productTypeModel.bind(newProductTypeManager)
   ) {
-    const productTypeInfo = {
-      adminId: adminId,
-      slugtype: typeName,
-      fields: newTypeProperties,
-    };
-    const ProductType = schema();
+    try {
+      const productTypeInfo = {
+        adminId: adminId,
+        slugtype: typeName,
+        fields: newTypeProperties,
+      };
+      const ProductType = schema();
 
-    const newProductType = new ProductType(productTypeInfo);
+      const newProductType = new ProductType(productTypeInfo);
 
-    const savedProductType = await newProductType.save();
+      const savedProductType = await newProductType.save();
 
-    return savedProductType;
+      return savedProductType;
+    } catch (e) {
+      return e;
+    }
   },
 
   getAllProductTypes: async function (
@@ -62,18 +66,26 @@ const newProductTypeManager = {
     params,
     schema = this.productTypeModel.bind(newProductTypeManager)
   ) {
-    const productTypeSchema = schema();
-    const getMatchedProduct = await productTypeSchema.findOne(params);
-    return getMatchedProduct;
+    try {
+      const productTypeSchema = schema();
+      const getMatchedProduct = await productTypeSchema.findOne(params);
+      return getMatchedProduct;
+    } catch (e) {
+      return e;
+    }
   },
 
   getManyProductTypes: async function (
     params,
     schema = this.productTypeModel.bind(newProductTypeManager)
   ) {
-    const productTypeSchema = schema();
-    const getMatchedProductTypes = await productTypeSchema.find(params);
-    return getMatchedProductTypes;
+    try {
+      const productTypeSchema = schema();
+      const getMatchedProductTypes = await productTypeSchema.find(params);
+      return getMatchedProductTypes;
+    } catch (e) {
+      return e;
+    }
   },
 
   editOneProductType: async function (
@@ -81,33 +93,45 @@ const newProductTypeManager = {
     newProductTypeInfo,
     schema = this.productTypeModel.bind(newProductTypeManager)
   ) {
-    const productTypeSchema = schema();
-    const updatedProductType = await productTypeSchema.findOneAndUpdate(
-      searchProductType,
-      newProductTypeInfo,
-      {
-        new: true,
-      }
-    );
+    try {
+      const productTypeSchema = schema();
+      const updatedProductType = await productTypeSchema.findOneAndUpdate(
+        searchProductType,
+        newProductTypeInfo,
+        {
+          new: true,
+        }
+      );
 
-    return updatedProductType;
+      return updatedProductType;
+    } catch (e) {
+      return e;
+    }
   },
   deleteOneProductType: async function (
     params,
     schema = this.productTypeModel.bind(newProductTypeManager)
   ) {
-    const productTypeSchema = schema();
-    const deletedProductType = await productTypeSchema.deleteOne(params);
-    return deletedProductType;
+    try {
+      const productTypeSchema = schema();
+      const deletedProductType = await productTypeSchema.deleteOne(params);
+      return deletedProductType;
+    } catch (e) {
+      return e;
+    }
   },
 
   deleteManyProductTypes: async function (
     params,
     schema = this.productTypeModel.bind(newProductTypeManager)
   ) {
-    const productTypeSchema = schema();
-    const deletedProductTypes = await productTypeSchema.deleteMany(params);
-    return deletedProductTypes;
+    try {
+      const productTypeSchema = schema();
+      const deletedProductTypes = await productTypeSchema.deleteMany(params);
+      return deletedProductTypes;
+    } catch (e) {
+      return e;
+    }
   },
 };
 
@@ -138,25 +162,28 @@ const newProductManager = {
     productDetails,
     schema = this.productModel.bind(newProductManager)
   ) {
-    const newProductProperties = { ...this.newProductProperties };
-    const additionalAttributes = productTypeAttributes;
-    if (additionalAttributes) {
-      for (const attribute of additionalAttributes) {
-        if (attribute["value"] == "String") {
-          newProductProperties[attribute["name"]] = String;
-        } else if (attribute["value"] == "Number") {
-          newProductProperties[attribute["name"]] = Number;
+    try {
+      const newProductProperties = { ...this.newProductProperties };
+      const additionalAttributes = productTypeAttributes;
+      if (additionalAttributes) {
+        for (const attribute of additionalAttributes) {
+          if (attribute["value"] == "String") {
+            newProductProperties[attribute["name"]] = String;
+          } else if (attribute["value"] == "Number") {
+            newProductProperties[attribute["name"]] = Number;
+          }
         }
       }
+      const Product = schema(newProductProperties);
+
+      const newProduct = new Product(productDetails);
+
+      const savedProduct = await newProduct.save();
+
+      return savedProduct;
+    } catch (err) {
+      return err;
     }
-
-    const Product = schema();
-
-    const newProduct = new Product(productDetails);
-
-    const savedProduct = await newProduct.save();
-
-    return savedProduct;
   },
 
   getAllProducts: async function (
@@ -175,18 +202,26 @@ const newProductManager = {
     params,
     schema = this.productModel.bind(newProductManager)
   ) {
-    const productSchema = schema();
-    const getMatchedProduct = await productSchema.findOne(params);
-    return getMatchedProduct;
+    try {
+      const productSchema = schema();
+      const getMatchedProduct = await productSchema.findOne(params);
+      return getMatchedProduct;
+    } catch (e) {
+      return e;
+    }
   },
 
   getManyProducts: async function (
     params,
     schema = this.productModel.bind(newProductManager)
   ) {
-    const productSchema = schema();
-    const getMatchedProducts = await productSchema.find(params);
-    return getMatchedProducts;
+    try {
+      const productSchema = schema();
+      const getMatchedProducts = await productSchema.find(params);
+      return getMatchedProducts;
+    } catch (e) {
+      return e;
+    }
   },
 
   editOneProduct: async function (
@@ -194,33 +229,45 @@ const newProductManager = {
     newProductInfo,
     schema = this.productModel.bind(newProductManager)
   ) {
-    const productSchema = schema();
-    const updatedProduct = await productSchema.findOneAndUpdate(
-      searchProduct,
-      newProductInfo,
-      {
-        new: true,
-      }
-    );
+    try {
+      const productSchema = schema();
+      const updatedProduct = await productSchema.findOneAndUpdate(
+        searchProduct,
+        newProductInfo,
+        {
+          new: true,
+        }
+      );
 
-    return updatedProduct;
+      return updatedProduct;
+    } catch (e) {
+      return e;
+    }
   },
   deleteOneProduct: async function (
     params,
     schema = this.productModel.bind(newProductManager)
   ) {
-    const productSchema = schema();
-    const deletedProduct = await productSchema.deleteOne(params);
-    return deletedProduct;
+    try {
+      const productSchema = schema();
+      const deletedProduct = await productSchema.deleteOne(params);
+      return deletedProduct;
+    } catch (e) {
+      return e;
+    }
   },
 
   deleteManyProducts: async function (
     params,
     schema = this.productModel.bind(newProductManager)
   ) {
-    const productSchema = schema();
-    const deletedProducts = await productSchema.deleteMany(params);
-    return deletedProducts;
+    try {
+      const productSchema = schema();
+      const deletedProducts = await productSchema.deleteMany(params);
+      return deletedProducts;
+    } catch (e) {
+      return e;
+    }
   },
 };
 
