@@ -11,6 +11,7 @@ const usersManager = {
         required: true,
         unique: true,
         trim: true,
+        index: true,
       },
       password: {
         type: String,

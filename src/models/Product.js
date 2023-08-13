@@ -18,10 +18,14 @@ const newProductTypeManager = {
 
   productTypeModel: function () {
     !this.productTypesModelGenerated
-      ? (this.productTypesModelGenerated = mongoose.model(
-          "producttypes",
-          this.productTypesSchema()
-        ))
+      ? () => {
+          this.productTypesModelGenerated = mongoose.model(
+            "producttypes",
+            this.productTypesSchema()
+          );
+          this.productTypesSchema().index({ slug: 1 }, { unique: true });
+          console.log("Asss");
+        }
       : null;
     return this.productTypesModelGenerated;
   },
@@ -138,7 +142,7 @@ const newProductTypeManager = {
 const newProductManager = {
   newProductProperties: {
     title: String,
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String, required: true, index: true, unique: true },
     price: Number,
     discount: Number,
     instock: Number,
@@ -150,7 +154,8 @@ const newProductManager = {
   },
 
   productSchema: function (schema) {
-    return new mongoose.Schema(schema);
+    const newSchema = new mongoose.Schema(schema);
+    return newSchema;
   },
 
   productModel: function (schema = this.newProductProperties) {

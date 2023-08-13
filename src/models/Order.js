@@ -8,6 +8,7 @@ const ordersManager = {
       type: Number,
       required: true,
       unique: true,
+      index: true,
     },
     customer: {
       email: { type: String, required: true },

@@ -8,6 +8,8 @@ const cartManager = {
       email: {
         type: String,
         required: true,
+        index: true,
+        unique: true,
       },
       items: [
         {
@@ -135,7 +137,7 @@ const cartManager = {
     if (updatedCart) {
       updatedCart = updatedCart._doc;
     }
-    
+
     if (addedCart) {
       addedCart = addedCart._doc;
     }
