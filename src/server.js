@@ -10,20 +10,23 @@ console.log("Server fired up!");
 connectToDatabase();
 
 const uu = async () => {
-  /* const yy = await pordC.products.saveNewProduct("dvdv", {
+   /* const yy = await pordC.products.saveNewProduct("dvdv", {
     title: "454",
-    slug: "hash_node_op",
+    slug: "hash0_node_op",
     price: 34,
     discount: 34,
     instock: 34,
     description: "String",
-    warrantyMonths: 4,
+    warrantyMonths: 10,
     type: "String",
     coverPhoto: "String",
     photos: ["String"],
     bfbfb: "444",
   });
-  console.log(yy);*/
+  console.log(yy); */
+
+   const yy = await pordC.products.getFullProduct("hash_no00de_op");
+  console.log(yy);
 };
 
 uu();

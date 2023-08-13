@@ -25,13 +25,38 @@ const products = {
         productDetails
       );
 
-      outputMsg.cart = savedProduct;
+      outputMsg.product = savedProduct;
       outputMsg.success = true;
-      outputMsg.message = "Successfully updated the cart";
+      outputMsg.message = "Successfully saved the product";
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";
       outputMsg.error = err.message;
+    }
+
+    return outputMsg;
+  },
+
+  getFullProduct: async function (slug) {
+    let productInfo = null;
+    const outputMsg = {};
+
+    try {
+      productInfo = await productManager.getOneProduct({ slug: slug });
+
+      if (!productInfo) {
+        return new Error((message = "Invalid slug"));
+      }
+
+      outputMsg.product = productInfo;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the product";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+
     }
 
     return outputMsg;
