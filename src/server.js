@@ -10,7 +10,7 @@ console.log("Server fired up!");
 connectToDatabase();
 
 const uu = async () => {
-   /* const yy = await pordC.products.saveNewProduct("dvdv", {
+  /* const yy = await pordC.products.saveNewProduct("dvdv", {
     title: "454",
     slug: "hash0_node_op",
     price: 34,
@@ -25,8 +25,10 @@ const uu = async () => {
   });
   console.log(yy); */
 
-   const yy = await pordC.products.getFullProduct("hash_no00de_op");
-  console.log(yy);
+  const yy = await pordC.products.getAllProductsSummery();
+
+  /*   const yy = await prod.newProductManager.getAllProducts();
+   */ console.log(yy);
 };
 
 uu();

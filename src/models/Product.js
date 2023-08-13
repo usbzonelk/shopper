@@ -188,11 +188,17 @@ const newProductManager = {
   },
 
   getAllProducts: async function (
+    selection = null,
     schema = this.productModel.bind(newProductManager)
   ) {
     try {
       const productSchema = schema();
-      const allProducts = await productSchema.find({});
+      let allProducts = null;
+      if (!selection) {
+        allProducts = await productSchema.find({});
+      } else {
+        allProducts = await productSchema.find({}).select(selection);
+      }
       return allProducts;
     } catch (err) {
       return err;

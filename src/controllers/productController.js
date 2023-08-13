@@ -56,7 +56,36 @@ const products = {
       outputMsg.message = "Error occured";
       outputMsg.error = err.message;
       return outputMsg;
+    }
 
+    return outputMsg;
+  },
+
+  getAllProductsSummery: async function () {
+    let productInfo = null;
+    const outputMsg = {};
+
+    try {
+      productInfo = await productManager.getAllProducts(
+        (selection = {
+          title: 1,
+          slug: 1,
+          price: 1,
+          discount: 1,
+          instock: 1,
+          type: 1,
+          coverPhoto: 1,
+        })
+      );
+
+      outputMsg.products = productInfo;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the products";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
     }
 
     return outputMsg;
