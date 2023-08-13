@@ -2,14 +2,30 @@ const Product = require("../models/Product");
 const productManager = Product.newProductManager;
 const productTypeManager = Product.newProductTypeManager;
 
-const saveNewProduct = async (email, products) => {
-    const cartSchema = await cartManager.cartModel.bind(cartManager);
-    let addItem = null;
+const products = {
+  saveNewProduct: async function (productType, productDetails) {
+    savedProduct = null;
     const outputMsg = {};
-  
+    const productTypeName = productType;
+
     try {
-      addItem = await cartManager.addProductsToCart(email, products, cartSchema);
-      outputMsg.cart = addItem;
+      let productType = await productTypeManager.getOneProductType({
+        slugtype: productTypeName,
+      });
+      let productTypeAttributes = null;
+
+      if (productType) {
+        productTypeAttributes = productType.fields;
+      } else {
+        return new Error((message = "Invalid Product type"));
+      }
+
+      savedProduct = await productManager.saveNewProduct(
+        productTypeAttributes,
+        productDetails
+      );
+
+      outputMsg.cart = savedProduct;
       outputMsg.success = true;
       outputMsg.message = "Successfully updated the cart";
     } catch (err) {
@@ -17,8 +33,11 @@ const saveNewProduct = async (email, products) => {
       outputMsg.message = "Error occured";
       outputMsg.error = err.message;
     }
-  
-    return outputMsg;
-  };
 
-module.exports = {};
+    return outputMsg;
+  },
+};
+
+const productTypes = {};
+
+module.exports = { products, productTypes };

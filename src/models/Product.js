@@ -18,14 +18,10 @@ const newProductTypeManager = {
 
   productTypeModel: function () {
     !this.productTypesModelGenerated
-      ? () => {
-          this.productTypesModelGenerated = mongoose.model(
-            "producttypes",
-            this.productTypesSchema()
-          );
-          this.productTypesSchema().index({ slug: 1 }, { unique: true });
-          console.log("Asss");
-        }
+      ? (this.productTypesModelGenerated = mongoose.model(
+          "producttypes",
+          this.productTypesSchema()
+        ))
       : null;
     return this.productTypesModelGenerated;
   },
