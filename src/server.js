@@ -3,12 +3,14 @@ const carty = require("./models/Cart");
 const carts = require("./controllers/cartController");
 const prod = require("./models/Product");
 const pordC = require("./controllers/productController");
+const sringss = require("./utils/stringValidators");
+
 console.log("Server fired up!");
 
 connectToDatabase();
 
 const uu = async () => {
-  const yy = await pordC.products.saveNewProduct("dvdv", {
+  /* const yy = await pordC.products.saveNewProduct("dvdv", {
     title: "454",
     slug: "hash_node_op",
     price: 34,
@@ -21,7 +23,7 @@ const uu = async () => {
     photos: ["String"],
     bfbfb: "444",
   });
-  console.log(yy);
+  console.log(yy);*/
 };
 
 uu();
