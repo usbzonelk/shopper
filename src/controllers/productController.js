@@ -90,6 +90,31 @@ const products = {
 
     return outputMsg;
   },
+
+  slugCheck: async function (slug) {
+    let productInfo = null;
+    const outputMsg = {};
+
+    try {
+      productInfo = await productManager.getOneProduct({ slug: slug });
+
+      if (!productInfo) {
+        outputMsg.valid = false;
+      } else {
+        outputMsg.valid = true;
+      }
+
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the validity of slug.";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
 };
 
 const productTypes = {};
