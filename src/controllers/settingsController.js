@@ -31,7 +31,7 @@ const settings = {
     const outputMsg = {};
 
     try {
-      savedSetting = await SettingsManager.getOneProduct({
+      savedSetting = await SettingsManager.getOneSetting({
         setting: settingName,
       });
 
@@ -42,6 +42,83 @@ const settings = {
       outputMsg.setting = savedSetting;
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the setting";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
+  getAllSettings: async function () {
+    let savedSettings = null;
+    const outputMsg = {};
+
+    try {
+      savedSettings = await SettingsManager.getAllSettings();
+
+      outputMsg.settings = savedSettings;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the settings";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
+  editSetting: async function (settingName, newValue) {
+    let editedSettings = null;
+    const outputMsg = {};
+
+    try {
+      const isSettingThere = await SettingsManager.getOneSetting({
+        setting: settingName,
+      });
+      if (!isSettingThere) {
+        return new Error((message = "There is no such a setting"));
+      }
+
+      editedSettings = await SettingsManager.editOneSetting(
+        settingName,
+        newValue
+      );
+
+      outputMsg.settings = editedSettings;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully edited the setting";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
+
+  deleteSetting: async function (settingName) {
+    let deletedSetting = null;
+    const outputMsg = {};
+
+    try {
+      const isSettingThere = await SettingsManager.getOneSetting({
+        setting: settingName,
+      });
+      if (!isSettingThere) {
+        return new Error((message = "There is no such a setting"));
+      }
+
+      deletedSetting = await SettingsManager.deleteOneSetting({
+        setting: settingName,
+      });
+
+      outputMsg.deleted = deletedSetting;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully deleted the setting";
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";

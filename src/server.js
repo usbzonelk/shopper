@@ -26,7 +26,7 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await sett.settings.saveNewSetting("a0shvd", false);
+  const yy = await sett.settings.deleteSetting("a")
 
   /*   const yy = await prod.newProductManager.getAllProducts();
    */ console.log(yy);
