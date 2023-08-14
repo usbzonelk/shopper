@@ -1,6 +1,7 @@
 const connectToDatabase = require("./config/database");
 const carty = require("./models/Cart");
-const carts = require("./controllers/cartController");
+const sett = require("./controllers/settingsController");
+const set1 = require("./models/Settings");
 const prod = require("./models/Product");
 const pordC = require("./controllers/productController");
 const sringss = require("./utils/stringValidators");
@@ -25,7 +26,7 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await pordC.products.getAllProductsSummery();
+  const yy = await sett.settings.saveNewSetting("a0shvd", false);
 
   /*   const yy = await prod.newProductManager.getAllProducts();
    */ console.log(yy);
