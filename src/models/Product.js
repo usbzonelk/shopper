@@ -220,11 +220,18 @@ const newProductManager = {
 
   getManyProducts: async function (
     params,
+    selection = null,
     schema = this.productModel.bind(newProductManager)
   ) {
     try {
       const productSchema = schema();
-      const getMatchedProducts = await productSchema.find(params);
+      let getMatchedProducts = null;
+      if (!selection) {
+        getMatchedProducts = await productSchema.find(params);
+      } else {
+        getMatchedProducts = await productSchema.find(params).select(selection);
+      }
+
       return getMatchedProducts;
     } catch (e) {
       return e;

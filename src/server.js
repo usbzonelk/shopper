@@ -26,7 +26,13 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await sett.settings.deleteSetting("a")
+  const yy = await pordC.products.filteredProductSummary(
+    { price: 34 },
+    (selection = {
+      title: 1,
+      slug: 1,
+    })
+  );
 
   /*   const yy = await prod.newProductManager.getAllProducts();
    */ console.log(yy);
