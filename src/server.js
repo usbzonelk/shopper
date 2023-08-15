@@ -27,7 +27,7 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await user.changeMail("gss@lk.lk", "kln@ac.lk");
+  const yy = await user.changeMail("1@1.lk", "kln@a0c.lk");
 
   /*   const yy = await prod.newProductManager.getAllProducts();
    */ console.log(yy);

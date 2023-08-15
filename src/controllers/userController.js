@@ -71,14 +71,18 @@ const deactivateUser = async (email) => {
   return outputMsg;
 };
 
-const passwordReset = async (email, newPass) => {
+const changePassword = async (email, newPass) => {
   let userEdited = null;
   const outputMsg = {};
 
   try {
-    const mailValidity = await users.getOneUserInfo({ email: email });
-    if (!mailValidity) {
+    const userInfo = await users.getOneUserInfo({ email: email });
+    console.log(userInfo);
+    if (!userInfo) {
       return new Error((message = "Account doesn't exist"));
+    }
+    if (userInfo.status != "verified") {
+      return new Error((message = "Account is not active"));
     }
     const newPassHashed = await bcrypt.hashPassword(newPass);
     userEdited = await users.editOneUser(
@@ -101,15 +105,17 @@ const changeMail = async (oldEmail, newEmail) => {
   const outputMsg = {};
 
   try {
-    const mailValidity = await users.getOneUserInfo({ email: oldEmail });
-    if (!mailValidity) {
+    const userInfo = await users.getOneUserInfo({ email: oldEmail });
+    if (!userInfo) {
       return new Error((message = "Account doesn't exist"));
     }
-    const newMailValidity = await users.getOneUserInfo({ email: newEmail });
-    if (newMailValidity) {
+    const newMailInfo = await users.getOneUserInfo({ email: newEmail });
+    if (newMailInfo) {
       return new Error((message = "An account already exists"));
     }
-
+    if (userInfo.status != "verified") {
+      return new Error((message = "Account is not active"));
+    }
     userEdited = await users.editOneUser(
       { email: oldEmail },
       { email: newEmail }
@@ -125,10 +131,55 @@ const changeMail = async (oldEmail, newEmail) => {
   return outputMsg;
 };
 
+const changePersonalInfo = async (
+  mail,
+  fullName = null,
+  address = null,
+  phone = null
+) => {
+  let userEdited = null;
+  const outputMsg = {};
+
+  try {
+    const userInfo = await users.getOneUserInfo({ email: mail });
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    if (userInfo.status != "verified") {
+      return new Error((message = "Account is not active"));
+    }
+    if (fullName) {
+      userEdited = await users.editOneUser(
+        { email: mail },
+        { fullName: fullName }
+      );
+    }
+    if (address) {
+      userEdited = await users.editOneUser(
+        { email: mail },
+        { address: address }
+      );
+    }
+    if (phone) {
+      userEdited = await users.editOneUser({ email: mail }, { phone: phone });
+    }
+
+    outputMsg.user = { email: userEdited.email, status: userEdited.status };
+    outputMsg.success = true;
+    outputMsg.message = "Successfully changed email";
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
+
 module.exports = {
   createTempUser,
   verifyUser,
   deactivateUser,
-  passwordReset,
+  changePassword,
   changeMail,
+  changePersonalInfo,
 };
