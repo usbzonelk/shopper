@@ -88,7 +88,6 @@ const changePassword = async (email, newPass) => {
   }
   try {
     const userInfo = await users.getOneUserInfo({ email: email });
-    console.log(userInfo);
     if (!userInfo) {
       return new Error((message = "Account doesn't exist"));
     }
@@ -190,7 +189,44 @@ const changePersonalInfo = async (
   return outputMsg;
 };
 
-const userLogin = async () => {};
+const userLogin = async (email, enteredPassword) => {
+  let userEdited = null;
+  const outputMsg = {};
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const userInfo = await users.getOneUserInfo({ email: email });
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    if (userInfo.status != "verified") {
+      return new Error(
+        (message =
+          "Account is not active. Contact an administrator to reactivate your account")
+      );
+    }
+    const userPass = userInfo.password;
+    const accountValidity = await bcrypt.validateUser(
+      enteredPassword,
+      userPass
+    );
+    if (accountValidity) {
+      outputMsg.user = { email: userInfo.email };
+      outputMsg.success = true;
+      outputMsg.message = "Successfully logged in";
+    } else {
+      outputMsg.user = { email: userInfo.email };
+      outputMsg.success = false;
+      outputMsg.message = "Incorrect password";
+    }
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
 
 module.exports = {
   createTempUser,
