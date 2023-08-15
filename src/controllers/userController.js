@@ -192,6 +192,8 @@ const changePersonalInfo = async (
 
 const userLogin = async (email, enteredPassword) => {
   const outputMsg = {};
+  const userEntredMail = email;
+
   if (!validateMail(email)) {
     return new Error((message = "Entered Email Address is invalid"));
   }
@@ -212,16 +214,14 @@ const userLogin = async (email, enteredPassword) => {
       userPass
     );
     if (accountValidity) {
-      const refreshToken = auth.jwtRefreshGenerator({
-        mail: userInfo.mail,
-        role: "user",
-      });
+      const userMail = userInfo.mail;
+      const refreshToken = auth.jwtRefreshGenerator(userEntredMail, "user");
       const storeToken = await users.editOneUser(
         { email: userInfo.email },
         { refreshToken: refreshToken }
       );
 
-      outputMsg.user = { email: userInfo.email, token: refreshToken };
+      outputMsg.user = { email: email, token: refreshToken };
       outputMsg.success = true;
       outputMsg.message = "Successfully logged in";
     } else {
@@ -276,6 +276,39 @@ const generateAccessToken = async (email, refreshToken) => {
   return outputMsg;
 };
 
+const userLogout = async (email) => {
+  const outputMsg = {};
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const userInfo = await users.getOneUserInfo({ email: email });
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    if (userInfo.status != "verified") {
+      return new Error(
+        (message =
+          "Account is not active. Contact an administrator to reactivate your account")
+      );
+    }
+
+    const removeTokens = await users.editOneUser(
+      { email: userInfo.email },
+      { refreshToken: "", accessToken: "" }
+    );
+
+    outputMsg.user = { email: userInfo.email };
+    outputMsg.success = true;
+    outputMsg.message = "Successfully logged out";
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
+
 module.exports = {
   createTempUser,
   verifyUserStatus,
@@ -284,5 +317,6 @@ module.exports = {
   changeMail,
   changePersonalInfo,
   userLogin,
+  userLogout,
   generateAccessToken,
 };

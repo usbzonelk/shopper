@@ -27,13 +27,5 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-
-  const yy = await user.generateAccessToken(
-    "1@1.lk",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6eyJyb2xlIjoidXNlciJ9LCJpYXQiOjE2OTIxMDAwMTcsImV4cCI6MTY5MzMwOTYxN30.PF6BsT6gu8kcNvdn-OQo5XceALsA5EXsnzOfCx2BELg"
-  );
-
-  /*   const yy = await prod.newProductManager.getAllProducts();
-   */ console.log(yy);
 };
 uu();
