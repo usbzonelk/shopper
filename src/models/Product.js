@@ -5,14 +5,17 @@ const newProductTypeManager = {
 
   productTypesSchema: function () {
     return new mongoose.Schema({
-      slugtype: { type: String, required: true, unique: true },
+      slugtype: { type: String, required: true, unique: true, index: true },
       adminId: String,
       fields: [
         {
           name: { type: String, required: true },
           value: { type: mongoose.Schema.Types.Mixed, required: true },
+          search: { type: String, required: true, index: true, unique: true },
+          
         },
       ],
+      values: [mongoose.Schema.Types.Mixed],
     });
   },
 
@@ -147,6 +150,7 @@ const newProductManager = {
     type: String,
     coverPhoto: String,
     photos: [String],
+    availability: { type: String, default: "In stock" },
   },
 
   productSchema: function (schema) {
