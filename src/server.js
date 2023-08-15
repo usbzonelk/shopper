@@ -6,6 +6,7 @@ const prod = require("./models/Product");
 const pordC = require("./controllers/productController");
 const sringss = require("./utils/stringValidators");
 const user = require("./controllers/userController");
+const jwt = require("./utils/auth");
 
 console.log("Server fired up!");
 
