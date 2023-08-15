@@ -1,6 +1,7 @@
 const User = require("../models/Users");
 const bcrypt = require("../utils/bcrypt");
 const validateMail = require("../utils/stringValidators").validateMail;
+const auth = require("../utils/auth");
 
 const users = User.usersManager;
 
@@ -211,13 +212,61 @@ const userLogin = async (email, enteredPassword) => {
       userPass
     );
     if (accountValidity) {
-      outputMsg.user = { email: userInfo.email };
+      const refreshToken = auth.jwtRefreshGenerator({
+        mail: userInfo.mail,
+        role: "user",
+      });
+      const storeToken = await users.editOneUser(
+        { email: userInfo.email },
+        { refreshToken: refreshToken }
+      );
+
+      outputMsg.user = { email: userInfo.email, token: refreshToken };
       outputMsg.success = true;
       outputMsg.message = "Successfully logged in";
     } else {
       outputMsg.user = { email: userInfo.email };
       outputMsg.success = false;
       outputMsg.message = "Incorrect password";
+    }
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
+
+const generateAccessToken = async (email, refreshToken) => {
+  const outputMsg = {};
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const userInfo = await users.getOneUserInfo({ email: email });
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    if (userInfo.status != "verified") {
+      return new Error(
+        (message =
+          "Account is not active. Contact an administrator to reactivate your account")
+      );
+    }
+
+    const accessToken = auth.jwtAccessGenerator(refreshToken);
+    if (accessToken) {
+      const storeToken = await users.editOneUser(
+        { email: userInfo.email },
+        { accessToken: accessToken }
+      );
+      outputMsg.user = { email: userInfo.email, token: accessToken };
+      outputMsg.success = true;
+      outputMsg.message = "Successfully generated token";
+    } else {
+      outputMsg.user = { email: userInfo.email };
+      outputMsg.success = false;
+      outputMsg.message = "Please log in first";
     }
   } catch (error) {
     outputMsg.success = false;
@@ -235,4 +284,5 @@ module.exports = {
   changeMail,
   changePersonalInfo,
   userLogin,
+  generateAccessToken,
 };

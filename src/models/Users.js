@@ -42,6 +42,8 @@ const usersManager = {
         required: true,
         trim: true,
       },
+      accessToken: { type: String, default: "" },
+      refreshToken: { type: String, default: "" },
     });
   },
 
