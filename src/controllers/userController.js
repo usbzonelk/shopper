@@ -309,6 +309,31 @@ const userLogout = async (email) => {
   return outputMsg;
 };
 
+const emailValidator = async (email) => {
+  let validity = false;
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const userInfo = await users.getOneUserInfo({ email: email });
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    if (userInfo.status != "verified") {
+      return new Error(
+        (message =
+          "Account is not active. Contact an administrator to reactivate your account")
+      );
+    } else {
+      validity = true;
+    }
+
+    return validity;
+  } catch (error) {
+    return error.massage;
+  }
+};
+
 module.exports = {
   createTempUser,
   verifyUserStatus,
@@ -319,4 +344,5 @@ module.exports = {
   userLogin,
   userLogout,
   generateAccessToken,
+  emailValidator,
 };

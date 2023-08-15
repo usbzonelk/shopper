@@ -27,5 +27,8 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
+
+  const yy = await user.emailValidator("1@1.lk");
+  console.log(yy);
 };
 uu();
