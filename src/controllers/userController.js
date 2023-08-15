@@ -190,7 +190,6 @@ const changePersonalInfo = async (
 };
 
 const userLogin = async (email, enteredPassword) => {
-  let userEdited = null;
   const outputMsg = {};
   if (!validateMail(email)) {
     return new Error((message = "Entered Email Address is invalid"));
