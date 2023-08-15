@@ -5,6 +5,7 @@ const set1 = require("./models/Settings");
 const prod = require("./models/Product");
 const pordC = require("./controllers/productController");
 const sringss = require("./utils/stringValidators");
+const user = require("./controllers/userController");
 
 console.log("Server fired up!");
 
@@ -26,13 +27,7 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await pordC.products.filteredProductSummary(
-    { price: 34 },
-    (selection = {
-      title: 1,
-      slug: 1,
-    })
-  );
+  const yy = await user.verifyUser("gss@hlk.lk");
 
   /*   const yy = await prod.newProductManager.getAllProducts();
    */ console.log(yy);
