@@ -1,7 +1,17 @@
 const Cart = require("../models/Cart");
 const cartManager = Cart.cartManager;
+const userController = require("./userController");
 
 const generateNewCart = async (email, products = {}) => {
+  const outputMsg = {};
+  let emailValidity = false;
+
+  try {
+    emailValidity = await userController.emailValidator(email);
+  } catch (error) {
+    return error.message;
+  }
+
   const cartSchema = await cartManager.cartModel.bind(cartManager);
 
   const isCartCreated = await cartManager.getOneCart(
@@ -14,10 +24,15 @@ const generateNewCart = async (email, products = {}) => {
       products,
       cartSchema
     );
-    return newCart;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully created the cart";
+    outputMsg.cart = newCart;
   } else {
-    return isCartCreated;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved the cart";
+    outputMsg.cart = isCartCreated;
   }
+  return outputMsg;
 };
 
 const addItemsToCart = async (email, products) => {

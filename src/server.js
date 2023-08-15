@@ -6,6 +6,7 @@ const prod = require("./models/Product");
 const pordC = require("./controllers/productController");
 const sringss = require("./utils/stringValidators");
 const user = require("./controllers/userController");
+const cartctrl = require("./controllers/cartController");
 const jwt = require("./utils/auth");
 
 console.log("Server fired up!");
@@ -28,7 +29,7 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await user.emailValidator("1@1.lk");
+  const yy = await cartctrl.generateNewCart("1@1.lk");
   console.log(yy);
 };
 uu();
