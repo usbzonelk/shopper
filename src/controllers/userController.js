@@ -1,10 +1,15 @@
 const User = require("../models/Users");
 const bcrypt = require("../utils/bcrypt");
+const validateMail = require("../utils/stringValidators").validateMail;
+
 const users = User.usersManager;
 
 const createTempUser = async (email, password) => {
   let userCreated = null;
   const outputMsg = {};
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
 
   try {
     const mailValidity = await users.getOneUserInfo({ email: email });
@@ -23,10 +28,12 @@ const createTempUser = async (email, password) => {
   return outputMsg;
 };
 
-const verifyUser = async (email) => {
+const verifyUserStatus = async (email) => {
   let userEdited = null;
   const outputMsg = {};
-
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
   try {
     const mailValidity = await users.getOneUserInfo({ email: email });
     if (!mailValidity) {
@@ -50,7 +57,9 @@ const verifyUser = async (email) => {
 const deactivateUser = async (email) => {
   let userEdited = null;
   const outputMsg = {};
-
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
   try {
     const mailValidity = await users.getOneUserInfo({ email: email });
     if (!mailValidity) {
@@ -74,7 +83,9 @@ const deactivateUser = async (email) => {
 const changePassword = async (email, newPass) => {
   let userEdited = null;
   const outputMsg = {};
-
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
   try {
     const userInfo = await users.getOneUserInfo({ email: email });
     console.log(userInfo);
@@ -103,7 +114,9 @@ const changePassword = async (email, newPass) => {
 const changeMail = async (oldEmail, newEmail) => {
   let userEdited = null;
   const outputMsg = {};
-
+  if (!validateMail(oldEmail) || !validateMail(newEmail)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
   try {
     const userInfo = await users.getOneUserInfo({ email: oldEmail });
     if (!userInfo) {
@@ -139,7 +152,9 @@ const changePersonalInfo = async (
 ) => {
   let userEdited = null;
   const outputMsg = {};
-
+  if (!validateMail(mail)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
   try {
     const userInfo = await users.getOneUserInfo({ email: mail });
     if (!userInfo) {
@@ -175,11 +190,14 @@ const changePersonalInfo = async (
   return outputMsg;
 };
 
+const userLogin = async () => {};
+
 module.exports = {
   createTempUser,
-  verifyUser,
+  verifyUserStatus,
   deactivateUser,
   changePassword,
   changeMail,
   changePersonalInfo,
+  userLogin,
 };

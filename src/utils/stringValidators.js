@@ -6,4 +6,11 @@ const validateSlug = (slug) => {
   }
 };
 
-module.exports = { validateSlug };
+const validateMail = (mail) => {
+  if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(mail)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+module.exports = { validateSlug, validateMail };
