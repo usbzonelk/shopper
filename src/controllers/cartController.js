@@ -2,12 +2,20 @@ const Cart = require("../models/Cart");
 const cartManager = Cart.cartManager;
 const userController = require("./userController");
 
-const generateNewCart = async (email, products = {}) => {
+const generateNewCart = async (email, products = []) => {
   const outputMsg = {};
   let emailValidity = false;
-
+  let userID = null;
+  let userDetails = null;
   try {
-    emailValidity = await userController.emailValidator(email);
+    userDetails = await userController.getUserID(email);
+    userID = userDetails.userID;
+    console.log(userID);
+    if (userID) {
+      emailValidity = true;
+    } else {
+      return new Error((message = "Invalid Email"));
+    }
   } catch (error) {
     return error.message;
   }
@@ -15,12 +23,12 @@ const generateNewCart = async (email, products = {}) => {
   const cartSchema = await cartManager.cartModel.bind(cartManager);
 
   const isCartCreated = await cartManager.getOneCart(
-    { email: email },
+    { userID: userID },
     cartSchema
   );
   if (!isCartCreated) {
     const newCart = await cartManager.createNewCart(
-      email,
+      userID,
       products,
       cartSchema
     );

@@ -57,12 +57,12 @@ const cartManager = {
   },
 
   createNewCart: async function (
-    email,
+    userID,
     products,
     schema = this.cartModel.bind(cartManager)
   ) {
     const newCartDetails = {
-      email: email,
+      userID: userID,
       items: products,
       addedAt: new Date(),
     };
