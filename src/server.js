@@ -29,7 +29,7 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await user.getFullUserInfo("kln@ac.lk")
+  const yy = await user.getUserID("kln@ac.lk")
   console.log(yy);
 };
 uu();

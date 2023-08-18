@@ -365,11 +365,14 @@ const getUserID = async (email) => {
   }
 
   try {
-    const userInfo = await users.getOneUserInfo({ email: email }, "email");
+    const userInfo = await users.getUserInfoSelected(
+      { email: email },
+      { email: 1 }
+    );
     if (!userInfo) {
       return new Error((message = "Account doesn't exist"));
     }
-    outputMsg.user = userInfo._id;
+    outputMsg.userID = userInfo._id;
     outputMsg.success = true;
     outputMsg.message = "Successfully retrieved user data";
   } catch (error) {

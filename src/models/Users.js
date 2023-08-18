@@ -103,6 +103,14 @@ const usersManager = {
     return getMatchedUser;
   },
 
+  getUserInfoSelected: async function (params, selection) {
+    const userModel = this.userModel();
+    let getMatchedUserFullInfo = await userModel
+      .findOne(params)
+      .select(selection);
+    return getMatchedUserFullInfo;
+  },
+
   getManyUsers: async function (params) {
     const userModel = this.userModel();
     const getMatchedUsers = await userModel.find(params);
