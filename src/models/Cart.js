@@ -131,7 +131,7 @@ const cartManager = {
     });
 
     let addedCart = await cartSchema.findOneAndUpdate(
-      { email: mail },
+      { userID: userID },
       { $addToSet: { items: { $each: newItems } } },
       { new: true }
     );

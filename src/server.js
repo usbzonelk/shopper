@@ -28,8 +28,11 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-
-  const yy = await cartctrl.generateNewCart("1@1.lk");
+  const uu = await user.getUserID("1@1.lk");
+  const yy = await carty.cartManager.addProductsToCart(uu.userID, [
+    { product: { slug: "252" }, quantity: 5 },
+    { product: { slug: "xxx" }, quantity: 5 },
+  ]);
   console.log(yy);
 };
 uu();
