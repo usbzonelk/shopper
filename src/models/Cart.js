@@ -104,20 +104,20 @@ const cartManager = {
   },
 
   isInTheCart: async function (
-    mail,
+    userID,
     itemToFind,
     schema = this.cartModel.bind(cartManager)
   ) {
     const cartSchema = schema();
     const isInTheCart = await cartSchema.findOne({
-      email: mail,
+      userID: userID,
       "items.product.slug": itemToFind,
     });
     return isInTheCart ? true : false;
   },
 
   addProductsToCart: async function (
-    mail,
+    userID,
     newItems,
     schema = this.cartModel.bind(cartManager)
   ) {
@@ -125,7 +125,7 @@ const cartManager = {
 
     let updatedCart = newItems.forEach(async (item) => {
       await cartSchema.findOneAndUpdate(
-        { email: mail, "items.product.slug": item.product.slug },
+        { userID: userID, "items.product.slug": item.product.slug },
         { $inc: { "items.$.quantity": item.quantity } }
       );
     });
@@ -148,13 +148,13 @@ const cartManager = {
   },
 
   removeItemsFromCart: async function (
-    mail,
+    userID,
     itemsToRemove,
     schema = this.cartModel.bind(cartManager)
   ) {
     const cartSchema = schema();
     const updatedCart = await cartSchema.updateOne(
-      { email: mail },
+      { userID: userID },
       { $pull: { items: { "product.slug": { $in: itemsToRemove } } } },
       { new: true }
     );
@@ -162,14 +162,14 @@ const cartManager = {
   },
 
   changeQty: async function (
-    mail,
+    userID,
     itemToFind,
     changedQty,
     schema = this.cartModel.bind(cartManager)
   ) {
     const cartSchema = schema();
     const updatedCart = await cartSchema.findOneAndUpdate(
-      { email: mail, "items.product.slug": itemToFind },
+      { userID: userID, "items.product.slug": itemToFind },
       { $set: { "items.$.quantity": changedQty } },
       { new: true }
     );
