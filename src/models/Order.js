@@ -11,6 +11,11 @@ const ordersManager = {
       index: true,
     },
     customer: {
+      userID: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
       email: { type: String, required: true },
       address: { type: String, required: true },
     },

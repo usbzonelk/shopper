@@ -334,6 +334,52 @@ const emailValidator = async (email) => {
   }
 };
 
+const getFullUserInfo = async (email) => {
+  const outputMsg = {};
+
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const userInfo = await users.getOneUserInfo({ email: email });
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+
+    outputMsg.user = userInfo;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved user data";
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
+
+const getUserID = async (email) => {
+  const outputMsg = {};
+
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+
+  try {
+    const userInfo = await users.getOneUserInfo({ email: email }, "email");
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    outputMsg.user = userInfo._id;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved user data";
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
+
 module.exports = {
   createTempUser,
   verifyUserStatus,
@@ -345,4 +391,6 @@ module.exports = {
   userLogout,
   generateAccessToken,
   emailValidator,
+  getFullUserInfo,
+  getUserID,
 };

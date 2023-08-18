@@ -92,9 +92,14 @@ const usersManager = {
     }
   },
 
-  getOneUserInfo: async function (params) {
+  getOneUserInfo: async function (params, selectionInput = null) {
     const userModel = this.userModel();
-    const getMatchedUser = await userModel.findOne(params);
+    let getMatchedUser = null;
+    if (selectionInput) {
+      getMatchedUser = await userModel.findOne(params).select("email");
+    } else {
+      getMatchedUser = await userModel.findOne(params);
+    }
     return getMatchedUser;
   },
 

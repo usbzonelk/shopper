@@ -5,12 +5,14 @@ const cartManager = {
 
   cartSchema: function () {
     return new mongoose.Schema({
-      email: {
-        type: String,
+      userID: {
         required: true,
         index: true,
         unique: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
       },
+
       items: [
         {
           product: {

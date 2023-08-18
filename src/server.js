@@ -29,7 +29,7 @@ const uu = async () => {
   });
   console.log(yy); */
 
-  const yy = await cartctrl.generateNewCart("1@1.lk");
+  const yy = await user.getFullUserInfo("kln@ac.lk")
   console.log(yy);
 };
 uu();
