@@ -29,12 +29,13 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  const yy = await newProdType.saveNewProductType("laptops", {
+  const yy = await newProdType.getManyAttributes("laptops", { search: true });
+  /* ("laptops", {
     attributeName: "bran0d100",
     search: true,
     type: 'String',
     qualitative: true,
-  });
+  }); */
 
   console.log(yy);
 };
