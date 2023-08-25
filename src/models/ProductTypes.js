@@ -54,11 +54,12 @@ const productTypes = {
 
   getAllAttributes: async function (
     collectionName,
+    selection,
     schema = this.productTypeModel.bind(productTypes, collectionName)
   ) {
     try {
       const productTypeSchema = schema();
-      const allAttributes = await productTypeSchema.find({});
+      const allAttributes = await productTypeSchema.find({}).select(selection);
       return allAttributes;
     } catch (err) {
       return err;
@@ -68,11 +69,14 @@ const productTypes = {
   getOneAttribute: async function (
     collectionName,
     params,
+    selection,
     schema = this.productTypeModel.bind(productTypes, collectionName)
   ) {
     try {
       const productTypeSchema = schema();
-      const getMatchedProduct = await productTypeSchema.findOne(params);
+      const getMatchedProduct = await productTypeSchema
+        .findOne(params)
+        .select(selection);
       return getMatchedProduct;
     } catch (e) {
       return e;

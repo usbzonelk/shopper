@@ -29,7 +29,11 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  const yy = await newProdType.getManyAttributes("laptops", { search: true });
+  const yy = await newProdType.getOneAttribute(
+    "laptops",
+    { search: true },
+    { attributeName: true }
+  );
   /* ("laptops", {
     attributeName: "bran0d100",
     search: true,
