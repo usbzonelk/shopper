@@ -8,6 +8,7 @@ const sringss = require("./utils/stringValidators");
 const user = require("./controllers/userController");
 const cartctrl = require("./controllers/cartController");
 const jwt = require("./utils/auth");
+const newProdType = require("./models/ProductTypes").productTypes;
 
 console.log("Server fired up!");
 
@@ -28,11 +29,13 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  const uu = await user.getUserID("1@1.lk");
-  const yy = await carty.cartManager.addProductsToCart(uu.userID, [
-    { product: { slug: "252" }, quantity: 5 },
-    { product: { slug: "xxx" }, quantity: 5 },
-  ]);
+  const yy = await newProdType.saveNewProductType("laptops", {
+    attributeName: "bran0d100",
+    search: true,
+    type: 'String',
+    qualitative: true,
+  });
+
   console.log(yy);
 };
 uu();

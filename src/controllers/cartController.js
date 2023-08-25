@@ -10,7 +10,6 @@ const generateNewCart = async (email, products = []) => {
   try {
     userDetails = await userController.getUserID(email);
     userID = userDetails.userID;
-    console.log(userID);
     if (userID) {
       emailValidity = true;
     } else {
@@ -44,12 +43,23 @@ const generateNewCart = async (email, products = []) => {
 };
 
 const addItemsToCart = async (email, products) => {
+  let userDetails = null;
+
   const cartSchema = await cartManager.cartModel.bind(cartManager);
   let addItem = null;
   const outputMsg = {};
 
   try {
-    addItem = await cartManager.addProductsToCart(email, products, cartSchema);
+    userDetails = await userController.getUserID(email);
+    if (!userDetails) {
+      return new Error((message = "Invalid Email"));
+    }
+
+    addItem = await cartManager.addProductsToCart(
+      userDetails._id,
+      products,
+      cartSchema
+    );
     outputMsg.cart = addItem;
     outputMsg.success = true;
     outputMsg.message = "Successfully updated the cart";
@@ -63,13 +73,17 @@ const addItemsToCart = async (email, products) => {
 };
 
 const removeItems = async (email, removedProducts) => {
+  let userDetails = null;
+
   const cartSchema = await cartManager.cartModel.bind(cartManager);
   let removedItem = null;
   const outputMsg = {};
 
   try {
+    userDetails = await userController.getUserID(email);
+
     removedItem = await cartManager.removeItemsFromCart(
-      email,
+      userDetails._id,
       removedProducts,
       cartSchema
     );
@@ -86,12 +100,20 @@ const removeItems = async (email, removedProducts) => {
 };
 
 const changeQty = async (email, item, newQty) => {
+  let userDetails = null;
+
   const cartSchema = await cartManager.cartModel.bind(cartManager);
   let changedQty = null;
   const outputMsg = {};
 
   try {
-    changedQty = await cartManager.changeQty(email, item, newQty, cartSchema);
+    userDetails = await userController.getUserID(email);
+    changedQty = await cartManager.changeQty(
+      userDetails._id,
+      item,
+      newQty,
+      cartSchema
+    );
     outputMsg.cart = changedQty;
     outputMsg.success = true;
     outputMsg.message = "Successfully updated the cart";
@@ -105,15 +127,22 @@ const changeQty = async (email, item, newQty) => {
 };
 
 const isInTheCart = async (email, item) => {
+  let userDetails = null;
+
   const cartSchema = await cartManager.cartModel.bind(cartManager);
   let isInTheCart = null;
   const outputMsg = {};
 
   try {
-    isInTheCart = await cartManager.isInTheCart(email, item, cartSchema);
+    userDetails = await userController.getUserID(email);
+    isInTheCart = await cartManager.isInTheCart(
+      userDetails._id,
+      item,
+      cartSchema
+    );
     outputMsg.isInTheCart = isInTheCart;
     outputMsg.success = true;
-    outputMsg.message = "Successfully updated the cart";
+    outputMsg.message = "Successfully checked the cart";
   } catch (err) {
     outputMsg.success = false;
     outputMsg.message = "Error occured";
