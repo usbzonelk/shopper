@@ -182,7 +182,32 @@ const products = {
     return outputMsg;
   },
 
-  
+  editProduct: async function (slug, newProductInfo) {
+    const outputMsg = {};
+    let productInfo = null;
+    let editedProduct = null;
+
+    try {
+      productInfo = await productManager.getOneProduct({ slug: slug });
+
+      if (!productInfo) {
+        return new Error((message = "Slug is invalid"));
+      }
+      editedProduct = await productManager.editOneProduct(
+        { slug: slug },
+        newProductInfo
+      );
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the validity of slug.";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
 };
 
 const productTypes = {};
