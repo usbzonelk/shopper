@@ -30,10 +30,11 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  const yy = await newProdTypeCt.addValsToAttribute("laptops", "udeshXX", [
-    "kkk",
-    "pp",
-  ]);
+  const yy = await newProdTypeCt.removeValsFromAttributes(
+    "laptops",
+    "udeshXX",
+    ["kkk", "pp"]
+  );
   /*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
    */
   console.log(yy);

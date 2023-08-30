@@ -291,12 +291,38 @@ const productTypes = {
       editedAttribute = await ProductTypes.productTypes.editAttributeArrays(
         type,
         usersAttributeName,
-        { $push: { values: { $each: newVals } } }
+        { $addToSet: { values: { $each: newVals } } }
       );
       outputMsg.editedAttribute = editedAttribute;
       outputMsg.productType = type;
       outputMsg.success = true;
       outputMsg.message = `Successfully added new values to the attribute ${usersAttributeName}`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+  removeValsFromAttributes: async function (
+    type,
+    usersAttributeName,
+    valsToRemove
+  ) {
+    let editedAttribute = null;
+    const outputMsg = {};
+
+    try {
+      editedAttribute = await ProductTypes.productTypes.editAttributeArrays(
+        type,
+        usersAttributeName,
+        { $pull: { values: { $in: valsToRemove } } }
+      );
+      outputMsg.editedAttribute = editedAttribute;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully removed the values from the attribute ${usersAttributeName}`;
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";
