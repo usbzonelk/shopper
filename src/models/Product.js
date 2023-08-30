@@ -140,6 +140,7 @@ const newProductManager = {
     coverPhoto: String,
     photos: [String],
     availability: { type: String, default: "In stock" },
+    slugType: { type: String, required: true, index: true },
   },
 
   productSchema: function (schema) {
@@ -213,17 +214,14 @@ const newProductManager = {
 
   getManyProducts: async function (
     params,
-    selection = null,
+    selection,
     schema = this.productModel.bind(newProductManager)
   ) {
     try {
       const productSchema = schema();
       let getMatchedProducts = null;
-      if (!selection) {
-        getMatchedProducts = await productSchema.find(params);
-      } else {
-        getMatchedProducts = await productSchema.find(params).select(selection);
-      }
+
+      getMatchedProducts = await productSchema.find(params).select(selection);
 
       return getMatchedProducts;
     } catch (e) {
@@ -251,7 +249,7 @@ const newProductManager = {
       return e;
     }
   },
-  
+
   deleteOneProduct: async function (
     params,
     schema = this.productModel.bind(newProductManager)

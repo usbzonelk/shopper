@@ -146,6 +146,30 @@ const products = {
 
     return outputMsg;
   },
+
+  filterRange: async function (range = [], slugType, property) {
+    const outputMsg = {};
+    const selection = {};
+
+    selection[property] = { $gte: range[0], $lte: range[1] };
+    try {
+      filteredProducts = await productManager.getManyProducts(
+        { slugType: slugType },
+        selection
+      );
+
+      outputMsg.filteredProducts = filteredProducts;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the products.";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
 };
 
 const productTypes = {};
