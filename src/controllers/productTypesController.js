@@ -2,7 +2,37 @@ const ProductTypes = require("../models/ProductTypes");
 const ProductTypesDB = require("../models/Product");
 
 const productTypes = {
-  saveNewAttribute: async function (productType, productTypeData, adminId) {
+  saveNewAttribute: async function (productType, productTypeData) {
+    const outputMsg = {};
+    const productTypeName = productType;
+    try {
+      let productTypeExists =
+        await ProductTypesDB.newProductTypeManager.getOneProductType({
+          slugtype: productTypeName,
+        });
+      let productTypeAttributes = productTypeData;
+      if (!productTypeExists) {
+        console.log(productTypeExists);
+        return new Error((message = "Product type doesn't exist"));
+      }
+
+      const fullSavedProduct = await ProductTypes.productTypes.saveNewAttribute(
+        productType,
+        productTypeAttributes
+      );
+
+      outputMsg.productType = fullSavedProduct;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully saved the product attributes";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+
+    return outputMsg;
+  },
+  saveNewProductType: async function (productType, adminId) {
     let savedProduct = null;
 
     const outputMsg = {};
@@ -12,8 +42,9 @@ const productTypes = {
         await ProductTypesDB.newProductTypeManager.getOneProductType({
           slugtype: productTypeName,
         });
-      let productTypeAttributes = productTypeData;
+      let productTypeAttributes = {};
       if (productTypeExists) {
+        console.log(productTypeExists);
         return new Error((message = "Product type already exists"));
       }
 
@@ -25,14 +56,14 @@ const productTypes = {
 
       let fullSavedProduct = null;
       if (savedProduct) {
-        fullSavedProduct = await ProductTypes.saveNewAttribute(
+        fullSavedProduct = await ProductTypes.productTypes.saveNewAttribute(
           productType,
           productTypeAttributes
         );
       }
-      outputMsg.productType = fullSavedProduct;
+      outputMsg.productType = savedProduct;
       outputMsg.success = true;
-      outputMsg.message = "Successfully saved the product";
+      outputMsg.message = "Successfully saved new product type";
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";

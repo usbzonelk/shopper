@@ -31,24 +31,18 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  /* const yy = await newProdTypeCt.saveNewAttribute(
-    "phones2",
+   const yy = await newProdTypeCt.saveNewAttribute(
+    "ummdh",
     {
-      attributeName: "brand",
+      attributeName: "jas",
       search: false,
       type: "String",
       qualitative: true,
     },
     "1"
-  ); */
-  const yy = await newProdTypeCt.getAllAttributesOfaType("phones2");
-  /* ("laptops", {
-    attributeName: "bran0d100",
-    search: true,
-    type: 'String',
-    qualitative: true,
-  }); */
-
+  );  
+/*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
+ */ 
   console.log(yy);
 };
 uu();

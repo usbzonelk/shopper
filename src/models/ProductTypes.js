@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const productTypes = {
   productTypeGenerated: null,
+  collectionNameNow: null,
 
   productTypeSchema: function () {
     return new mongoose.Schema({
@@ -25,12 +26,16 @@ const productTypes = {
     if (!collectionName) {
       return new Error((message = "Collection name is invalid"));
     }
-    !this.productTypesModelGenerated
-      ? (this.productTypesModelGenerated = mongoose.model(
-          `type-${collectionName}`,
-          this.productTypeSchema()
-        ))
-      : null;
+
+    if (this.collectionNameNow == collectionName) {
+      null;
+    } else {
+      this.productTypesModelGenerated = mongoose.model(
+        `type-${collectionName}`,
+        this.productTypeSchema()
+      );
+      this.collectionNameNow = collectionName;
+    }
     return this.productTypesModelGenerated;
   },
 
@@ -122,7 +127,7 @@ const productTypes = {
       return e;
     }
   },
-  
+
   deleteOneAttribute: async function (
     collectionName,
     params,
