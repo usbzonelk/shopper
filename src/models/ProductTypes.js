@@ -11,7 +11,8 @@ const productTypes = {
         unique: true,
         index: true,
       },
-      search: { type: Boolean, default: false },
+      search: { type: Boolean, default: true },
+      sort: { type: Boolean, default: false },
       type: { type: mongoose.Schema.Types.Mixed, required: true },
       qualitative: { type: Boolean, default: true },
       minValue: { type: Number },
@@ -121,6 +122,7 @@ const productTypes = {
       return e;
     }
   },
+  
   deleteOneAttribute: async function (
     collectionName,
     params,

@@ -7,15 +7,6 @@ const newProductTypeManager = {
     return new mongoose.Schema({
       slugtype: { type: String, required: true, unique: true, index: true },
       adminId: String,
-      fields: [
-        {
-          name: { type: String, required: true },
-          value: { type: mongoose.Schema.Types.Mixed, required: true },
-          search: { type: String, required: true, index: true, unique: true },
-          
-        },
-      ],
-      values: [mongoose.Schema.Types.Mixed],
     });
   },
 
@@ -32,14 +23,12 @@ const newProductTypeManager = {
   saveNewProductType: async function (
     adminId,
     typeName,
-    newTypeProperties,
     schema = this.productTypeModel.bind(newProductTypeManager)
   ) {
     try {
       const productTypeInfo = {
         adminId: adminId,
         slugtype: typeName,
-        fields: newTypeProperties,
       };
       const ProductType = schema();
 

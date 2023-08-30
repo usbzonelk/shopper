@@ -9,6 +9,8 @@ const user = require("./controllers/userController");
 const cartctrl = require("./controllers/cartController");
 const jwt = require("./utils/auth");
 const newProdType = require("./models/ProductTypes").productTypes;
+const newProdTypeCt =
+  require("./controllers/productTypesController").productTypes;
 
 console.log("Server fired up!");
 
@@ -29,10 +31,15 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  const yy = await newProdType.getOneAttribute(
-    "laptops",
-    { search: true },
-    { attributeName: true }
+  const yy = await newProdTypeCt.saveNewAttribute(
+    "phones2",
+    {
+      attributeName: "brand",
+      search: false,
+      type: "String",
+      qualitative: true,
+    },
+    "1"
   );
   /* ("laptops", {
     attributeName: "bran0d100",
