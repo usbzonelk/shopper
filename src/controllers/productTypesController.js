@@ -32,6 +32,7 @@ const productTypes = {
 
     return outputMsg;
   },
+
   saveNewProductType: async function (productType, adminId) {
     let savedProduct = null;
 
@@ -208,7 +209,6 @@ const productTypes = {
     return outputMsg;
   },
 
-
   getAllSearchPositiveAttributes: async function (type) {
     let serachPositiveAttributes = null;
     const outputMsg = {};
@@ -226,6 +226,77 @@ const productTypes = {
       outputMsg.productType = type;
       outputMsg.success = true;
       outputMsg.message = `Successfully retrieved all search positive attributes`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+  getAllSortableAttributes: async function (type) {
+    let serachPositiveAttributes = null;
+    const outputMsg = {};
+
+    try {
+      serachPositiveAttributes =
+        await ProductTypes.productTypes.getManyAttributes(
+          type,
+          {
+            sort: true,
+          },
+          { attributeName: 1, _id: 0 }
+        );
+      outputMsg.attributes = serachPositiveAttributes;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully retrieved all sortable attributes`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+  getValuesOfAnAtrribute: async function (type, attributeName) {
+    let attributeValues = null;
+    const outputMsg = {};
+
+    try {
+      attributeValues = await ProductTypes.productTypes.getOneAttribute(
+        type,
+        {
+          attributeName: attributeName,
+        },
+        { attributeName: 1, _id: 0, values: 1 }
+      );
+      outputMsg.attribute = attributeValues;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully retrieved all values of the given attribute`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+  addValsToAttribute: async function (type, usersAttributeName, newVals) {
+    let editedAttribute = null;
+    const outputMsg = {};
+
+    try {
+      editedAttribute = await ProductTypes.productTypes.editAttributeArrays(
+        type,
+        usersAttributeName,
+        { $push: { values: { $each: newVals } } }
+      );
+      outputMsg.editedAttribute = editedAttribute;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully added new values to the attribute ${usersAttributeName}`;
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";

@@ -19,6 +19,7 @@ const productTypes = {
       minValue: { type: Number },
       maxValue: { type: Number },
       defaultValue: { type: mongoose.Schema.Types.Mixed, default: false },
+      values: { type: [String] },
     });
   },
 
@@ -151,6 +152,26 @@ const productTypes = {
       const productTypeSchema = schema();
       const deletedAttributes = await productTypeSchema.deleteMany(params);
       return deletedAttributes;
+    } catch (e) {
+      return e;
+    }
+  },
+
+  editAttributeArrays: async function (
+    collectionName,
+    searchAttribute,
+    editCommand,
+    schema = this.productTypeModel.bind(productTypes, collectionName)
+  ) {
+    try {
+      const productTypeSchema = schema();
+      const updatedAttribute = await productTypeSchema.updateOne(
+        { attributeName: searchAttribute },
+        editCommand,
+        { new: true }
+      );
+
+      return updatedAttribute;
     } catch (e) {
       return e;
     }

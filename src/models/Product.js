@@ -251,6 +251,7 @@ const newProductManager = {
       return e;
     }
   },
+  
   deleteOneProduct: async function (
     params,
     schema = this.productModel.bind(newProductManager)
