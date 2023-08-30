@@ -7,7 +7,6 @@ const pordC = require("./controllers/productController");
 const sringss = require("./utils/stringValidators");
 const user = require("./controllers/userController");
 const cartctrl = require("./controllers/cartController");
-const jwt = require("./utils/auth");
 const newProdType = require("./models/ProductTypes").productTypes;
 const newProdTypeCt =
   require("./controllers/productTypesController").productTypes;
@@ -31,18 +30,9 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-   const yy = await newProdTypeCt.saveNewAttribute(
-    "ummdh",
-    {
-      attributeName: "jas",
-      search: false,
-      type: "String",
-      qualitative: true,
-    },
-    "1"
-  );  
-/*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
- */ 
+  const yy = await newProdTypeCt.getAllQuantitativeAttributes("laptops");
+  /*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
+   */
   console.log(yy);
 };
 uu();

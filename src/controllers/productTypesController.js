@@ -110,6 +110,129 @@ const productTypes = {
     }
     return outputMsg;
   },
+
+  editAttribute: async function (type, usersAttributeName, newInfo) {
+    let editedAttribute = null;
+    const outputMsg = {};
+
+    try {
+      editedAttribute = await ProductTypes.productTypes.editOneAttribute(
+        type,
+        {
+          attributeName: usersAttributeName,
+        },
+        newInfo
+      );
+      outputMsg.editedAttribute = editedAttribute;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully edited the attribute ${usersAttributeName}`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+  deleteAttribute: async function (type, usersAttributeName) {
+    let deletedAttribute = null;
+    const outputMsg = {};
+
+    try {
+      deletedAttribute = await ProductTypes.productTypes.deleteOneAttribute(
+        type,
+        {
+          attributeName: usersAttributeName,
+        }
+      );
+      outputMsg.deletedAttribute = deletedAttribute;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully deleted the attribute ${usersAttributeName}`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+  getAllQualitativeAttributes: async function (type) {
+    let serachPositiveAttributes = null;
+    const outputMsg = {};
+
+    try {
+      serachPositiveAttributes =
+        await ProductTypes.productTypes.getManyAttributes(
+          type,
+          {
+            qualitative: true,
+          },
+          { attributeName: 1, _id: 0 }
+        );
+      outputMsg.attributes = serachPositiveAttributes;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully retrieved all qualitative attributes`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+  getAllQuantitativeAttributes: async function (type) {
+    let serachPositiveAttributes = null;
+    const outputMsg = {};
+
+    try {
+      serachPositiveAttributes =
+        await ProductTypes.productTypes.getManyAttributes(
+          type,
+          {
+            qualitative: false,
+          },
+          { attributeName: 1, _id: 0 }
+        );
+      outputMsg.attributes = serachPositiveAttributes;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully retrieved all quantitative attributes`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
+
+
+  getAllSearchPositiveAttributes: async function (type) {
+    let serachPositiveAttributes = null;
+    const outputMsg = {};
+
+    try {
+      serachPositiveAttributes =
+        await ProductTypes.productTypes.getManyAttributes(
+          type,
+          {
+            search: true,
+          },
+          { attributeName: 1, _id: 0 }
+        );
+      outputMsg.attributes = serachPositiveAttributes;
+      outputMsg.productType = type;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully retrieved all search positive attributes`;
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+    }
+    return outputMsg;
+  },
 };
 
 module.exports = { productTypes };
