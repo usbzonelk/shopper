@@ -136,7 +136,6 @@ const newProductManager = {
     instock: Number,
     description: String,
     warrantyMonths: Number,
-    type: String,
     coverPhoto: String,
     photos: [String],
     availability: { type: String, default: "In stock" },

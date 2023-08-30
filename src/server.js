@@ -3,7 +3,7 @@ const carty = require("./models/Cart");
 const sett = require("./controllers/settingsController");
 const set1 = require("./models/Settings");
 const prod = require("./models/Product");
-const pordC = require("./controllers/productController");
+const pordC = require("./controllers/productController").products;
 const sringss = require("./utils/stringValidators");
 const user = require("./controllers/userController");
 const cartctrl = require("./controllers/cartController");
@@ -30,11 +30,12 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  const yy = await newProdTypeCt.removeValsFromAttributes(
+  /* const yy = await newProdTypeCt.removeValsFromAttributes(
     "laptops",
     "udeshXX",
     ["kkk", "pp"]
-  );
+  ); */
+  const yy = await pordC.filterRange([0, 100], "laptops", "price");
   /*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
    */
   console.log(yy);

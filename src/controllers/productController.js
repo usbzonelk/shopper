@@ -147,15 +147,26 @@ const products = {
     return outputMsg;
   },
 
-  filterRange: async function (range = [], slugType, property) {
+  filterRange: async function (range = [0, 0], slugType, property) {
     const outputMsg = {};
-    const selection = {};
+    const params = {};
 
-    selection[property] = { $gte: range[0], $lte: range[1] };
+    params[property] = { $gte: range[0], $lte: range[1] };
+
     try {
       filteredProducts = await productManager.getManyProducts(
-        { slugType: slugType },
-        selection
+        {
+          slugType: slugType,
+          ...params,
+        },
+        {
+          _id: 0,
+          __v: 0,
+          description: 0,
+          instock: 0,
+          warrantyMonths: 0,
+          photos: 0,
+        }
       );
 
       outputMsg.filteredProducts = filteredProducts;
@@ -170,6 +181,8 @@ const products = {
 
     return outputMsg;
   },
+
+  
 };
 
 const productTypes = {};
