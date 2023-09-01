@@ -274,6 +274,8 @@ const newProductManager = {
       return e;
     }
   },
+
+  
 };
 
 module.exports = {

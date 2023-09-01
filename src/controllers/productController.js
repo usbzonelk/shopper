@@ -182,6 +182,41 @@ const products = {
     return outputMsg;
   },
 
+  filterQualitative: async function (properties = [], slugType, property) {
+    const outputMsg = {};
+    const params = {};
+
+    params[property] = { $in: properties };
+
+    try {
+      filteredProducts = await productManager.getManyProducts(
+        {
+          slugType: slugType,
+          ...params,
+        },
+        {
+          _id: 0,
+          __v: 0,
+          description: 0,
+          instock: 0,
+          warrantyMonths: 0,
+          photos: 0,
+        }
+      );
+
+      outputMsg.filteredProducts = filteredProducts;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the products.";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
+
   editProduct: async function (slug, newProductInfo) {
     const outputMsg = {};
     let productInfo = null;
@@ -199,6 +234,39 @@ const products = {
       );
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the validity of slug.";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
+
+  searchProducts: async function (property, string) {
+    let searchedProducts = null;
+    const outputMsg = {};
+    const query = {};
+    query[property] = { $regex: `${string}`, $options: "i" };
+
+    try {
+      searchedProducts = await productManager.getManyProducts(
+        query,
+        (selection = {
+          title: 1,
+          slug: 1,
+          price: 1,
+          discount: 1,
+          instock: 1,
+          type: 1,
+          coverPhoto: 1,
+        })
+      );
+
+      outputMsg.products = searchedProducts;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the products";
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";

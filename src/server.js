@@ -35,7 +35,7 @@ const uu = async () => {
     "udeshXX",
     ["kkk", "pp"]
   ); */
-  const yy = await pordC.filterRange([0, 100], "laptops", "price");
+  const yy = await pordC.filterQualitative(["45"], "laptops", "title");
   /*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
    */
   console.log(yy);
