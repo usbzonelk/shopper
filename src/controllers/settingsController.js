@@ -51,6 +51,7 @@ const settings = {
 
     return outputMsg;
   },
+  
   getAllSettings: async function () {
     let savedSettings = null;
     const outputMsg = {};
@@ -70,6 +71,7 @@ const settings = {
 
     return outputMsg;
   },
+
   editSetting: async function (settingName, newValue) {
     let editedSettings = null;
     const outputMsg = {};

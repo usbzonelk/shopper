@@ -276,6 +276,8 @@ const products = {
 
     return outputMsg;
   },
+
+  
 };
 
 const productTypes = {};
