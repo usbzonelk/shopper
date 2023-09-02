@@ -10,6 +10,7 @@ const cartctrl = require("./controllers/cartController");
 const newProdType = require("./models/ProductTypes").productTypes;
 const newProdTypeCt =
   require("./controllers/productTypesController").productTypes;
+const mailss = require("./utils/mail/mailer");
 
 console.log("Server fired up!");
 
@@ -40,4 +41,5 @@ const uu = async () => {
    */
   console.log(yy);
 };
+mailss.mailSender(["bhashith.me@gmail.com"]);
 uu();
