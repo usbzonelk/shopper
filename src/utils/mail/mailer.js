@@ -38,6 +38,7 @@ const callbackReturnValues = {
 };
 const callbackReturn = () => {
   console.log(callbackReturnValues);
+  //Handle errors here
 };
 
 const callback = (error, data, response) => {
