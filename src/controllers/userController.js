@@ -24,7 +24,7 @@ const createTempUser = async (email, password) => {
   } catch (error) {
     outputMsg.success = false;
     outputMsg.message = "Error occured";
-    outputMsg.error = err.message;
+    outputMsg.error = error.message;
   }
   return outputMsg;
 };
@@ -383,6 +383,68 @@ const getUserID = async (email) => {
   return outputMsg;
 };
 
+const getVerificationCode = async (email) => {
+  const outputMsg = {};
+
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+
+  try {
+    const userInfo = await users.getUserInfoSelected(
+      { email: email },
+      { email: 1, verificationCode: 1, _id: 0 }
+    );
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    outputMsg.verificationCode = userInfo.verificationCode;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved verification code";
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
+
+const verifyUserAccount = async (email, verificationCode) => {
+  const outputMsg = {};
+
+  if (!validateMail(email)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+
+  try {
+    const userInfo = await users.getUserInfoSelected(
+      { email: email },
+      { email: 1, verificationCode: 1, _id: 0, status: 1 }
+    );
+    if (!userInfo) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    if (userInfo.status == "verified") {
+      return new Error((message = "Account is already verified"));
+    }
+    if (verificationCode !== userInfo.verificationCode) {
+      return new Error((message = "Invalid verification code"));
+    } else {
+      userVerified = await users.editOneUser(
+        { email: email },
+        { status: "verified" }
+      );
+    }
+    outputMsg.verifiedUser = userVerified.email;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully verified the user";
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
 module.exports = {
   createTempUser,
   verifyUserStatus,
@@ -396,4 +458,6 @@ module.exports = {
   emailValidator,
   getFullUserInfo,
   getUserID,
+  getVerificationCode,
+  verifyUserAccount,
 };

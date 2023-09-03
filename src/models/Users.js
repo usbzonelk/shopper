@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("../utils/bcrypt");
+const md5 = require("../utils/md5").hashMD5;
 
 const usersManager = {
   generatedUserModel: null,
@@ -19,7 +20,6 @@ const usersManager = {
       },
       fullName: {
         type: String,
-        required: true,
         trim: true,
       },
       address: {
@@ -40,6 +40,10 @@ const usersManager = {
       status: {
         type: String,
         required: true,
+        trim: true,
+      },
+      verificationCode: {
+        type: String,
         trim: true,
       },
       accessToken: { type: String, default: "" },
@@ -70,6 +74,16 @@ const usersManager = {
     const newUser = new User(userInfo);
 
     const savedUser = await newUser.save();
+
+    const docID = savedUser._id;
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email: email },
+      { verificationCode: md5(docID) },
+      {
+        new: true,
+      }
+    );
 
     return savedUser;
   },

@@ -36,10 +36,13 @@ const uu = async () => {
     "udeshXX",
     ["kkk", "pp"]
   ); */
-  const yy = await pordC.searchProducts("slug", "hash");
+  const yy = await user.verifyUserAccount(
+    "jkb@k.kl",
+    "25583b5c6555a049e38ef3b82c4033cb"
+  );
   /*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
    */
   console.log(yy);
 };
-mailss.mailSender(["bhashith.me@gmail.com"]);
+
 uu();
