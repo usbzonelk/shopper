@@ -277,7 +277,55 @@ const products = {
     return outputMsg;
   },
 
-  
+  getProductID: async function (slug) {
+    let searchedProduct = null;
+    const outputMsg = {};
+
+    try {
+      searchedProduct = await productManager.getOneProduct(
+        { slug: slug },
+        (selection = {
+          slug: 1,
+        })
+      );
+
+      outputMsg.productID = searchedProduct._id;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the product ID";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
+
+  getSlug: async function (productID) {
+    let searchedProduct = null;
+    const outputMsg = {};
+
+    try {
+      searchedProduct = await productManager.getOneProduct(
+        { _id: productID },
+        {
+          slug: 1,
+        }
+      );
+
+      outputMsg.slug = searchedProduct.slug;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the product slug";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
 };
 
 const productTypes = {};

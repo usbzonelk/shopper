@@ -141,6 +141,7 @@ const newProductManager = {
     availability: { type: String, default: "In stock" },
     slugType: { type: String, required: true, index: true },
   },
+  generatedProductModel: null,
 
   productSchema: function (schema) {
     const newSchema = new mongoose.Schema(schema);
@@ -148,7 +149,13 @@ const newProductManager = {
   },
 
   productModel: function (schema = this.newProductProperties) {
-    return mongoose.model("Product", this.productSchema(schema));
+    if (!this.generatedProductModel) {
+      this.generatedProductModel = mongoose.model(
+        "Product",
+        this.productSchema(schema)
+      );
+    }
+    return this.generatedProductModel;
   },
 
   saveNewProduct: async function (
@@ -200,11 +207,14 @@ const newProductManager = {
 
   getOneProduct: async function (
     params,
+    selection,
     schema = this.productModel.bind(newProductManager)
   ) {
     try {
       const productSchema = schema();
-      const getMatchedProduct = await productSchema.findOne(params);
+      const getMatchedProduct = await productSchema
+        .findOne(params)
+        .select(selection);
       return getMatchedProduct;
     } catch (e) {
       return e;
@@ -274,8 +284,6 @@ const newProductManager = {
       return e;
     }
   },
-
-  
 };
 
 module.exports = {
