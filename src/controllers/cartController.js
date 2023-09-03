@@ -20,10 +20,10 @@ const generateNewCart = async (email, products = []) => {
   }
 
   const cartSchema = await cartManager.cartModel.bind(cartManager);
-
   const isCartCreated = await cartManager.getOneCart(
     { userID: userID },
-    cartSchema
+    cartSchema,
+    { items: 1, addedAt: 1, _id: 0 }
   );
   if (!isCartCreated) {
     const newCart = await cartManager.createNewCart(
@@ -31,6 +31,7 @@ const generateNewCart = async (email, products = []) => {
       products,
       cartSchema
     );
+
     outputMsg.success = true;
     outputMsg.message = "Successfully created the cart";
     outputMsg.cart = newCart;
@@ -56,7 +57,7 @@ const addItemsToCart = async (email, products) => {
     }
 
     addItem = await cartManager.addProductsToCart(
-      userDetails._id,
+      userDetails.userID,
       products,
       cartSchema
     );
@@ -83,7 +84,7 @@ const removeItems = async (email, removedProducts) => {
     userDetails = await userController.getUserID(email);
 
     removedItem = await cartManager.removeItemsFromCart(
-      userDetails._id,
+      userDetails.userID,
       removedProducts,
       cartSchema
     );
@@ -109,7 +110,7 @@ const changeQty = async (email, item, newQty) => {
   try {
     userDetails = await userController.getUserID(email);
     changedQty = await cartManager.changeQty(
-      userDetails._id,
+      userDetails.userID,
       item,
       newQty,
       cartSchema
@@ -136,7 +137,7 @@ const isInTheCart = async (email, item) => {
   try {
     userDetails = await userController.getUserID(email);
     isInTheCart = await cartManager.isInTheCart(
-      userDetails._id,
+      userDetails.userID,
       item,
       cartSchema
     );

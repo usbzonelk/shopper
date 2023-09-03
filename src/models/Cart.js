@@ -75,10 +75,13 @@ const cartManager = {
     return savedCart;
   },
 
-  getAllCarts: async function (schema = this.cartModel.bind(cartManager)) {
+  getAllCarts: async function (
+    schema = this.cartModel.bind(cartManager),
+    selection
+  ) {
     try {
       const cartSchema = schema();
-      const allCarts = await cartSchema.find({});
+      const allCarts = await cartSchema.find({}).select(selection);
       return allCarts;
     } catch (err) {
       return err;
@@ -87,32 +90,37 @@ const cartManager = {
 
   getOneCart: async function (
     params,
-    schema = this.cartModel.bind(cartManager)
+    schema = this.cartModel.bind(cartManager),
+    selection
   ) {
     const cartSchema = schema();
-    const getMatchedCart = await cartSchema.findOne(params);
+    const getMatchedCart = await cartSchema.findOne(params).select(selection);
     return getMatchedCart;
   },
 
   getManyCarts: async function (
     params,
-    schema = this.cartModel.bind(cartManager)
+    schema = this.cartModel.bind(cartManager),
+    selection
   ) {
     const cartSchema = schema();
-    const getMatchedCarts = await cartSchema.findOne(params);
+    const getMatchedCarts = await cartSchema.findOne(params).select(selection);
     return getMatchedCarts;
   },
 
   isInTheCart: async function (
     userID,
     itemToFind,
-    schema = this.cartModel.bind(cartManager)
+    schema = this.cartModel.bind(cartManager),
+    selection
   ) {
     const cartSchema = schema();
-    const isInTheCart = await cartSchema.findOne({
-      userID: userID,
-      "items.product.slug": itemToFind,
-    });
+    const isInTheCart = await cartSchema
+      .findOne({
+        userID: userID,
+        "items.product.slug": itemToFind,
+      })
+      .select(selection);
     return isInTheCart ? true : false;
   },
 

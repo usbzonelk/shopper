@@ -359,6 +359,7 @@ const getFullUserInfo = async (email) => {
 
 const getUserID = async (email) => {
   const outputMsg = {};
+  const userMail = email;
 
   if (!validateMail(email)) {
     return new Error((message = "Entered Email Address is invalid"));
@@ -366,8 +367,8 @@ const getUserID = async (email) => {
 
   try {
     const userInfo = await users.getUserInfoSelected(
-      { email: email },
-      { email: 1 }
+      { email: userMail },
+      { email: 1, _id: 1 }
     );
     if (!userInfo) {
       return new Error((message = "Account doesn't exist"));
@@ -445,6 +446,7 @@ const verifyUserAccount = async (email, verificationCode) => {
   }
   return outputMsg;
 };
+
 module.exports = {
   createTempUser,
   verifyUserStatus,
