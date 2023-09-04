@@ -38,6 +38,8 @@ const uu = async () => {
   ); */
   const yy = await cartctrl.generateNewCart("jkb@k.kl", [
     { product: { slug: "656565kk" } },
+    { product: { slug: "hash_node_op" }, quantity: 45 },
+    { product: { slug: "hash_node_op" }, quantity: 45 },
   ]);
 
   console.log(yy);

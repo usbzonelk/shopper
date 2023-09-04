@@ -25,9 +25,8 @@ const cartManager = {
             },
             title: {
               type: String,
-              required: true,
             },
-            photo: { type: String, required: true },
+            photo: { type: String },
           },
           quantity: {
             type: Number,
@@ -53,15 +52,6 @@ const cartManager = {
     return this.cartModelGenerated;
   },
 
-  generateNewItem: async function (product, qty, discount) {
-    const itemInfo = {
-      product: product,
-      quantity: qty,
-      discount: discount,
-    };
-    return itemInfo;
-  },
-
   createNewCart: async function (
     userID,
     products,
@@ -74,10 +64,14 @@ const cartManager = {
     };
     const Cart = schema(newCartDetails);
 
-    const newCart = new Cart(newCartDetails);
-
-    const savedCart = await newCart.save();
-
+    const savedCart = await Cart.findOneAndUpdate(
+      { userID: userID },
+      newCartDetails,
+      {
+        new: true,
+        upsert: true,
+      }
+    );
     return savedCart;
   },
 

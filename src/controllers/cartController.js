@@ -28,30 +28,23 @@ const generateNewCart = async (email, products = []) => {
     );
 
     userAddedProducts.forEach((productInfo, idx) => {
+      if (productIDs.productIDs[idx]) {
+        return new Error((message = "Invalid slug!"));
+      }
       productInfo.product.productID = productIDs.productIDs[idx];
     });
-    const cartSchema = await cartManager.cartModel.bind(cartManager);
-    const isCartCreated = await cartManager.getOneCart(
-      { userID: userID },
-      cartSchema,
-      { items: 1, addedAt: 1, _id: 0 }
-    );
-    console.log(isCartCreated);
-    if (!isCartCreated) {
-      const newCart = await cartManager.createNewCart(
-        userID,
-        userAddedProducts,
-        cartSchema
-      );
 
-      outputMsg.success = true;
-      outputMsg.message = "Successfully created the cart";
-      outputMsg.cart = newCart;
-    } else {
-      outputMsg.success = true;
-      outputMsg.message = "Successfully retrieved the cart";
-      outputMsg.cart = isCartCreated;
-    }
+    const cartSchema = await cartManager.cartModel.bind(cartManager);
+
+    const newCart = await cartManager.createNewCart(
+      userID,
+      userAddedProducts,
+      cartSchema
+    );
+
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved the cart";
+    outputMsg.cart = newCart;
   } catch (error) {
     return error;
   }
@@ -59,23 +52,38 @@ const generateNewCart = async (email, products = []) => {
 };
 
 const addItemsToCart = async (email, products) => {
-  let userDetails = null;
-
-  const cartSchema = await cartManager.cartModel.bind(cartManager);
-  let addItem = null;
+  const userAddedSlugs = [];
+  const userAddedProducts = [...products];
   const outputMsg = {};
+
+  products.forEach((productInfo) => {
+    userAddedSlugs.push(productInfo.product.slug);
+  });
+
+  let userDetails;
 
   try {
     userDetails = await userController.getUserID(email);
     if (!userDetails) {
       return new Error((message = "Invalid Email"));
     }
+    const cartSchema = await cartManager.cartModel.bind(cartManager);
+
+    const productIDs = await productController.products.getProductIDs(
+      userAddedSlugs
+    );
+
+    userAddedProducts.forEach((productInfo, idx) => {
+      productInfo.product.productID = productIDs.productIDs[idx];
+    });
+    let addItem;
 
     addItem = await cartManager.addProductsToCart(
       userDetails.userID,
-      products,
+      userAddedProducts,
       cartSchema
     );
+
     outputMsg.cart = addItem;
     outputMsg.success = true;
     outputMsg.message = "Successfully updated the cart";
