@@ -36,7 +36,7 @@ const uu = async () => {
     "udeshXX",
     ["kkk", "pp"]
   ); */
-  const yy = await cartctrl.generateNewCart("jkb@k.0kl", [
+  const yy = await cartctrl.generateNewCart("jkb@k.kl", [
     { product: { slug: "656565kk" } },
   ]);
 
