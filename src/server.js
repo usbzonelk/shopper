@@ -42,7 +42,7 @@ const uu = async () => {
     { product: { slug: "hash_node_op" }, quantity: 45 },
   ]);
 
-  console.log(yy);
+  console.log(yy.cart.items);
 };
 
 uu();

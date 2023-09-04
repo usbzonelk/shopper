@@ -19,7 +19,6 @@ const cartManager = {
             productID: {
               required: true,
               index: true,
-              unique: true,
               type: mongoose.Schema.Types.ObjectId,
               ref: "products",
             },
@@ -55,6 +54,7 @@ const cartManager = {
   createNewCart: async function (
     userID,
     products,
+    selection,
     schema = this.cartModel.bind(cartManager)
   ) {
     const newCartDetails = {
@@ -62,8 +62,7 @@ const cartManager = {
       items: products,
       addedAt: new Date(),
     };
-    const Cart = schema(newCartDetails);
-
+    const Cart = schema();
     const savedCart = await Cart.findOneAndUpdate(
       { userID: userID },
       newCartDetails,
@@ -71,7 +70,7 @@ const cartManager = {
         new: true,
         upsert: true,
       }
-    );
+    ).select(selection);
     return savedCart;
   },
 

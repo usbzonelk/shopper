@@ -28,17 +28,17 @@ const generateNewCart = async (email, products = []) => {
     );
 
     userAddedProducts.forEach((productInfo, idx) => {
-      if (productIDs.productIDs[idx]) {
+      if (!productIDs.productIDs[idx]) {
         return new Error((message = "Invalid slug!"));
       }
       productInfo.product.productID = productIDs.productIDs[idx];
     });
-
     const cartSchema = await cartManager.cartModel.bind(cartManager);
 
     const newCart = await cartManager.createNewCart(
       userID,
       userAddedProducts,
+      { _id: 0, userID: 0 },
       cartSchema
     );
 
