@@ -1,44 +1,57 @@
 const Cart = require("../models/Cart");
 const cartManager = Cart.cartManager;
 const userController = require("./userController");
+const productController = require("./productController");
 
 const generateNewCart = async (email, products = []) => {
+  const userAddedSlugs = [];
+  const userAddedProducts = [...products];
+
+  products.forEach((productInfo) => {
+    userAddedSlugs.push(productInfo.product.slug);
+  });
+
   const outputMsg = {};
-  let emailValidity = false;
   let userID = null;
-  let userDetails = null;
+  let userDetails;
   try {
-    userDetails = await userController.getUserID(email);
-    userID = userDetails.userID;
-    if (userID) {
-      emailValidity = true;
+    userDetails = await userController.getUserID(email).then((respose) => {
+      if (!respose.userID) {
+        return new Error((message = "Invalid Email"));
+      }
+    });
+
+    const productIDs = await productController.products.getProductIDs(
+      userAddedSlugs
+    );
+
+    userAddedProducts.forEach((productInfo, idx) => {
+      productInfo.product.productID = productIDs.productIDs[idx];
+    });
+    const cartSchema = await cartManager.cartModel.bind(cartManager);
+    const isCartCreated = await cartManager.getOneCart(
+      { userID: userID },
+      cartSchema,
+      { items: 1, addedAt: 1, _id: 0 }
+    );
+    console.log(isCartCreated);
+    if (!isCartCreated) {
+      const newCart = await cartManager.createNewCart(
+        userID,
+        userAddedProducts,
+        cartSchema
+      );
+
+      outputMsg.success = true;
+      outputMsg.message = "Successfully created the cart";
+      outputMsg.cart = newCart;
     } else {
-      return new Error((message = "Invalid Email"));
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the cart";
+      outputMsg.cart = isCartCreated;
     }
   } catch (error) {
     return error.message;
-  }
-
-  const cartSchema = await cartManager.cartModel.bind(cartManager);
-  const isCartCreated = await cartManager.getOneCart(
-    { userID: userID },
-    cartSchema,
-    { items: 1, addedAt: 1, _id: 0 }
-  );
-  if (!isCartCreated) {
-    const newCart = await cartManager.createNewCart(
-      userID,
-      products,
-      cartSchema
-    );
-
-    outputMsg.success = true;
-    outputMsg.message = "Successfully created the cart";
-    outputMsg.cart = newCart;
-  } else {
-    outputMsg.success = true;
-    outputMsg.message = "Successfully retrieved the cart";
-    outputMsg.cart = isCartCreated;
   }
   return outputMsg;
 };

@@ -277,21 +277,25 @@ const products = {
     return outputMsg;
   },
 
-  getProductID: async function (slug) {
-    let searchedProduct = null;
+  getProductIDs: async function (slugs = []) {
+    let searchedSlugs = [];
     const outputMsg = {};
 
     try {
-      searchedProduct = await productManager.getOneProduct(
-        { slug: slug },
+      searchedSlugs = await productManager.getManyProducts(
+        { slug: { $in: slugs } },
         (selection = {
           slug: 1,
         })
       );
+      const productIDs = [];
+      searchedSlugs.forEach((productID) => {
+        productIDs.push(productID._id);
+      });
 
-      outputMsg.productID = searchedProduct._id;
+      outputMsg.productIDs = productIDs;
       outputMsg.success = true;
-      outputMsg.message = "Successfully retrieved the product ID";
+      outputMsg.message = "Successfully retrieved the product IDs";
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";
@@ -302,21 +306,27 @@ const products = {
     return outputMsg;
   },
 
-  getSlug: async function (productID) {
-    let searchedProduct = null;
+  getSlugs: async function (productIDs = []) {
+    let searchedProducts;
     const outputMsg = {};
 
     try {
-      searchedProduct = await productManager.getOneProduct(
-        { _id: productID },
+      searchedProducts = await productManager.getManyProducts(
+        { _id: { $in: productIDs } },
         {
           slug: 1,
+          _id: 0,
         }
       );
+      const allSlugs = [];
 
-      outputMsg.slug = searchedProduct.slug;
+      searchedProducts.forEach((product) => {
+        allSlugs.push(product.slug);
+      });
+
+      outputMsg.slugs = allSlugs;
       outputMsg.success = true;
-      outputMsg.message = "Successfully retrieved the product slug";
+      outputMsg.message = "Successfully retrieved the product slugs";
     } catch (err) {
       outputMsg.success = false;
       outputMsg.message = "Error occured";

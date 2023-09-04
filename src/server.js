@@ -36,11 +36,11 @@ const uu = async () => {
     "udeshXX",
     ["kkk", "pp"]
   ); */
-  const yy = await pordC.getProductID("hash0_node_op");
-  /*   const yy = await newProdTypeCt.saveNewProductType("ummdh")
-   */
-  const uuy = await pordC.getSlug(yy.productID);
-  console.log(uuy);
+  const yy = await cartctrl.generateNewCart("jkb@k.0kl", [
+    { product: { slug: "656565kk" } },
+  ]);
+
+  console.log(yy);
 };
 
 uu();

@@ -16,7 +16,13 @@ const cartManager = {
       items: [
         {
           product: {
-            slug: { type: String, required: true },
+            productID: {
+              required: true,
+              index: true,
+              unique: true,
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "products",
+            },
             title: {
               type: String,
               required: true,
