@@ -35,16 +35,26 @@ const generateNewCart = async (email, products = []) => {
     });
     const cartSchema = await cartManager.cartModel.bind(cartManager);
 
-    const newCart = await cartManager.createNewCart(
+    const isCartCreated = await cartManager.getOneCart({ userID: userID });
+
+    if (!isCartCreated) {
+      const createdCart = await cartManager.createNewCart(
+        userID,
+        [],
+        { _id: 0, userID: 0 },
+        cartSchema
+      );
+    }
+    const cartAdded = await cartManager.addProductsToCart(
       userID,
       userAddedProducts,
-      { _id: 0, userID: 0 },
-      cartSchema
+      cartSchema,
+      { _id: 0, userID: 0 }
     );
 
     outputMsg.success = true;
     outputMsg.message = "Successfully retrieved the cart";
-    outputMsg.cart = newCart;
+    outputMsg.cart = cartAdded;
   } catch (error) {
     return error;
   }

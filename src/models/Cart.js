@@ -126,32 +126,29 @@ const cartManager = {
   addProductsToCart: async function (
     userID,
     newItems,
-    schema = this.cartModel.bind(cartManager)
+    schema = this.cartModel.bind(cartManager),
+    selection
   ) {
     const cartSchema = schema();
 
     let updatedCart = newItems.forEach(async (item) => {
-      await cartSchema.findOneAndUpdate(
-        { userID: userID, "items.product.slug": item.product.slug },
+      const yyy = await cartSchema.findOneAndUpdate(
+        { userID: userID, "items.product.productID": item.product.productID },
         { $inc: { "items.$.quantity": item.quantity } }
       );
+      if (!yyy) {
+        await cartSchema.findOneAndUpdate(
+          { userID: userID },
+          { $push: { items: item } }
+        );
+      }
     });
-
-    let addedCart = await cartSchema.findOneAndUpdate(
-      { userID: userID },
-      { $addToSet: { items: { $each: newItems } } },
-      { new: true }
-    );
 
     if (updatedCart) {
       updatedCart = updatedCart._doc;
     }
 
-    if (addedCart) {
-      addedCart = addedCart._doc;
-    }
-
-    return { ...updatedCart, ...addedCart };
+    return { ...updatedCart };
   },
 
   removeItemsFromCart: async function (
