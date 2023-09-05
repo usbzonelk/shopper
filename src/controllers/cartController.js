@@ -72,7 +72,7 @@ const addItemsToCart = async (email, products) => {
   const userAddedSlugs = [];
   const userAddedProducts = [...products];
   const outputMsg = {};
-
+  let userID;
   products.forEach((productInfo) => {
     userAddedSlugs.push(productInfo.product.slug);
   });
@@ -81,8 +81,13 @@ const addItemsToCart = async (email, products) => {
 
   try {
     userDetails = await userController.getUserID(email);
-    if (!userDetails) {
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
       return new Error((message = "Invalid Email"));
+    } else {
+      userID = userDetails.userID;
     }
     const cartSchema = await cartManager.cartModel.bind(cartManager);
 
@@ -91,6 +96,9 @@ const addItemsToCart = async (email, products) => {
     );
 
     userAddedProducts.forEach((productInfo, idx) => {
+      if (!productIDs.productIDs[idx]) {
+        return new Error((message = "Invalid slug!"));
+      }
       productInfo.product.productID = productIDs.productIDs[idx];
     });
     let addItem;
@@ -114,20 +122,44 @@ const addItemsToCart = async (email, products) => {
 };
 
 const removeItems = async (email, removedProducts) => {
-  let userDetails = null;
+  const userAddedSlugs = [];
+  let userID;
 
+  removedProducts.forEach((productInfo) => {
+    userAddedSlugs.push(productInfo);
+  });
+
+  let userDetails;
   const cartSchema = await cartManager.cartModel.bind(cartManager);
-  let removedItem = null;
+  let removedItem;
   const outputMsg = {};
 
   try {
     userDetails = await userController.getUserID(email);
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
+      return new Error((message = "Invalid Email"));
+    } else {
+      userID = userDetails.userID;
+    }
+
+    const productIDsToBeRemoved =
+      await productController.products.getProductIDs(userAddedSlugs);
+
+    if (!productIDsToBeRemoved.productIDs) {
+      if (productIDsToBeRemoved.error) {
+        return productIDsToBeRemoved.error;
+      }
+    }
 
     removedItem = await cartManager.removeItemsFromCart(
       userDetails.userID,
-      removedProducts,
+      productIDsToBeRemoved.productIDs,
       cartSchema
     );
+
     outputMsg.cart = removedItem;
     outputMsg.success = true;
     outputMsg.message = "Successfully updated the cart";
@@ -143,18 +175,45 @@ const removeItems = async (email, removedProducts) => {
 const changeQty = async (email, item, newQty) => {
   let userDetails = null;
 
+  const itemsToUpdate = [];
+  itemsToUpdate.push(item);
+
   const cartSchema = await cartManager.cartModel.bind(cartManager);
   let changedQty = null;
   const outputMsg = {};
 
   try {
+    if (newQty < 1) {
+      throw new Error((message = "Quantity must be exceeding 0!"));
+    }
+
     userDetails = await userController.getUserID(email);
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
+      return new Error((message = "Invalid email"));
+    }
+    const productIDsToBeUpdated =
+      await productController.products.getProductIDs(itemsToUpdate);
+
+    if (!productIDsToBeUpdated.productIDs) {
+      if (productIDsToBeUpdated.error) {
+        return productIDsToBeUpdated.error;
+      }
+    }
+
     changedQty = await cartManager.changeQty(
       userDetails.userID,
-      item,
+      productIDsToBeUpdated.productIDs[0],
       newQty,
       cartSchema
     );
+
+    if (changedQty.error) {
+      return changedQty.error;
+    }
+
     outputMsg.cart = changedQty;
     outputMsg.success = true;
     outputMsg.message = "Successfully updated the cart";
@@ -162,6 +221,7 @@ const changeQty = async (email, item, newQty) => {
     outputMsg.success = false;
     outputMsg.message = "Error occured";
     outputMsg.error = err.message;
+    throw err;
   }
 
   return outputMsg;
@@ -170,15 +230,34 @@ const changeQty = async (email, item, newQty) => {
 const isInTheCart = async (email, item) => {
   let userDetails = null;
 
+  const itemsToCheck = [];
+  itemsToCheck.push(item);
+
   const cartSchema = await cartManager.cartModel.bind(cartManager);
   let isInTheCart = null;
   const outputMsg = {};
 
   try {
     userDetails = await userController.getUserID(email);
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
+      return new Error((message = "Invalid email"));
+    }
+
+    const productIDsToBeChecked =
+      await productController.products.getProductIDs(itemsToCheck);
+
+    if (!productIDsToBeChecked.productIDs) {
+      if (productIDsToBeChecked.error) {
+        return productIDsToBeChecked.error;
+      }
+    }
+
     isInTheCart = await cartManager.isInTheCart(
       userDetails.userID,
-      item,
+      productIDsToBeChecked.productIDs[0],
       cartSchema
     );
     outputMsg.isInTheCart = isInTheCart;
@@ -188,6 +267,7 @@ const isInTheCart = async (email, item) => {
     outputMsg.success = false;
     outputMsg.message = "Error occured";
     outputMsg.error = err.message;
+    throw err;
   }
 
   return outputMsg;

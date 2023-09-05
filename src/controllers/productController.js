@@ -289,7 +289,10 @@ const products = {
         })
       );
       const productIDs = [];
-      searchedSlugs.forEach((productID) => {
+      searchedSlugs.forEach((productID, idx) => {
+        if (!productID._id) {
+          throw new Error((message = `Invalid slug ${slugs[idx]}`));
+        }
         productIDs.push(productID._id);
       });
 

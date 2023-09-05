@@ -110,16 +110,14 @@ const cartManager = {
   isInTheCart: async function (
     userID,
     itemToFind,
-    schema = this.cartModel.bind(cartManager),
-    selection
+    schema = this.cartModel.bind(cartManager)
   ) {
     const cartSchema = schema();
-    const isInTheCart = await cartSchema
-      .findOne({
-        userID: userID,
-        "items.product.slug": itemToFind,
-      })
-      .select(selection);
+    const isInTheCart = await cartSchema.findOne({
+      userID: userID,
+      "items.product.productID": itemToFind,
+    });
+
     return isInTheCart ? true : false;
   },
 
@@ -153,9 +151,9 @@ const cartManager = {
     schema = this.cartModel.bind(cartManager)
   ) {
     const cartSchema = schema();
-    const updatedCart = await cartSchema.updateOne(
+    const updatedCart = await cartSchema.findOneAndUpdate(
       { userID: userID },
-      { $pull: { items: { "product.slug": { $in: itemsToRemove } } } },
+      { $pull: { items: { "product.productID": { $in: itemsToRemove } } } },
       { new: true }
     );
     return updatedCart;
@@ -169,7 +167,7 @@ const cartManager = {
   ) {
     const cartSchema = schema();
     const updatedCart = await cartSchema.findOneAndUpdate(
-      { userID: userID, "items.product.slug": itemToFind },
+      { userID: userID, "items.product.productID": itemToFind },
       { $set: { "items.$.quantity": changedQty } },
       { new: true }
     );
