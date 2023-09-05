@@ -1,23 +1,33 @@
+const express = require("express");
+const graphQLServer = require("./graphql/graphqlServer");
+const cors = require("cors");
+const { json } = require("body-parser");
+
 const connectToDatabase = require("./config/database");
-const carty = require("./models/Cart");
-const sett = require("./controllers/settingsController");
-const set1 = require("./models/Settings");
-const prod = require("./models/Product");
-const pordC = require("./controllers/productController").products;
-const sringss = require("./utils/stringValidators");
-const user = require("./controllers/userController");
-const cartctrl = require("./controllers/cartController");
-const newProdType = require("./models/ProductTypes").productTypes;
-const newProdTypeCt =
-  require("./controllers/productTypesController").productTypes;
-const mailss = require("./utils/mail/mailer");
+const app = express();
 
-console.log("Server fired up!");
+const startServer = async () => {
+  await graphQLServer.server.start();
 
+  app.use("/expressOnly", (req, res) => {
+    res.send("Hello from my custom endpoint!");
+  });
+
+  app.use(
+    "/gq",
+    cors(),
+    json(),
+    graphQLServer.expressMiddleware(graphQLServer.server)
+  );
+
+  app.listen(12345, () => {
+    console.log(`Server fired up!`);
+  });
+};
 connectToDatabase();
+startServer();
 
-const uu = async () => {
-  /* const yy = await pordC.products.saveNewProduct("dvdv", {
+/* const yy = await pordC.products.saveNewProduct("dvdv", {
     title: "454",
     slug: "hash0_node_op",
     price: 34,
@@ -31,13 +41,10 @@ const uu = async () => {
     bfbfb: "444",
   });
   console.log(yy); */
-  /* const yy = await newProdTypeCt.removeValsFromAttributes(
+/* const yy = await newProdTypeCt.removeValsFromAttributes(
     "laptops",
     "udeshXX",
     ["kkk", "pp"]
   ); */
-  /* const yy = await cartctrl.renderTheCart("jkb@k.kl");
+/* const yy = await cartctrl.renderTheCart("jkb@k.kl");
   console.log(yy.cart); */
-};
-
-uu();
