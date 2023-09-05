@@ -337,7 +337,7 @@ const renderTheCart = async (email) => {
       if (!productsInSlugs.slugs[idx]) {
         throw new Error((message = "Invalid slug!"));
       }
-      fullCartItems[idx].product.slug = productsInSlugs.slugs[idx].slug;
+      fullCartItems[idx].product.slug = productsInSlugs.slugs[idx];
     });
 
     outputMsg.cart = fullCartItems;
