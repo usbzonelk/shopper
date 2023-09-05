@@ -12,9 +12,13 @@ const products = {
       let productType = await productTypeManager.getOneProductType({
         slugtype: productTypeName,
       });
+
       let productTypeAttributes = null;
 
       if (productType) {
+        if (productType.error) {
+          throw productType.error;
+        }
         productTypeAttributes = productType.fields;
       } else {
         return new Error((message = "Invalid Product type"));
@@ -24,7 +28,9 @@ const products = {
         productTypeAttributes,
         productDetails
       );
-
+      if (savedProduct.error) {
+        return new Error(savedProduct.error);
+      }
       outputMsg.product = savedProduct;
       outputMsg.success = true;
       outputMsg.message = "Successfully saved the product";
@@ -47,7 +53,9 @@ const products = {
       if (!productInfo) {
         return new Error((message = "Invalid slug"));
       }
-
+      if (productInfo.error) {
+        return new Error(productInfo.error);
+      }
       outputMsg.product = productInfo;
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the product";
@@ -77,7 +85,9 @@ const products = {
           coverPhoto: 1,
         })
       );
-
+      if (productInfo.error) {
+        throw productInfo.error;
+      }
       outputMsg.products = productInfo;
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the products";
@@ -108,7 +118,9 @@ const products = {
           coverPhoto: 1,
         })
       );
-
+      if (products.error) {
+        throw products.error;
+      }
       outputMsg.products = products;
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the product summeries";
@@ -132,6 +144,9 @@ const products = {
       if (!productInfo) {
         outputMsg.valid = false;
       } else {
+        if (productInfo.error) {
+          throw new Error(productInfo.error);
+        }
         outputMsg.valid = true;
       }
 
@@ -182,11 +197,11 @@ const products = {
     return outputMsg;
   },
 
-  filterQualitative: async function (properties = [], slugType, property) {
+  filterQualitative: async function (values = [], slugType, property) {
     const outputMsg = {};
     const params = {};
 
-    params[property] = { $in: properties };
+    params[property] = { $in: values };
 
     try {
       filteredProducts = await productManager.getManyProducts(
@@ -326,7 +341,9 @@ const products = {
       searchedProducts.forEach((product) => {
         allSlugs.push(product.slug);
       });
-
+      if (searchedProducts.error) {
+        throw new Error(searchedProducts.error);
+      }
       outputMsg.slugs = allSlugs;
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the product slugs";
