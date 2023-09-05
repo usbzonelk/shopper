@@ -29,12 +29,23 @@ const generateNewCart = async (email, products = []) => {
       userAddedSlugs
     );
 
+    const productsInfo =
+      await productController.products.getSomeProductsSummary(
+        "_id",
+        productIDs.productIDs
+      );
+    if (productsInfo.error) {
+      return productsInfo.error;
+    }
     userAddedProducts.forEach((productInfo, idx) => {
       if (!productIDs.productIDs[idx]) {
         return new Error((message = "Invalid slug!"));
       }
       productInfo.product.productID = productIDs.productIDs[idx];
+      productInfo.price = productsInfo.products[idx].price;
+      productInfo.discount = productsInfo.products[idx].discount;
     });
+
     const cartSchema = await cartManager.cartModel.bind(cartManager);
 
     const isCartCreated = await cartManager.getOneCart({ userID: userID });
@@ -95,11 +106,22 @@ const addItemsToCart = async (email, products) => {
       userAddedSlugs
     );
 
+    const productsInfo =
+      await productController.products.getSomeProductsSummary(
+        "_id",
+        productIDs.productIDs
+      );
+    if (productsInfo.error) {
+      return productsInfo.error;
+    }
+
     userAddedProducts.forEach((productInfo, idx) => {
       if (!productIDs.productIDs[idx]) {
         return new Error((message = "Invalid slug!"));
       }
       productInfo.product.productID = productIDs.productIDs[idx];
+      productInfo.price = productsInfo.products[idx].price;
+      productInfo.discount = productsInfo.products[idx].discount;
     });
     let addItem;
 
@@ -273,10 +295,65 @@ const isInTheCart = async (email, item) => {
   return outputMsg;
 };
 
+const renderTheCart = async (email) => {
+  const outputMsg = {};
+  const cartSchema = await cartManager.cartModel.bind(cartManager);
+
+  let userID;
+  try {
+    let userDetails = await userController.getUserID(email);
+
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
+      return new Error((message = "Invalid Email"));
+    } else {
+      userID = userDetails.userID;
+    }
+
+    const getTheFullCart = await cartManager.getOneCart(
+      { userID: userID },
+      cartSchema,
+      { _id: 0, userID: 0 }
+    );
+
+    const cartItemsIDs = [];
+    const fullCartItems = [...getTheFullCart.items];
+
+    getTheFullCart.items.forEach((item) => {
+      cartItemsIDs.push(item.product.productID._id);
+    });
+
+    const productsInSlugs = await productController.products.getSlugs(
+      cartItemsIDs
+    );
+
+    if (productsInSlugs.error) {
+      return productsInfo.error;
+    }
+    fullCartItems.forEach((productInfo, idx) => {
+      console.log(productInfo);
+      if (!productsInSlugs.slugs[idx]) {
+        throw new Error((message = "Invalid slug!"));
+      }
+      fullCartItems[idx].product.slug = productsInSlugs.slugs[idx].slug;
+    });
+
+    outputMsg.cart = fullCartItems;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved the cart";
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
+
 module.exports = {
   generateNewCart,
   addItemsToCart,
   removeItems,
   changeQty,
   isInTheCart,
+  renderTheCart,
 };

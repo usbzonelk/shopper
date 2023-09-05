@@ -26,6 +26,7 @@ const cartManager = {
               type: String,
             },
             photo: { type: String },
+            price: { type: Number },
           },
           quantity: {
             type: Number,

@@ -238,6 +238,27 @@ const newProductManager = {
     }
   },
 
+  getManyProductsFromAnArray: async function (
+    property,
+    values = [],
+    selection,
+    schema = this.productModel.bind(newProductManager)
+  ) {
+    const query = {};
+    query[property] = { $in: values };
+
+    try {
+      const productSchema = schema();
+      let getMatchedProducts = null;
+
+      getMatchedProducts = await productSchema.find(query).select(selection);
+
+      return getMatchedProducts;
+    } catch (e) {
+      return e;
+    }
+  },
+
   editOneProduct: async function (
     searchProduct,
     newProductInfo,

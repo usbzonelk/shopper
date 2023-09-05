@@ -134,6 +134,40 @@ const products = {
     return outputMsg;
   },
 
+  getSomeProductsSummary: async function (property, params) {
+    let products = null;
+    const outputMsg = {};
+
+    try {
+      products = await productManager.getManyProductsFromAnArray(
+        property,
+        params,
+        (selection = {
+          title: 1,
+          slug: 1,
+          price: 1,
+          discount: 1,
+          instock: 1,
+          type: 1,
+          coverPhoto: 1,
+        })
+      );
+      if (products.error) {
+        throw products.error;
+      }
+      outputMsg.products = products;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the product summeries";
+    } catch (err) {
+      outputMsg.success = false;
+      outputMsg.message = "Error occured";
+      outputMsg.error = err.message;
+      return outputMsg;
+    }
+
+    return outputMsg;
+  },
+
   slugCheck: async function (slug) {
     let productInfo = null;
     const outputMsg = {};
@@ -327,7 +361,6 @@ const products = {
   getSlugs: async function (productIDs = []) {
     let searchedProducts;
     const outputMsg = {};
-
     try {
       searchedProducts = await productManager.getManyProducts(
         { _id: { $in: productIDs } },
@@ -337,7 +370,6 @@ const products = {
         }
       );
       const allSlugs = [];
-
       searchedProducts.forEach((product) => {
         allSlugs.push(product.slug);
       });

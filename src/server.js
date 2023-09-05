@@ -36,8 +36,8 @@ const uu = async () => {
     "udeshXX",
     ["kkk", "pp"]
   ); */
-  const yy = await cartctrl.removeItems("jkb@k.kl", ["hash_node_op", null]);
-  console.log(yy);
+  const yy = await cartctrl.renderTheCart("jkb@k.kl");
+  console.log(yy.cart);
 };
 
 uu();

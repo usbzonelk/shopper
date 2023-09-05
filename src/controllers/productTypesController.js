@@ -45,7 +45,9 @@ const productTypes = {
         });
       let productTypeAttributes = {};
       if (productTypeExists) {
-        console.log(productTypeExists);
+        if (productTypeExists.error) {
+          throw new Error(productTypeExists.error);
+        }
         return new Error((message = "Product type already exists"));
       }
 
