@@ -12,12 +12,14 @@ const generateNewCart = async (email, products = []) => {
   });
 
   const outputMsg = {};
-  let userID = false;
-  let userDetails;
+  let userID;
   try {
-    userDetails = await userController.getUserID(email);
+    let userDetails = await userController.getUserID(email);
 
     if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
       return new Error((message = "Invalid Email"));
     } else {
       userID = userDetails.userID;
@@ -45,18 +47,23 @@ const generateNewCart = async (email, products = []) => {
         cartSchema
       );
     }
+
     const cartAdded = await cartManager.addProductsToCart(
       userID,
       userAddedProducts,
       cartSchema,
       { _id: 0, userID: 0 }
     );
-
+    const cartInfo = await cartManager.getOneCart(
+      { userID: userID },
+      cartSchema,
+      { _id: 0, userID: 0 }
+    );
+    outputMsg.cart = cartInfo;
     outputMsg.success = true;
     outputMsg.message = "Successfully retrieved the cart";
-    outputMsg.cart = cartAdded;
   } catch (error) {
-    return error;
+    throw error;
   }
   return outputMsg;
 };

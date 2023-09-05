@@ -103,7 +103,7 @@ const cartManager = {
     selection
   ) {
     const cartSchema = schema();
-    const getMatchedCarts = await cartSchema.findOne(params).select(selection);
+    const getMatchedCarts = await cartSchema.find(params).select(selection);
     return getMatchedCarts;
   },
 
@@ -144,11 +144,7 @@ const cartManager = {
       }
     });
 
-    if (updatedCart) {
-      updatedCart = updatedCart._doc;
-    }
-
-    return { ...updatedCart };
+    return true;
   },
 
   removeItemsFromCart: async function (
