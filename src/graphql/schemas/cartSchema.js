@@ -4,15 +4,15 @@ const cartTypeDefs = `type Cart {
     
   }
   
-  type Product:{
+  type CartProduct{
       slug: String!
       title: String
       photo: String,
-      price: String,
+      price: Float,
   }
   
-  type Item:{
-    product: Product!,
+  type Item{
+    product: CartProduct!,
     quantity: Int!
     discount : Float
   }`;

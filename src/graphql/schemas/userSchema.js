@@ -1,14 +1,14 @@
 const userTypeDefs = `
-type User: {
+type User {
     email: String!
     fullName: String
     address: Address
     phoneNumber: String
-    registrationDate: Date
+    registrationDate: String
     status: String!
 }
 
-type Address: {
+type Address {
     street: String
     city: String
     state: String

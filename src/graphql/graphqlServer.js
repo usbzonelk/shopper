@@ -1,9 +1,8 @@
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 
-const schemas = require("./schemas/schemasHandler");
-
-const typeDefs = schemas;
+const schemasHandler = require("./schemas/schemasHandler");
+const typeDefs = schemasHandler.schemas;
 const books = [
   {
     title: "The Awakening",
@@ -17,7 +16,7 @@ const books = [
 
 const resolvers = {
   Query: {
-    books: () => {
+    product: () => {
       return books;
     },
   },

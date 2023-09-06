@@ -15,7 +15,7 @@ type Product{
 }
 `;
 const CustomAttributeTypeDef = `
-type customAttribute = {
+type customAttribute {
   attributeName: String!
   search: Boolean!
   sort: Boolean!
