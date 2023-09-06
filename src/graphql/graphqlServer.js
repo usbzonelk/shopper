@@ -1,15 +1,9 @@
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 
-const typeDefs =
-  ` type Book {
-    title: String
-  }` +
-  `
-  type Query {
-    books: [Book]
-  }
-`;
+const schemas = require("./schemas/schemasHandler");
+
+const typeDefs = schemas;
 const books = [
   {
     title: "The Awakening",

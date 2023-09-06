@@ -14,10 +14,6 @@ const app = express();
 const startServer = async () => {
   await graphQLServer.server.start();
 
-  const tyyy = await cartctr.renderTheCart("jkb@k.kl");
-
-  console.log(tyyy.cart);
-
   app.use("/expressOnly", (req, res) => {
     res.send("Hello from my custom endpoint!");
   });
