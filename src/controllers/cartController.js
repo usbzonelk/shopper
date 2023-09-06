@@ -58,7 +58,6 @@ const generateNewCart = async (email, products = []) => {
         cartSchema
       );
     }
-
     const cartAdded = await cartManager.addProductsToCart(
       userID,
       userAddedProducts,
@@ -120,7 +119,7 @@ const addItemsToCart = async (email, products) => {
         return new Error((message = "Invalid slug!"));
       }
       productInfo.product.productID = productIDs.productIDs[idx];
-      productInfo.price = productsInfo.products[idx].price;
+      productInfo.price = parseInt(productsInfo.products[idx].price);
       productInfo.discount = productsInfo.products[idx].discount;
     });
     let addItem;
@@ -319,7 +318,7 @@ const renderTheCart = async (email) => {
     );
 
     const cartItemsIDs = [];
-    const fullCartItems = [...getTheFullCart.items];
+    const fullCartItems = [];
 
     getTheFullCart.items.forEach((item) => {
       cartItemsIDs.push(item.product.productID._id);
@@ -332,13 +331,26 @@ const renderTheCart = async (email) => {
     if (productsInSlugs.error) {
       return productsInfo.error;
     }
-    fullCartItems.forEach((productInfo, idx) => {
-      console.log(productInfo);
-      if (!productsInSlugs.slugs[idx]) {
-        throw new Error((message = "Invalid slug!"));
-      }
-      fullCartItems[idx].product.slug = productsInSlugs.slugs[idx];
-    });
+
+    const productsInfo =
+      await productController.products.getSomeProductsSummary(
+        "slug",
+        productsInSlugs.slugs
+      );
+    if (productsInfo.error) {
+      return productsInfo.error;
+    }
+
+    const updateArray = (productInfo, idx) => {
+      fullCartItems.push({ ...productInfo }.__parentArray);
+
+      /*       fullCartItems[idx].product.slug = productsInSlugs.slugs[idx];
+       */ console.log({ ...fullCartItems[idx] });
+    };
+
+    getTheFullCart.items.map((productInfo, idx) =>
+      updateArray(productInfo, idx)
+    );
 
     outputMsg.cart = fullCartItems;
     outputMsg.success = true;

@@ -1,10 +1,11 @@
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 
-const typeDefs = ` type Book {
+const typeDefs =
+  ` type Book {
     title: String
-    author: String
-  }
+  }` +
+  `
   type Query {
     books: [Book]
   }
@@ -31,7 +32,7 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
 });
-
 
 module.exports = { server, expressMiddleware };
