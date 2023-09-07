@@ -171,10 +171,8 @@ const products = {
   slugCheck: async function (slug) {
     let productInfo = null;
     const outputMsg = {};
-
     try {
       productInfo = await productManager.getOneProduct({ slug: slug });
-
       if (!productInfo) {
         outputMsg.valid = false;
       } else {

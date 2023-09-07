@@ -47,6 +47,12 @@ type customAttribute {
 const publicQueryDefs = `
 type Query {
   GetAllProducts : [Product]
+  GetFullProduct(slug :String!) : Product!
+  CheckTheSlug(slug : String!) : Boolean!
+  SearchProductsByTitle(keyword: String!) : [Product]
+  FilterByProperty(searchProperty : String!, values: [String]!, productType: String!) : [Product]
+  FilterByRange(searchProperty : String!, range: [Float]!, productType: String!) : [Product]
+
 }
 `;
 
