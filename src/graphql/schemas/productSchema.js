@@ -46,7 +46,7 @@ type customAttribute {
 
 const publicQueryDefs = `
 type Query {
-  products : [Product]
+  GetAllProducts : [Product]
 }
 `;
 

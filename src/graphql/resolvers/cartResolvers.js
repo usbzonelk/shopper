@@ -4,3 +4,4 @@ const resolvers = {
     },
   };
   
+module.exports={}
