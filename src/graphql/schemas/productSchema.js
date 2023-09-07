@@ -1,10 +1,26 @@
-let productsTypeDef = `
+let adminProductsTypeDef = `
 type Product{
     title: String!
     slug:  String!
     price: Float!
     discount: Float
     instock: Int
+    description: String
+    warrantyMonths: Int
+    coverPhoto: String
+    photos: [String]
+    availability: String
+    slugType: String!
+    customAttributes : [customAttribute]
+}
+`;
+
+let publicProductsTypeDef = `
+type Product{
+    title: String!
+    slug:  String!
+    price: Float!
+    discount: Float
     description: String
     warrantyMonths: Int
     coverPhoto: String
@@ -27,6 +43,28 @@ type customAttribute {
   values:[String]
 }
 `;
-productsTypeDef = productsTypeDef + CustomAttributeTypeDef;
 
-module.exports = { productsTypeDef };
+const publicQueryDefs = `
+type Query {
+  products : [Product]
+}
+`;
+
+const adminQueryDefs = `
+type Query {
+  products : [Product]
+}
+`;
+
+adminProductsTypeDef =
+  adminProductsTypeDef + CustomAttributeTypeDef + adminQueryDefs;
+publicProductsTypeDef =
+  publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
+const userProductsTypeDef =
+  publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
+
+module.exports = {
+  adminProductsTypeDef,
+  publicProductsTypeDef,
+  userProductsTypeDef,
+};
