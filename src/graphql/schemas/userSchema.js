@@ -1,4 +1,4 @@
-const userTypeDefs = `
+const userUserTypeDefs = `
 type User {
     email: String!
     fullName: String
@@ -15,6 +15,30 @@ type Address {
     postalCode: String
     country: String
 }
-`
+`;
 
-module.exports = { userTypeDefs };
+const adminUserTypeDefs = `
+type User {
+    email: String!
+    fullName: String
+    address: Address
+    phoneNumber: String
+    registrationDate: String
+    status: String!
+    password: String
+}
+
+type Address {
+    street: String
+    city: String
+    state: String
+    postalCode: String
+    country: String
+}
+
+type Users{
+    users: [User]
+}
+`;
+
+module.exports = { userUserTypeDefs, adminUserTypeDefs };

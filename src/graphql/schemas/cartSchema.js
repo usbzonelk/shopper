@@ -1,4 +1,4 @@
-const cartTypeDefs = `type Cart {
+const userCartTypeDefs = `type Cart {
     email: String!
     items: [Item]
     
@@ -17,4 +17,28 @@ const cartTypeDefs = `type Cart {
     discount : Float
   }`;
 
-module.exports = { cartTypeDefs };
+const adminCartTypedefs = `
+type Cart {
+  email: String!
+  items: [Item]
+  
+}
+
+type CartProduct{
+    slug: String!
+    title: String
+    photo: String,
+    price: Float,
+}
+
+type Item{
+  product: CartProduct!,
+  quantity: Int!
+  discount : Float
+}
+
+type Carts{
+  carts:[Cart]!
+}`;
+
+module.exports = { adminCartTypedefs, userCartTypeDefs };
