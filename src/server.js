@@ -3,7 +3,8 @@ const cors = require("cors");
 const { json } = require("body-parser");
 const { expressMiddleware } = require("@apollo/server/express4");
 
-const connectToDatabase = require("./config/database");
+const connectToDatabase = require("./config/database").connectToDatabase;
+const checkDBConnection = require("./config/database").checkDbStatus;
 
 const { publicServer } = require("./graphql/publicServer");
 
@@ -25,6 +26,7 @@ const startServer = async () => {
     expressMiddleware(publicServer, {
       context: async ({ req, res }) => ({
         token: req.headers.authorization,
+        dbConnecion: checkDBConnection(),
       }),
     })
   );

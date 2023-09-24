@@ -3,6 +3,8 @@ const mongoPass = "W4MZeyrsSEFJnilc";
 const dbName = "shopper";
 const collectionName = "shopperx";
 
+let dbConnectionStatus = false;
+
 const mongoose = require("mongoose");
 
 async function connectToDatabase() {
@@ -15,11 +17,20 @@ async function connectToDatabase() {
       },
       { collection: collectionName }
     );
-
+    dbConnectionStatus = true;
     console.log("Connected to the database");
   } catch (error) {
+    dbConnectionStatus = false;
     console.error("Error connecting to the database:", error.message);
   }
 }
 
-module.exports = connectToDatabase;
+function checkDbStatus() {
+  if (dbConnectionStatus) {
+    return { status: true, message: "Connected to database" };
+  } else {
+    return { status: false, message: "Database connection error" };
+  }
+}
+
+module.exports = { connectToDatabase, checkDbStatus };
