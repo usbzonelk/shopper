@@ -24,7 +24,7 @@ const startServer = async () => {
     json(),
     expressMiddleware(publicServer, {
       context: async ({ req, res }) => ({
-        token: await eval(`2+2`),
+        token: req.headers.authorization,
       }),
     })
   );
