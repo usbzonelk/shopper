@@ -23,6 +23,13 @@ const startServer = async () => {
     "/public",
     cors(),
     json(),
+    (req, res, next) => {
+      if (!checkDBConnection().status) {
+        res.send(checkDBConnection().message);
+      } else {
+        next();
+      }
+    },
     expressMiddleware(publicServer, {
       context: async ({ req, res }) => ({
         token: req.headers.authorization,
