@@ -5,7 +5,6 @@ const publicResolvers = {
   Query: {
     UserLogin: async (_, args, contextValue) => {
       const { email, enteredPassword } = args;
-      console.log(contextValue);
       let isUserValid = null;
       try {
         isUserValid = await userController.userLogin(email, enteredPassword);
@@ -14,10 +13,11 @@ const publicResolvers = {
           extensions: { code: "UNAUTHENTICATED" },
         });
       }
-      console.log(isUserValid);
 
       if (isUserValid.error) {
-        console.log("lll");
+        throw new GraphQLError(isUserValid.error, {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
       } else if (isUserValid.user) {
         console.log(isUserValid);
         return isUserValid.user;
