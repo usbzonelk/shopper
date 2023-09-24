@@ -10,7 +10,7 @@ const publicResolvers = {
       } else if (allProducts.error) {
         throw allProducts.error;
       } else {
-        return new Error((message = "No products found"));
+        throw new Error((message = "No products found"));
       }
     },
 
@@ -30,8 +30,8 @@ const publicResolvers = {
     },
 
     CheckTheSlug: async (_, args, context) => {
-      console.log(context)
-      
+      console.log(context);
+
       const { slug } = args;
       const slugInfo = await productController.slugCheck(slug);
       if (slugInfo.error) {

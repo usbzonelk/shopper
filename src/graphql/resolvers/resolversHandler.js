@@ -3,8 +3,10 @@ const productResolver = require("./productResolvers");
 const userResolver = require("./userResolver");
 
 const publicResolvers = {
-  ...productResolver.publicResolvers,
-  ...userResolver.publicResolvers,
+  Query: {
+    ...userResolver.publicResolvers.Query,
+    ...productResolver.publicResolvers.Query,
+  },
 };
 
 const userResolvers = {};

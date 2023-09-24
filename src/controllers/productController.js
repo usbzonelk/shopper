@@ -95,7 +95,7 @@ const products = {
       outputMsg.success = false;
       outputMsg.message = "Error occured";
       outputMsg.error = err.message;
-      return outputMsg;
+      throw new Error((message = err.message));
     }
 
     return outputMsg;
