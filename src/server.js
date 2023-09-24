@@ -33,7 +33,6 @@ const startServer = async () => {
     expressMiddleware(publicServer, {
       context: async ({ req, res }) => ({
         token: req.headers.authorization,
-        dbConnecion: checkDBConnection(),
       }),
     })
   );
