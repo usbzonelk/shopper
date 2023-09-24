@@ -70,7 +70,7 @@ const publicResolvers = {
 
     FilterByRange: async (_, args) => {
       const { searchProperty, range, productType } = args;
-      const productInfo = await productController.filterQualitative(
+      const productInfo = await productController.filterRange(
         range,
         productType,
         searchProperty

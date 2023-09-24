@@ -250,7 +250,6 @@ const products = {
           photos: 0,
         }
       );
-
       outputMsg.filteredProducts = filteredProducts;
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the products.";
@@ -260,7 +259,6 @@ const products = {
       outputMsg.error = err.message;
       return outputMsg;
     }
-
     return outputMsg;
   },
 
