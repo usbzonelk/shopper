@@ -4,6 +4,11 @@ const GraphQLError = require("graphql").GraphQLError;
 const publicResolvers = {
   Query: {
     UserLogin: async (_, args, contextValue) => {
+      if (!contextValue.dbConnecion.status) {
+        throw new GraphQLError("Error establishing database connection", {
+          extensions: { code: "DATABASE_CONNECTION_ERROR" },
+        });
+      }
       const { email, enteredPassword } = args;
       console.log(contextValue);
       let isUserValid = null;
