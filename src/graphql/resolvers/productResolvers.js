@@ -1,6 +1,3 @@
-const { products } = require("../../controllers/productController");
-const { GraphQLError } = require("graphql");
-
 const productController =
   require("../../controllers/productController").products;
 
@@ -25,21 +22,16 @@ const publicResolvers = {
         throw fullProduct.error;
       }
       if (!fullProduct.product) {
-        throw new GraphQLError(
-          "You are not authorized to perform this action.",
-          {
-            extensions: {
-              code: "FORBIDDEN",
-            },
-          }
-        );
+        throw new Error((message = "Product not found"));
       }
       if (fullProduct.product) {
         return fullProduct.product;
       }
     },
 
-    CheckTheSlug: async (_, args) => {
+    CheckTheSlug: async (_, args, context) => {
+      console.log(context)
+      
       const { slug } = args;
       const slugInfo = await productController.slugCheck(slug);
       if (slugInfo.error) {

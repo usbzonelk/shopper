@@ -2,7 +2,10 @@ const cartResolver = require("./cartResolvers");
 const productResolver = require("./productResolvers");
 const userResolver = require("./userResolver");
 
-const publicResolvers = { ...productResolver.publicResolvers };
+const publicResolvers = {
+  ...productResolver.publicResolvers,
+  ...userResolver.publicResolvers,
+};
 
 const userResolvers = {};
 

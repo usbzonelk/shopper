@@ -41,4 +41,26 @@ type Users{
 }
 `;
 
-module.exports = { userUserTypeDefs, adminUserTypeDefs };
+let publicTypeDefs = `
+type User {
+    email: String!
+    token: String
+}
+`;
+
+const publicQueryDefs = `
+type Query {
+    UserLogin (email: String!, password: String!) : User
+  }
+`;
+
+/* adminProductsTypeDef =
+  adminProductsTypeDef + CustomAttributeTypeDef + adminQueryDefs;
+publicProductsTypeDef =
+  publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
+ */
+publicTypeDefs = publicTypeDefs + publicQueryDefs;
+
+module.exports = {
+  publicTypeDefs /* adminUserTypeDefs, userUserTypeDefs */,
+};

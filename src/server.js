@@ -18,7 +18,16 @@ const startServer = async () => {
     res.send("Hello from my custom endpoint!");
   });
 
-  app.use("/public", cors(), json(), expressMiddleware(publicServer));
+  app.use(
+    "/public",
+    cors(),
+    json(),
+    expressMiddleware(publicServer, {
+      context: async ({ req, res }) => ({
+        token: await eval(`2+2`),
+      }),
+    })
+  );
 
   app.listen(PORT, () => {
     console.log(`Server fired up on port http://127.0.12.3:${PORT}/gq !`);

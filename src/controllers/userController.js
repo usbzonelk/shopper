@@ -195,15 +195,15 @@ const userLogin = async (email, enteredPassword) => {
   const userEntredMail = email;
 
   if (!validateMail(email)) {
-    return new Error((message = "Entered Email Address is invalid"));
+    throw new Error((message = "Entered Email Address is invalid"));
   }
   try {
     const userInfo = await users.getOneUserInfo({ email: email });
     if (!userInfo) {
-      return new Error((message = "Account doesn't exist"));
+      throw new Error((message = "Account doesn't exist"));
     }
     if (userInfo.status != "verified") {
-      return new Error(
+      throw new Error(
         (message =
           "Account is not active. Contact an administrator to reactivate your account")
       );
@@ -225,14 +225,13 @@ const userLogin = async (email, enteredPassword) => {
       outputMsg.success = true;
       outputMsg.message = "Successfully logged in";
     } else {
-      outputMsg.user = { email: userInfo.email };
-      outputMsg.success = false;
-      outputMsg.message = "Incorrect password";
+      throw new Error((message = "Incorrect Password"));
     }
   } catch (error) {
-    outputMsg.success = false;
+    /* outputMsg.success = false;
     outputMsg.message = "Error occured";
-    outputMsg.error = error.message;
+    outputMsg.error = error.message; */
+    throw error;
   }
   return outputMsg;
 };
@@ -240,12 +239,12 @@ const userLogin = async (email, enteredPassword) => {
 const generateAccessToken = async (email, refreshToken) => {
   const outputMsg = {};
   if (!validateMail(email)) {
-    return new Error((message = "Entered Email Address is invalid"));
+    throw new Error((message = "Entered Email Address is invalid"));
   }
   try {
     const userInfo = await users.getOneUserInfo({ email: email });
     if (!userInfo) {
-      return new Error((message = "Account doesn't exist"));
+      throw new Error((message = "Account doesn't exist"));
     }
     if (userInfo.status != "verified") {
       return new Error(
