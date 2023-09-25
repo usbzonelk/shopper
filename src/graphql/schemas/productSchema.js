@@ -66,8 +66,7 @@ adminProductsTypeDef =
   adminProductsTypeDef + CustomAttributeTypeDef + adminQueryDefs;
 publicProductsTypeDef =
   publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
-const userProductsTypeDef =
-  publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
+const userProductsTypeDef = ``;
 
 module.exports = {
   adminProductsTypeDef,
