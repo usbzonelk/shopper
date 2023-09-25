@@ -19,7 +19,6 @@ const userTypeDefs = `type Cart {
   input ItemInput{
     product: CartProductInput!,
     quantity: Int!
-    discount : Float
   }
 
   input CartProductInput{

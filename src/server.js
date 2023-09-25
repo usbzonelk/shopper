@@ -15,18 +15,19 @@ const app = express();
 
 const startServer = async () => {
   await userServer.start();
+  await publicServer.start();
 
   app.use("/expressOnly", (req, res) => {
     res.send("Hello from my custom endpoint!");
   });
 
-  /* app.use(
+  app.use(
     "/public",
     cors(),
     json(),
     (req, res, next) => {
       if (!checkDBConnection().status) {
-        res.send(checkDBConnection().message);
+        res.status(500).send(checkDBConnection().message);
       } else {
         next();
       }
@@ -36,7 +37,7 @@ const startServer = async () => {
         token: req.headers.authorization,
       }),
     })
-  ); */
+  );
 
   app.use(
     "/user",

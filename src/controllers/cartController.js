@@ -95,7 +95,7 @@ const addItemsToCart = async (email, products) => {
       if (userDetails.error) {
         return userDetails.error;
       }
-      return new Error((message = "Invalid Email"));
+      throw new Error((message = "Invalid Email"));
     } else {
       userID = userDetails.userID;
     }
@@ -134,6 +134,7 @@ const addItemsToCart = async (email, products) => {
     outputMsg.success = true;
     outputMsg.message = "Successfully updated the cart";
   } catch (err) {
+    throw err;
     outputMsg.success = false;
     outputMsg.message = "Error occured";
     outputMsg.error = err.message;
@@ -306,7 +307,7 @@ const renderTheCart = async (email) => {
       if (userDetails.error) {
         return userDetails.error;
       }
-      return new Error((message = "Invalid Email"));
+      throw new Error((message = "Invalid Email"));
     } else {
       userID = userDetails.userID;
     }

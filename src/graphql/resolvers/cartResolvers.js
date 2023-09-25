@@ -13,6 +13,19 @@ const cartResolvers = {
       return null;
     },
   },
+  Mutation: {
+    AddToCart: async (_, args, context) => {
+      const cartItems = args.items;
+      const token = context.token;
+      if (token) {
+        const email = JSON.parse(
+          Buffer.from(token.split(".")[1], "base64").toString()
+        ).email;
+        return await cartController.addItemsToCart(email, cartItems);
+      }
+      return null;
+    },
+  },
 };
 
 module.exports = {
