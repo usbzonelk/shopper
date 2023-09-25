@@ -56,13 +56,24 @@ type Query {
 
 `;
 
+const userQueryDefs = `
+type Query {
+    UserLogin (email: String!, password: String!) : User
+    GetAccessToken : User
+  }
+
+`;
+
 /* adminProductsTypeDef =
   adminProductsTypeDef + CustomAttributeTypeDef + adminQueryDefs;
 publicProductsTypeDef =
   publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
  */
 publicTypeDefs = publicTypeDefs + publicQueryDefs;
+userTypeDefs =
+  publicTypeDefs + publicQueryDefs + userUserTypeDefs + userQueryDefs;
 
 module.exports = {
-  publicTypeDefs /* adminUserTypeDefs, userUserTypeDefs */,
+  publicTypeDefs /* adminUserTypeDefs*/,
+  userUserTypeDefs,
 };

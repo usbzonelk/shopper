@@ -31,12 +31,8 @@ const jwtAccessGenerator = async (refreshToken) => {
 
 const jwtValidator = async (token) => {
   let decodedToken = await new Promise((res, rej) => {
-    jwt.verify(token, jwtSecretKey, (err, decoded) => {
-      if (err) {
-        rej(err);
-      }
-      res(decoded);
-    });
+    const yy = jwt.verify(token, jwtSecretKey);
+    res(yy);
   });
 
   return decodedToken;
