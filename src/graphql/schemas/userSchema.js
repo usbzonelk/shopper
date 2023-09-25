@@ -51,7 +51,9 @@ type User {
 const publicQueryDefs = `
 type Query {
     UserLogin (email: String!, password: String!) : User
+    GetAccessToken : User
   }
+
 `;
 
 /* adminProductsTypeDef =

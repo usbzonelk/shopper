@@ -2,6 +2,7 @@ const User = require("../models/Users");
 const bcrypt = require("../utils/bcrypt");
 const validateMail = require("../utils/stringValidators").validateMail;
 const auth = require("../utils/auth");
+const { errorMonitor } = require("ws");
 
 const users = User.usersManager;
 
@@ -236,9 +237,14 @@ const userLogin = async (email, enteredPassword) => {
   return outputMsg;
 };
 
-const generateAccessToken = async (email, refreshToken) => {
+const generateAccessToken = async (refreshToken) => {
+  let email = null;
+  const jwtValidity = await auth.jwtValidator(refreshToken);
+  if (jwtValidity) {
+    email = jwtValidity.email;
+  }
   const outputMsg = {};
-  if (!validateMail(email)) {
+  if (!validateMail(email) || email == null) {
     throw new Error((message = "Entered Email Address is invalid"));
   }
   try {
@@ -247,7 +253,7 @@ const generateAccessToken = async (email, refreshToken) => {
       throw new Error((message = "Account doesn't exist"));
     }
     if (userInfo.status != "verified") {
-      return new Error(
+      throw new Error(
         (message =
           "Account is not active. Contact an administrator to reactivate your account")
       );
@@ -266,11 +272,13 @@ const generateAccessToken = async (email, refreshToken) => {
       outputMsg.user = { email: userInfo.email };
       outputMsg.success = false;
       outputMsg.message = "Please log in first";
+      throw new Error((message = outputMsg.message));
     }
   } catch (error) {
     outputMsg.success = false;
     outputMsg.message = "Error occured";
     outputMsg.error = error.message;
+    throw new Error((message = error.message));
   }
   return outputMsg;
 };

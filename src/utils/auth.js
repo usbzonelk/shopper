@@ -12,8 +12,8 @@ const jwtRefreshGenerator = (email, role) => {
   });
 };
 
-const jwtAccessGenerator = (refreshToken) => {
-  const validateRefresh = jwtValidator(refreshToken);
+const jwtAccessGenerator = async (refreshToken) => {
+  const validateRefresh = await jwtValidator(refreshToken);
   if (validateRefresh) {
     return jwt.sign(
       {
@@ -29,15 +29,16 @@ const jwtAccessGenerator = (refreshToken) => {
   }
 };
 
-const jwtValidator = (token) => {
-  let decodedToken = null;
-  jwt.verify(token, jwtSecretKey, (err, decoded) => {
-    if (err) {
-      return null;
-    }
-    decodedToken = decoded;
-    console.log(decoded);
+const jwtValidator = async (token) => {
+  let decodedToken = await new Promise((res, rej) => {
+    jwt.verify(token, jwtSecretKey, (err, decoded) => {
+      if (err) {
+        rej(err);
+      }
+      res(decoded);
+    });
   });
+
   return decodedToken;
 };
 
