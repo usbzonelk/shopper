@@ -44,7 +44,7 @@ const startServer = async () => {
     json(),
     (req, res, next) => {
       if (!checkDBConnection().status) {
-        res.send(checkDBConnection().message);
+        res.status(500).send(checkDBConnection().message);
       } else {
         next();
       }

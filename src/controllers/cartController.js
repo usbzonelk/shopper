@@ -311,7 +311,7 @@ const renderTheCart = async (email) => {
       userID = userDetails.userID;
     }
 
-    const getTheFullCart = await cartManager.getOneCart(
+    let getTheFullCart = await cartManager.getOneCart(
       { userID: userID },
       cartSchema,
       { _id: 0, userID: 0 }
@@ -319,11 +319,18 @@ const renderTheCart = async (email) => {
 
     const cartItemsIDs = [];
     const fullCartItems = [];
-
-    getTheFullCart.items.forEach((item) => {
-      cartItemsIDs.push(item.product.productID._id);
-    });
-
+    if (getTheFullCart) {
+      getTheFullCart.items.forEach((item) => {
+        cartItemsIDs.push(item.product.productID._id);
+      });
+    } else {
+      const newCart = await generateNewCart(email);
+      getTheFullCart = await cartManager.getOneCart(
+        { userID: userID },
+        cartSchema,
+        { _id: 0, userID: 0 }
+      );
+    }
     const productsInSlugs = await productController.products.getSlugs(
       cartItemsIDs
     );

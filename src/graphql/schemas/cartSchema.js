@@ -1,5 +1,4 @@
 const userTypeDefs = `type Cart {
-    email: String!
     items: [Item]
     
   }
