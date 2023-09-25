@@ -1,4 +1,4 @@
-const cartResolver = require("./cartResolvers");
+const cartResolver = require("./cartResolvers").cartResolvers;
 const productResolver = require("./productResolvers");
 const userResolver = require("./userResolver");
 
@@ -9,7 +9,7 @@ const publicResolvers = {
   },
 };
 
-const userResolvers = {};
+const userResolvers = { Query: { ...cartResolver.Query } };
 
 const adminResolvers = {};
 
