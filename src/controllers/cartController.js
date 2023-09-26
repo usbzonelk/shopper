@@ -320,6 +320,7 @@ const renderTheCart = async (email) => {
 
     const cartItemsIDs = [];
     const fullCartItems = [];
+
     if (getTheFullCart) {
       getTheFullCart.items.forEach((item) => {
         cartItemsIDs.push(item.product.productID._id);
@@ -351,16 +352,13 @@ const renderTheCart = async (email) => {
 
     const updateArray = (productInfo, idx) => {
       fullCartItems.push({ ...productInfo }.__parentArray);
-
-      /*       fullCartItems[idx].product.slug = productsInSlugs.slugs[idx];
-       */ console.log({ ...fullCartItems[idx] });
     };
 
-    getTheFullCart.items.map((productInfo, idx) =>
+    await getTheFullCart.items.map((productInfo, idx) =>
       updateArray(productInfo, idx)
     );
 
-    outputMsg.cart = fullCartItems;
+    outputMsg.cart = fullCartItems[0];
     outputMsg.success = true;
     outputMsg.message = "Successfully retrieved the cart";
   } catch (error) {

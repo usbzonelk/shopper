@@ -27,12 +27,11 @@ const userTypeDefs = `type Cart {
     photo: String,
     price: Float,
 }
+
 `;
 const adminTypedefs = `
 type Cart {
-  email: String!
   items: [Item]
-  
 }
 
 type CartProduct{

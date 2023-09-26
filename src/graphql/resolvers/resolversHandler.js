@@ -9,7 +9,10 @@ const publicResolvers = {
   },
 };
 
-const userResolvers = { Query: { ...cartResolver.Query } };
+const userResolvers = {
+  Query: { ...cartResolver.Query },
+  Mutation: { ...cartResolver.Mutation },
+};
 
 const adminResolvers = {};
 
