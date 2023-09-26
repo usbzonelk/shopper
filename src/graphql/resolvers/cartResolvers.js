@@ -26,7 +26,27 @@ const userResolvers = {
         try {
           await cartController.addItemsToCart(email, cartItems);
           const cartInfo = await cartController.renderTheCart(email);
-          console.log(cartInfo.cart);
+          return { items: cartInfo.cart };
+        } catch (err) {
+          throw new GraphQLError(err.message, {
+            extensions: { code: "SERVER_ERROR" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+    RemoveItems: async (_, { items }, context) => {
+      const token = context.token;
+      if (token) {
+        const email = JSON.parse(
+          Buffer.from(token.split(".")[1], "base64").toString()
+        ).email;
+        try {
+          await cartController.removeItems(email, items);
+          const cartInfo = await cartController.renderTheCart(email);
           return { items: cartInfo.cart };
         } catch (err) {
           throw new GraphQLError(err.message, {

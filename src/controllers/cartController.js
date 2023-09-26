@@ -150,7 +150,7 @@ const removeItems = async (email, removedProducts) => {
   let userID;
 
   removedProducts.forEach((productInfo) => {
-    userAddedSlugs.push(productInfo);
+    userAddedSlugs.push(productInfo.slug);
   });
 
   let userDetails;
@@ -192,7 +192,6 @@ const removeItems = async (email, removedProducts) => {
     outputMsg.message = "Error occured";
     outputMsg.error = err.message;
   }
-
   return outputMsg;
 };
 

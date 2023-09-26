@@ -21,6 +21,10 @@ const userTypeDefs = `
     quantity: Int!
   }
 
+  input SimpleItemInput{
+    slug: String!
+  }
+
   input CartProductInput{
     slug: String!
     title: String
@@ -59,7 +63,7 @@ type Query {
 const userMutationDefs = `
 type Mutation {
   AddToCart(items: [ItemInput]!): Cart!
-  RemoveItems(items: [ItemInput]!): Cart!
+  RemoveItems(items: [SimpleItemInput]!): Cart!
   ChangeQty(item: ItemInput!, newQty: Int!): Cart!
 }`;
 
