@@ -71,6 +71,8 @@ const userMutationDefs = `
 type Mutation {
   verifyUserStatus: Result!
   ChangeEmail(newMail: String!, password: String!) : Result!
+  ChangePassword(newPassword: String!, oldPassword: String!) : Result!
+
 }`;
 
 publicTypeDefs = publicTypeDefs + publicQueryDefs;

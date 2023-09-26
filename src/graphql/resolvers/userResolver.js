@@ -105,6 +105,42 @@ const userResolvers = {
         });
       }
     },
+
+    ChangePassword: async (_, { newPassword, oldPassword }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const email = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          console.log(email);
+          const userUpdateInfo = await userController.changePassword(
+            email,
+            oldPassword,
+            newPassword
+          );
+          console.log(userUpdateInfo);
+          if ("user" in userUpdateInfo) {
+            if (userUpdateInfo.user) {
+              return { success: true };
+            } else {
+              return { success: false };
+            }
+          } else {
+            throw new GraphQLError("Failed to update", {
+              extensions: { code: "FAILED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
   },
 };
 module.exports = {
