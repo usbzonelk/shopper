@@ -1,4 +1,4 @@
-let userUserTypeDefs = `
+let userTypeDefs = `
 type User {
     email: String!
     fullName: String
@@ -70,11 +70,11 @@ type Query {
 const userMutationDefs = `
 type Mutation {
   verifyUserStatus: Result!
-  
+  ChangeEmail(newMail: String!, password: String!) : Result!
 }`;
 
 publicTypeDefs = publicTypeDefs + publicQueryDefs;
-const userTypeDefs = userUserTypeDefs + userQueryDefs + userMutationDefs;
+userTypeDefs = userTypeDefs + userQueryDefs + userMutationDefs;
 
 module.exports = {
   publicTypeDefs /* adminUserTypeDefs*/,

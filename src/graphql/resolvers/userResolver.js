@@ -70,7 +70,41 @@ const userResolvers = {
         });
       }
     },
-    
+  },
+  Mutation: {
+    ChangeEmail: async (_, { newMail, password }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const oldEmail = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          const userUpdateInfo = await userController.changeMail(
+            oldEmail,
+            newMail,
+            password
+          );
+          if ("user" in userUpdateInfo) {
+            if (userUpdateInfo.user) {
+              return { success: true };
+            } else {
+              return { success: false };
+            }
+          } else {
+            throw new GraphQLError("Failed to update", {
+              extensions: { code: "FAILED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
   },
 };
 module.exports = {

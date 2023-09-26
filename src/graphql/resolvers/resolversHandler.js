@@ -14,7 +14,10 @@ const userResolvers = {
     ...cartResolver.userResolvers.Query,
     ...userResolver.userResolvers.Query,
   },
-  Mutation: { ...cartResolver.userResolvers.Mutation },
+  Mutation: {
+    ...cartResolver.userResolvers.Mutation,
+    ...userResolver.userResolvers.Mutation,
+  },
 };
 
 const adminResolvers = {};
