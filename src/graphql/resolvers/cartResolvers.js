@@ -10,7 +10,7 @@ const userResolvers = {
           Buffer.from(token.split(".")[1], "base64").toString()
         ).email;
         const fullCart = await cartController.renderTheCart(email);
-        return fullCart.cart;
+        return { items: fullCart.cart };
       }
       return null;
     },
