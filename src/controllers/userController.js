@@ -82,7 +82,7 @@ const deactivateUser = async (email) => {
   return outputMsg;
 };
 
-const changePassword = async (email, newPass) => {
+const changePassword = async (email, oldPass, newPass) => {
   let userEdited = null;
   const outputMsg = {};
   if (!validateMail(email)) {
@@ -96,11 +96,19 @@ const changePassword = async (email, newPass) => {
     if (userInfo.status != "verified") {
       return new Error((message = "Account is not active"));
     }
-    const newPassHashed = await bcrypt.hashPassword(newPass);
-    userEdited = await users.editOneUser(
-      { email: email },
-      { password: newPassHashed.pass }
-    );
+
+    const userPass = userInfo.password;
+    const passwordValidity = await bcrypt.validateUser(oldPass, userPass);
+    if (passwordValidity) {
+      const newPassHashed = await bcrypt.hashPassword(newPass);
+      userEdited = await users.editOneUser(
+        { email: email },
+        { password: newPassHashed.pass }
+      );
+    } else {
+      throw new Error((message = "Incorrect Password"));
+    }
+
     outputMsg.user = { email: userEdited.email, status: userEdited.status };
     outputMsg.success = true;
     outputMsg.message = "Successfully changed password";

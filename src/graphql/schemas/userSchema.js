@@ -15,6 +15,10 @@ type Address {
     postalCode: String
     country: String
 }
+
+type Result{
+  success: Boolean !
+}
 `;
 
 const adminUserTypeDefs = `
@@ -64,14 +68,19 @@ type Query {
 
 `;
 
+const userMutationDefs = `
+type Mutation {
+  verifyUserStatus(): Result!
+  
+}`;
+
 /* adminProductsTypeDef =
   adminProductsTypeDef + CustomAttributeTypeDef + adminQueryDefs;
 publicProductsTypeDef =
   publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
  */
 publicTypeDefs = publicTypeDefs + publicQueryDefs;
-userTypeDefs =
-  publicTypeDefs + publicQueryDefs + userUserTypeDefs + userQueryDefs;
+userTypeDefs = userUserTypeDefs + userQueryDefs + userMutationDefs;
 
 module.exports = {
   publicTypeDefs /* adminUserTypeDefs*/,
