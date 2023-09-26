@@ -1,7 +1,7 @@
 const cartController = require("../../controllers/cartController");
 const GraphQLError = require("graphql").GraphQLError;
 
-const cartResolvers = {
+const userResolvers = {
   Query: {
     GetFullCart: async (_, args, context) => {
       const token = context.token;
@@ -10,7 +10,6 @@ const cartResolvers = {
           Buffer.from(token.split(".")[1], "base64").toString()
         ).email;
         const fullCart = await cartController.renderTheCart(email);
-        console.log(fullCart);
         return fullCart.cart;
       }
       return null;
@@ -27,11 +26,8 @@ const cartResolvers = {
         try {
           await cartController.addItemsToCart(email, cartItems);
           const cartInfo = await cartController.renderTheCart(email);
-          if (cartInfo) {
-            return cartInfo.cart;
-          } else {
-            throw new Error((message = "Couldn't fetch the cart"));
-          }
+          console.log(cartInfo.cart);
+          return { items: cartInfo.cart };
         } catch (err) {
           throw new GraphQLError(err.message, {
             extensions: { code: "SERVER_ERROR" },
@@ -47,5 +43,5 @@ const cartResolvers = {
 };
 
 module.exports = {
-  cartResolvers,
+  userResolvers,
 };

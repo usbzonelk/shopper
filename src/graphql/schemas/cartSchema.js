@@ -1,31 +1,31 @@
-const userTypeDefs = `type Cart {
-    items: [Item]
-    
-  }
-  
+const userTypeDefs = `
   type CartProduct{
       slug: String!
       title: String
-      photo: String,
-      price: Float,
+      photo: String
+      price: Float
   }
   
   type Item{
-    product: CartProduct!,
+    product: CartProduct!
     quantity: Int!
     discount : Float
   }
   
+  type Cart {
+    items: [Item]
+  }
+
   input ItemInput{
-    product: CartProductInput!,
+    product: CartProductInput!
     quantity: Int!
   }
 
   input CartProductInput{
     slug: String!
     title: String
-    photo: String,
-    price: Float,
+    photo: String
+    price: Float
 }
 
 `;

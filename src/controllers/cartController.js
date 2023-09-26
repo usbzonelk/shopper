@@ -119,7 +119,9 @@ const addItemsToCart = async (email, products) => {
         return new Error((message = "Invalid slug!"));
       }
       productInfo.product.productID = productIDs.productIDs[idx];
-      productInfo.price = parseInt(productsInfo.products[idx].price);
+      productInfo.product.title = productsInfo.products[idx].title;
+      productInfo.product.slug = productsInfo.products[idx].slug;
+      productInfo.product.price = parseInt(productsInfo.products[idx].price);
       productInfo.discount = productsInfo.products[idx].discount;
     });
     let addItem;
