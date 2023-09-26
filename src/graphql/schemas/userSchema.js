@@ -73,11 +73,6 @@ type Mutation {
   
 }`;
 
-/* adminProductsTypeDef =
-  adminProductsTypeDef + CustomAttributeTypeDef + adminQueryDefs;
-publicProductsTypeDef =
-  publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
- */
 publicTypeDefs = publicTypeDefs + publicQueryDefs;
 const userTypeDefs = userUserTypeDefs + userQueryDefs + userMutationDefs;
 

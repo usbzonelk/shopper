@@ -70,6 +70,7 @@ const userResolvers = {
         });
       }
     },
+    
   },
 };
 module.exports = {

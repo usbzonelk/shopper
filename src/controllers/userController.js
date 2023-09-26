@@ -120,7 +120,7 @@ const changePassword = async (email, oldPass, newPass) => {
   return outputMsg;
 };
 
-const changeMail = async (oldEmail, newEmail) => {
+const changeMail = async (oldEmail, newEmail, password) => {
   let userEdited = null;
   const outputMsg = {};
   if (!validateMail(oldEmail) || !validateMail(newEmail)) {
@@ -129,19 +129,25 @@ const changeMail = async (oldEmail, newEmail) => {
   try {
     const userInfo = await users.getOneUserInfo({ email: oldEmail });
     if (!userInfo) {
-      return new Error((message = "Account doesn't exist"));
+      throw new Error((message = "Account doesn't exist"));
     }
-    const newMailInfo = await users.getOneUserInfo({ email: newEmail });
-    if (newMailInfo) {
-      return new Error((message = "An account already exists"));
+    const userPass = userInfo.password;
+    const passwordValidity = await bcrypt.validateUser(password, userPass);
+    if (passwordValidity) {
+      const newMailInfo = await users.getOneUserInfo({ email: newEmail });
+      if (newMailInfo) {
+        throw new Error((message = "An account already exists"));
+      }
+      if (userInfo.status != "verified") {
+        throw new Error((message = "Account is not active"));
+      }
+      userEdited = await users.editOneUser(
+        { email: oldEmail },
+        { email: newEmail }
+      );
+    } else {
+      throw new Error((message = "Incorrect Password"));
     }
-    if (userInfo.status != "verified") {
-      return new Error((message = "Account is not active"));
-    }
-    userEdited = await users.editOneUser(
-      { email: oldEmail },
-      { email: newEmail }
-    );
     outputMsg.user = { email: userEdited.email, status: userEdited.status };
     outputMsg.success = true;
     outputMsg.message = "Successfully changed email";
