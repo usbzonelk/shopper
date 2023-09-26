@@ -58,12 +58,21 @@ type User {
     email: String!
     token: String
 }
+type Result{
+  success: Boolean !
+}
 `;
 
 const publicQueryDefs = `
 type Query {
     UserLogin (email: String!, password: String!) : User
     GetAccessToken : User
+  }
+
+`;
+const publicMutationDefs = `
+type Mutation {
+  RegisterUser(email:String!, password:String!) : Result!
   }
 
 `;
@@ -83,7 +92,7 @@ type Mutation {
   ChangePersonalInfo(fullName: String, address: InputAddress, phone: String) : Result!
 }`;
 
-publicTypeDefs = publicTypeDefs + publicQueryDefs;
+publicTypeDefs = publicTypeDefs + publicQueryDefs + publicMutationDefs;
 userTypeDefs = userTypeDefs + userQueryDefs + userMutationDefs;
 
 module.exports = {

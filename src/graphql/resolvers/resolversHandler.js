@@ -7,6 +7,9 @@ const publicResolvers = {
     ...userResolver.publicResolvers.Query,
     ...productResolver.publicResolvers.Query,
   },
+  Mutation: {
+    ...userResolver.publicResolvers.Mutation,
+  },
 };
 
 const userResolvers = {

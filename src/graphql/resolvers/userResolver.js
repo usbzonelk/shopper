@@ -41,6 +41,31 @@ const publicResolvers = {
       return accessToken.user;
     },
   },
+  Mutation: {
+    RegisterUser: async (_, { email, password }) => {
+      try {
+        const tempUserCreation = await userController.createTempUser(
+          email,
+          password
+        );
+        if ("user" in tempUserCreation) {
+          if (tempUserCreation.user) {
+            return { success: true };
+          } else {
+            return { success: false };
+          }
+        } else {
+          throw new GraphQLError("Failed to create", {
+            extensions: { code: "FAILED" },
+          });
+        }
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: { code: "SERVER_ERROR" },
+        });
+      }
+    },
+  },
 };
 
 const userResolvers = {
@@ -183,6 +208,7 @@ const userResolvers = {
     },
   },
 };
+
 module.exports = {
   publicResolvers,
   userResolvers,
