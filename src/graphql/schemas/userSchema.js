@@ -1,4 +1,4 @@
-const userUserTypeDefs = `
+let userUserTypeDefs = `
 type User {
     email: String!
     fullName: String
@@ -62,15 +62,14 @@ type Query {
 
 const userQueryDefs = `
 type Query {
-    UserLogin (email: String!, password: String!) : User
-    GetAccessToken : User
+    GetUserInfo : User
   }
 
 `;
 
 const userMutationDefs = `
 type Mutation {
-  verifyUserStatus(): Result!
+  verifyUserStatus: Result!
   
 }`;
 
@@ -80,9 +79,9 @@ publicProductsTypeDef =
   publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
  */
 publicTypeDefs = publicTypeDefs + publicQueryDefs;
-userTypeDefs = userUserTypeDefs + userQueryDefs + userMutationDefs;
+const userTypeDefs = userUserTypeDefs + userQueryDefs + userMutationDefs;
 
 module.exports = {
   publicTypeDefs /* adminUserTypeDefs*/,
-  userUserTypeDefs,
+  userTypeDefs,
 };

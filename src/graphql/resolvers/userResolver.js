@@ -43,6 +43,37 @@ const publicResolvers = {
   },
 };
 
+const userResolvers = {
+  Query: {
+    GetUserInfo: async (_, args, contextValue) => {
+      if ("token" in contextValue) {
+        try {
+          const email = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          const userInfo = await userController.getFullUserInfo(email);
+          if (userInfo) {
+            console.log(userInfo.user);
+            return userInfo.user;
+          } else {
+            throw new GraphQLError("Invalid email", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+  },
+};
 module.exports = {
   publicResolvers,
+  userResolvers,
 };

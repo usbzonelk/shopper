@@ -13,6 +13,6 @@ const adminSchemas =
 const userSchemas =
   cartSchema.userCartTypeDefs +
   productSchema.userProductsTypeDef +
-  userSchema.userUserTypeDefs;
+  userSchema.userTypeDefs;
 
 module.exports = { publicSchemas, userSchemas, adminSchemas };
