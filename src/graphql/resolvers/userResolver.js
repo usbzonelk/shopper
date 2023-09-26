@@ -46,14 +46,13 @@ const publicResolvers = {
 const userResolvers = {
   Query: {
     GetUserInfo: async (_, args, contextValue) => {
-      if ("token" in contextValue) {
+      if ("token" in contextValue && contextValue.token) {
         try {
           const email = JSON.parse(
             Buffer.from(contextValue.token.split(".")[1], "base64").toString()
           ).email;
           const userInfo = await userController.getFullUserInfo(email);
           if (userInfo) {
-            console.log(userInfo.user);
             return userInfo.user;
           } else {
             throw new GraphQLError("Invalid email", {
