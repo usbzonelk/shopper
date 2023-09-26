@@ -9,11 +9,19 @@ type User {
 }
 
 type Address {
-    street: String
-    city: String
-    state: String
-    postalCode: String
-    country: String
+    street: String!
+    city: String!
+    state: String!
+    postalCode: String!
+    country: String!
+}
+
+input InputAddress {
+  street: String!
+  city: String!
+  state: String!
+  postalCode: String!
+  country: String!
 }
 
 type Result{
@@ -72,7 +80,7 @@ type Mutation {
   verifyUserStatus: Result!
   ChangeEmail(newMail: String!, password: String!) : Result!
   ChangePassword(newPassword: String!, oldPassword: String!) : Result!
-
+  ChangePersonalInfo(fullName: String, address: InputAddress, phone: String) : Result!
 }`;
 
 publicTypeDefs = publicTypeDefs + publicQueryDefs;
