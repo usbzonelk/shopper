@@ -64,7 +64,7 @@ const userMutationDefs = `
 type Mutation {
   AddToCart(items: [ItemInput]!): Cart!
   RemoveItems(items: [SimpleItemInput]!): Cart!
-  ChangeQty(item: ItemInput!, newQty: Int!): Cart!
+  ChangeQty(item: SimpleItemInput!, newQty: Int!): Cart!
 }`;
 
 const userCartTypeDefs = userTypeDefs + userQueryDefs + userMutationDefs;

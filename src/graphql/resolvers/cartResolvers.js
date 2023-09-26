@@ -59,6 +59,27 @@ const userResolvers = {
         });
       }
     },
+    ChangeQty: async (_, { item, newQty }, context) => {
+      const token = context.token;
+      if (token) {
+        const email = JSON.parse(
+          Buffer.from(token.split(".")[1], "base64").toString()
+        ).email;
+        try {
+          await cartController.changeQty(email, item.slug, newQty);
+          const cartInfo = await cartController.renderTheCart(email);
+          return { items: cartInfo.cart };
+        } catch (err) {
+          throw new GraphQLError(err.message, {
+            extensions: { code: "SERVER_ERROR" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
   },
 };
 
