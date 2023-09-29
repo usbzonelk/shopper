@@ -1,5 +1,5 @@
 let adminProductsTypeDef = `
-type Product{
+input Product{
     title: String!
     slug:  String!
     price: Float!
@@ -56,14 +56,15 @@ type Query {
 }
 `;
 
-const adminQueryDefs = `
-type Query {
-  products : [Product]
+const adminMutationDefs = `
+type Mutation {
+  CreateANewProduct(Product!) : Product!
+  EditProduct(Product!) : Product!
 }
 `;
 
 adminProductsTypeDef =
-  adminProductsTypeDef + CustomAttributeTypeDef + adminQueryDefs;
+  adminProductsTypeDef + CustomAttributeTypeDef + adminMutationDefs;
 publicProductsTypeDef =
   publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
 const userProductsTypeDef = ``;

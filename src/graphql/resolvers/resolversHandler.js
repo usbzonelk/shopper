@@ -23,6 +23,13 @@ const userResolvers = {
   },
 };
 
-const adminResolvers = {};
+const adminResolvers = {
+  Query: {
+    ...productResolver.adminResolvers.Query,
+  },
+  Mutation: {
+    ...productResolver.adminResolvers.Mutation,
+  },
+};
 
 module.exports = { publicResolvers, userResolvers, adminResolvers };

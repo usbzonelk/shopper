@@ -87,6 +87,12 @@ const publicResolvers = {
   },
 };
 
+const adminResolvers = {
+  Query: {},
+  Mutation: {},
+};
+
 module.exports = {
   publicResolvers,
+  adminResolvers,
 };
