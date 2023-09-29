@@ -66,10 +66,9 @@ const adminLogin = async (email, enteredPassword) => {
           "Account is not active. Contact an administrator to reactivate your account")
       );
     }
-    const userPass = userInfo.password;
-    const accountValidity = await bcrypt.validateUser(
-      enteredPassword,
-      userPass
+    const accountValidity = await admins.validateAdminPassword(
+      email,
+      enteredPassword
     );
     if (accountValidity) {
       const userMail = userInfo.mail;

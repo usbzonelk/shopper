@@ -90,7 +90,7 @@ const adminsManager = {
     return getMatchedAdmin;
   },
 
-  getManyUsers: async function (params) {
+  getManyAdmins: async function (params) {
     const adminModel = this.adminModel();
     const getMatchedAdmins = await adminModel.find(params);
     return getMatchedAdmins;
