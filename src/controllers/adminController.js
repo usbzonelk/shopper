@@ -5,42 +5,23 @@ const auth = require("../utils/auth");
 
 const admins = Admin.adminsManager;
 
-const admin = async (email, enteredPassword) => {
+const adminRegister = async (email, enteredPassword, createdBy) => {
   const outputMsg = {};
-  const userEntredMail = email;
+  const newAdminEmail = email;
 
   if (!validateMail(email)) {
     throw new Error((message = "Entered Email Address is invalid"));
   }
   try {
     const adminInfo = await admins.getOneAdminInfo({ email: email });
-    if (!adminInfo) {
-      throw new Error((message = "Account doesn't exist"));
-    }
-    if (adminInfo.status != "verified") {
-      throw new Error(
-        (message =
-          "Account is not active. Contact an administrator to reactivate your account")
-      );
-    }
-    const adminPass = adminInfo.password;
-    const accountValidity = await bcrypt.validateUser(
-      enteredPassword,
-      adminPass
-    );
-    if (accountValidity) {
-      const adminMail = userInfo.mail;
-      const refreshToken = auth.jwtRefreshGenerator(userEntredMail, "user");
-      const storeToken = await users.editOneUser(
-        { email: userInfo.email },
-        { refreshToken: refreshToken }
-      );
-
-      outputMsg.user = { email: email, token: refreshToken };
-      outputMsg.success = true;
-      outputMsg.message = "Successfully logged in";
+    if (adminInfo) {
+      throw new Error((message = "Account already exists"));
     } else {
-      throw new Error((message = "Incorrect Password"));
+      const newAccount = admins.createNewAdmin(
+        newAdminEmail,
+        enteredPassword,
+        createdBy
+      );
     }
   } catch (error) {
     throw error;
@@ -90,6 +71,6 @@ const adminLogin = async (email, enteredPassword) => {
 };
 
 module.exports = {
-  admin,
+  adminRegister,
   adminLogin,
 };
