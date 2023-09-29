@@ -45,12 +45,12 @@ const adminsManager = {
   },
 
   createNewAdmin: async function (email, password, addedBy) {
-    const hashedPass = await bcrypt.hashPassword(password);
-
-    const getMatchedAdmin = await adminModel.findOne({ email: addedBy });
-    if (!getMatchedAdmin) {
+    const getMatchedAdmin = await this.adminModel().findOne({ email: addedBy });
+    if (getMatchedAdmin) {
       return new Error((message = "Invalid admin email"));
     }
+    const hashedPass = await bcrypt.hashPassword(password);
+
     const adminInfo = {
       email: email,
       password: hashedPass.pass,
@@ -63,7 +63,6 @@ const adminsManager = {
     const newAdmin = new admin(adminInfo);
 
     const savedAdmin = await newAdmin.save();
-
     return savedAdmin;
   },
 
