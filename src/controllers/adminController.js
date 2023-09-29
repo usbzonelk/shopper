@@ -70,7 +70,43 @@ const adminLogin = async (email, enteredPassword) => {
   return outputMsg;
 };
 
+const verifyAdmin = async (email, verifierAdminEmail) => {
+  const outputMsg = {};
+
+  if (!validateMail(email) && !validateMail(verifierAdminEmail)) {
+    throw new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const adminInfo = await admins.getOneAdminInfo({ email: email });
+    if (!adminInfo) {
+      throw new Error((message = "Account not found"));
+    }
+    const verifierAdminInfo = await admins.getOneAdminInfo({
+      email: verifierAdminEmail,
+    });
+    if (!verifierAdminInfo) {
+      throw new Error((message = "Verifier account not found"));
+    }
+    if (verifierAdminInfo.status !== "verified") {
+      throw new Error((message = "Verifier Account is not verified"));
+    } else {
+      if (adminInfo.status == "verified") {
+        throw new Error((message = "Account is already verified"));
+      } else {
+        const verifiedAdmin = admins.editOneAdmin(
+          { email: "email" },
+          { status: "verified" }
+        );
+      }
+    }
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
+
 module.exports = {
   adminRegister,
   adminLogin,
+  verifyAdmin,
 };
