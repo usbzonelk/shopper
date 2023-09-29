@@ -56,7 +56,7 @@ const adminLogin = async (email, enteredPassword) => {
     throw new Error((message = "Entered Email Address is invalid"));
   }
   try {
-    const userInfo = await users.getOneUserInfo({ email: email });
+    const userInfo = await admins.getOneAdminInfo({ email: email });
     if (!userInfo) {
       throw new Error((message = "Account doesn't exist"));
     }
@@ -73,11 +73,7 @@ const adminLogin = async (email, enteredPassword) => {
     );
     if (accountValidity) {
       const userMail = userInfo.mail;
-      const refreshToken = auth.jwtRefreshGenerator(userEntredMail, "user");
-      const storeToken = await users.editOneUser(
-        { email: userInfo.email },
-        { refreshToken: refreshToken }
-      );
+      const refreshToken = auth.jwtRefreshGenerator(userEntredMail, "admin");
 
       outputMsg.user = { email: email, token: refreshToken };
       outputMsg.success = true;
@@ -96,4 +92,5 @@ const adminLogin = async (email, enteredPassword) => {
 
 module.exports = {
   admin,
+  adminLogin,
 };
