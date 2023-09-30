@@ -8,6 +8,7 @@ const checkDBConnection = require("./config/database").checkDbStatus;
 
 const { publicServer } = require("./graphql/publicServer");
 const { userServer } = require("./graphql/userServer");
+const { adminServer } = require("./graphql/adminServer");
 
 const PORT = 12345;
 
@@ -16,6 +17,7 @@ const app = express();
 const startServer = async () => {
   await userServer.start();
   await publicServer.start();
+  await adminServer.start();
 
   app.use("/expressOnly", (req, res) => {
     res.send("Hello from my custom endpoint!");
@@ -51,6 +53,24 @@ const startServer = async () => {
       }
     },
     expressMiddleware(userServer, {
+      context: async ({ req, res }) => ({
+        token: req.headers.authorization,
+      }),
+    })
+  );
+
+  app.use(
+    "/admin",
+    cors(),
+    json(),
+    (req, res, next) => {
+      if (!checkDBConnection().status) {
+        res.status(500).send(checkDBConnection().message);
+      } else {
+        next();
+      }
+    },
+    expressMiddleware(adminServer, {
       context: async ({ req, res }) => ({
         token: req.headers.authorization,
       }),

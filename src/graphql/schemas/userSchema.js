@@ -96,6 +96,7 @@ publicTypeDefs = publicTypeDefs + publicQueryDefs + publicMutationDefs;
 userTypeDefs = userTypeDefs + userQueryDefs + userMutationDefs;
 
 module.exports = {
-  publicTypeDefs /* adminUserTypeDefs*/,
+  publicTypeDefs,
+  adminUserTypeDefs,
   userTypeDefs,
 };

@@ -11,7 +11,22 @@ input Product{
     photos: [String]
     availability: String
     slugType: String!
-    customAttributes : [customAttribute]
+    customAttributes : [customAttributeInput]
+}
+
+type ProductOutput{
+  title: String!
+  slug:  String!
+  price: Float!
+  discount: Float
+  instock: Int
+  description: String
+  warrantyMonths: Int
+  coverPhoto: String
+  photos: [String]
+  availability: String
+  slugType: String!
+  customAttributes : [customAttribute]
 }
 `;
 
@@ -42,6 +57,17 @@ type customAttribute {
   defaultValue: String #Should change this later
   values:[String]
 }
+input customAttributeInput {
+  attributeName: String!
+  search: Boolean!
+  sort: Boolean!
+  type: String
+  qualitative: Boolean!
+  minValue: Float
+  maxValue: Float
+  defaultValue: String #Should change this later
+  values:[String]
+}
 `;
 
 const publicQueryDefs = `
@@ -58,8 +84,8 @@ type Query {
 
 const adminMutationDefs = `
 type Mutation {
-  CreateANewProduct(Product!) : Product!
-  EditProduct(Product!) : Product!
+  CreateANewProduct(newProduct: Product!) : ProductOutput!
+  EditProduct(editedProduct: Product!) : ProductOutput!
 }
 `;
 
