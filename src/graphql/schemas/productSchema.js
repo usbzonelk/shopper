@@ -89,8 +89,17 @@ type Mutation {
 }
 `;
 
+const adminQueryDefs = `
+type Query {
+ GetProduct : ProductOutput! #Should be removed later
+}
+`;
+
 adminProductsTypeDef =
-  adminProductsTypeDef + CustomAttributeTypeDef + adminMutationDefs;
+  adminProductsTypeDef +
+  CustomAttributeTypeDef +
+  adminQueryDefs +
+  adminMutationDefs;
 publicProductsTypeDef =
   publicProductsTypeDef + CustomAttributeTypeDef + publicQueryDefs;
 const userProductsTypeDef = ``;

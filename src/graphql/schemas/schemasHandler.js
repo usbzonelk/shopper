@@ -6,7 +6,7 @@ const publicSchemas =
   productSchema.publicProductsTypeDef + userSchema.publicTypeDefs;
 
 const adminSchemas =
-  cartSchema.userCartTypeDefs +
+  cartSchema.adminCartTypedefs +
   productSchema.adminProductsTypeDef +
   userSchema.adminUserTypeDefs;
 
