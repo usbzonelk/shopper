@@ -180,7 +180,6 @@ const newProductManager = {
       const newProduct = new Product(productDetails);
 
       const savedProduct = await newProduct.save();
-
       return savedProduct;
     } catch (err) {
       return err;

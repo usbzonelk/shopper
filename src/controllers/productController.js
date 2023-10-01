@@ -4,7 +4,7 @@ const productTypeManager = Product.newProductTypeManager;
 
 const products = {
   saveNewProduct: async function (productType, productDetails) {
-    savedProduct = null;
+    let savedProduct = null;
     const outputMsg = {};
     const productTypeName = productType;
 
@@ -21,7 +21,7 @@ const products = {
         }
         productTypeAttributes = productType.fields;
       } else {
-        return new Error((message = "Invalid Product type"));
+        throw new Error((message = "Invalid Product type"));
       }
 
       savedProduct = await productManager.saveNewProduct(
@@ -29,17 +29,19 @@ const products = {
         productDetails
       );
       if (savedProduct.error) {
-        return new Error(savedProduct.error);
+        throw new Error(savedProduct.error);
+      }
+      if ("code" in savedProduct) {
+        if (savedProduct.code === 11000 && "slug" in savedProduct.keyValue) {
+          throw new Error((message = "Slug already exists"));
+        }
       }
       outputMsg.product = savedProduct;
       outputMsg.success = true;
       outputMsg.message = "Successfully saved the product";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
-
     return outputMsg;
   },
 

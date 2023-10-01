@@ -1,3 +1,5 @@
+const GraphQLError = require("graphql").GraphQLError;
+
 const productController =
   require("../../controllers/productController").products;
 
@@ -89,7 +91,37 @@ const publicResolvers = {
 
 const adminResolvers = {
   Query: {},
-  Mutation: {},
+  Mutation: {
+    CreateANewProduct: async (_, { newProduct }, context) => {
+      const productType = newProduct.slugType;
+      try {
+        const newProductSaved = await productController.saveNewProduct(
+          productType,
+          newProduct
+        );
+        if (newProductSaved.error) {
+          throw new GraphQLError(newProductSaved.error.message, {
+            extensions: { code: "FAILED" },
+          });
+        }
+        return newProductSaved.product;
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: { code: "FAILED" },
+        });
+      }
+    },
+
+    EditProduct: async (_, { editedProduct }, context) => {
+      console.log(context);
+
+      const slugInfo = await productController.slugCheck(slug);
+      if (slugInfo.error) {
+        throw slugInfo.error;
+      }
+      return slugInfo.valid;
+    },
+  },
 };
 
 module.exports = {
