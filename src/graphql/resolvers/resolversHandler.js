@@ -1,11 +1,13 @@
 const cartResolver = require("./cartResolvers");
 const productResolver = require("./productResolvers");
 const userResolver = require("./userResolver");
+const adminResolver = require("./adminResolver");
 
 const publicResolvers = {
   Query: {
     ...userResolver.publicResolvers.Query,
     ...productResolver.publicResolvers.Query,
+    ...adminResolver.publicResolvers.Query,
   },
   Mutation: {
     ...userResolver.publicResolvers.Mutation,
@@ -26,10 +28,12 @@ const userResolvers = {
 const adminResolvers = {
   Query: {
     ...userResolver.adminResolvers.Query,
+    ...adminResolver.adminResolvers.Query,
   },
   Mutation: {
     ...productResolver.adminResolvers.Mutation,
     ...userResolver.adminResolvers.Mutation,
+    ...adminResolver.adminResolvers.Mutation,
   },
 };
 

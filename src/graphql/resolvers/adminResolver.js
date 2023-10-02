@@ -229,7 +229,9 @@ const adminResolvers = {
     },
   },
 };
-
+const publicResolvers = {
+  Query: {},
+};
 module.exports = {
   publicResolvers,
   adminResolvers,
