@@ -103,8 +103,8 @@ const adminMutationDefs = `
 type Mutation{
   ActivateUser(email: String!) : Boolean!
   DeactivateUser(email: String!) : Boolean!
-  ChangeUserEmail(email: String!) : Boolean!
-  ChangeUserPassword(email: String!) : Boolean!
+  ChangeUserEmail(email: String!, newEmail: String!) : Boolean!
+  ChangeUserPassword(email: String!, newPassword: String!) : Boolean!
 }
 `;
 

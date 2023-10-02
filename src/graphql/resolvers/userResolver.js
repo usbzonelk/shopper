@@ -209,7 +209,205 @@ const userResolvers = {
   },
 };
 
+const adminResolvers = {
+  Query: {
+    GetUserInfo: async (_, { email }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const email = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          const userInfo = await userController.getFullUserInfo(email);
+          if (userInfo) {
+            return userInfo.user;
+          } else {
+            throw new GraphQLError("Invalid email", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+    GetAllUsers: async (_, args, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const email = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          const userInfo = await userController.getFullUserInfo(email);
+          if (userInfo) {
+            return userInfo.user;
+          } else {
+            throw new GraphQLError("Invalid email", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+  },
+  Mutation: {
+    ChangeUserEmail: async (_, { newMail, email }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const oldEmail = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          const userUpdateInfo = await userController.changeMail(
+            oldEmail,
+            newMail,
+            password
+          );
+          if ("user" in userUpdateInfo) {
+            if (userUpdateInfo.user) {
+              return { success: true };
+            } else {
+              return { success: false };
+            }
+          } else {
+            throw new GraphQLError("Failed to update", {
+              extensions: { code: "FAILED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+
+    ChangeUserPassword: async (_, { newPassword, email }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const email = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          console.log(email);
+          const userUpdateInfo = await userController.changePassword(
+            email,
+            oldPassword,
+            newPassword
+          );
+          console.log(userUpdateInfo);
+          if ("user" in userUpdateInfo) {
+            if (userUpdateInfo.user) {
+              return { success: true };
+            } else {
+              return { success: false };
+            }
+          } else {
+            throw new GraphQLError("Failed to update", {
+              extensions: { code: "FAILED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+
+    ActivateUser: async (_, { email }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const email = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          const userUpdateInfo = await userController.changePersonalInfo(
+            email,
+            fullName,
+            address,
+            phone
+          );
+          console.log(userUpdateInfo);
+          if ("user" in userUpdateInfo) {
+            if (userUpdateInfo.user) {
+              return { success: true };
+            } else {
+              return { success: false };
+            }
+          } else {
+            throw new GraphQLError("Failed to update", {
+              extensions: { code: "FAILED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+    DeactivateUser: async (_, { email }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const email = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          ).email;
+          const userUpdateInfo = await userController.changePersonalInfo(
+            email,
+            fullName,
+            address,
+            phone
+          );
+          console.log(userUpdateInfo);
+          if ("user" in userUpdateInfo) {
+            if (userUpdateInfo.user) {
+              return { success: true };
+            } else {
+              return { success: false };
+            }
+          } else {
+            throw new GraphQLError("Failed to update", {
+              extensions: { code: "FAILED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+  },
+};
+
 module.exports = {
   publicResolvers,
   userResolvers,
+  adminResolvers,
 };
