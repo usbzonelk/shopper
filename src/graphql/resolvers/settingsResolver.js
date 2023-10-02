@@ -84,7 +84,8 @@ const adminResolvers = {
     },
   },
   Mutation: {
-    AddSetting: async (_, { settingInput }, contextValue) => {
+    AddSetting: async (_, { setting }, contextValue) => {
+      const settingInput = setting;
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(
@@ -102,6 +103,41 @@ const adminResolvers = {
           );
           if (addSetting) {
             return addSetting.setting;
+          } else {
+            throw new GraphQLError("Couldn't save the setting", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+
+    editSetting: async (_, { settingName, newSetting }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const tokenInfo = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          );
+          if (tokenInfo.role !== "admin") {
+            throw new GraphQLError("Forbidden", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+
+          const updatedSetting = await settingsController.editSetting(
+            settingName,
+            newSetting
+          );
+          if (updatedSetting) {
+            return updatedSetting.settings;
           } else {
             throw new GraphQLError("Couldn't save the setting", {
               extensions: { code: "NOT_FOUND" },
