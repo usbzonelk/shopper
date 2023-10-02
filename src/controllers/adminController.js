@@ -130,7 +130,7 @@ const deactivateAdmin = async (email, verifierEmail) => {
         throw new Error((message = "Privelege escalation is required"));
       } else if (verifierInfo.addedBy == "root") {
         const verifiedAdmin = await admins.editOneAdmin(
-          { email: "email" },
+          { email: email },
           { status: "deactivated" }
         );
         if ("error" in verifiedAdmin) {

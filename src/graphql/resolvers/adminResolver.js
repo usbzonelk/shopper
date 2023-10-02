@@ -81,6 +81,45 @@ const adminResolvers = {
         });
       }
     },
+
+    DeactivateAdmin: async (_, { email }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const tokenInfo = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          );
+          if (tokenInfo.role !== "admin") {
+            throw new GraphQLError("Forbidden", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+          const adminEmail = tokenInfo.email;
+          const newAdminInfo = await adminController.deactivateAdmin(
+            email,
+            adminEmail
+          );
+          if ("admin" in newAdminInfo) {
+            if (newAdminInfo.admin) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            throw new GraphQLError("Failed to update", {
+              extensions: { code: "FAILED" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
   },
 };
 
