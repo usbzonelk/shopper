@@ -121,6 +121,14 @@ const adminResolvers = {
       }
       return slugInfo.valid;
     },
+
+    DeleteProducts: async (_, { slugs }, context) => {
+      const deletedInfo = await productController.removeTheProducts(slugs)
+      if (deletedInfo.error) {
+        throw deletedInfo.error;
+      }
+      return deletedInfo.success;
+    },
   },
 };
 
