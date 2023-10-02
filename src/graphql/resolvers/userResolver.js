@@ -245,15 +245,20 @@ const adminResolvers = {
     GetAllUsers: async (_, args, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
-          const email = JSON.parse(
+          const tokenInfo = JSON.parse(
             Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          ).email;
-          const userInfo = await userController.getFullUserInfo(email);
-          if (userInfo) {
-            return userInfo.user;
-          } else {
-            throw new GraphQLError("Invalid email", {
+          );
+          if (tokenInfo.role !== "admin") {
+            throw new GraphQLError("Forbidden", {
               extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+          const usersInfo = await userController.getAllUsers();
+          if (usersInfo) {
+            return usersInfo.users;
+          } else {
+            throw new GraphQLError("No users found", {
+              extensions: { code: "NOT_FOUND" },
             });
           }
         } catch (error) {

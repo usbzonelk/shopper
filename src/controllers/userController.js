@@ -376,6 +376,21 @@ const getFullUserInfo = async (email) => {
   return outputMsg;
 };
 
+const getAllUsers = async () => {
+  const outputMsg = {};
+
+  try {
+    const usersInfo = await users.getAllUsers();
+
+    outputMsg.users = usersInfo;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved user data";
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
+
 const getUserID = async (email) => {
   const outputMsg = {};
   const userMail = email;
@@ -481,4 +496,5 @@ module.exports = {
   getUserID,
   getVerificationCode,
   verifyUserAccount,
+  getAllUsers,
 };
