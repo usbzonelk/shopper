@@ -1,4 +1,4 @@
-let adminProductsTypeDef = `
+let adminTypeDef = `
 type Admin{
   email: String!
   RegistrationDate:  String!
@@ -16,12 +16,13 @@ type Mutation {
 `;
 
 const adminQueryDefs = `
-type AdminLogin : Admin!
+type Query {
+    AdminLogin : Admin!
+}
 `;
 
-adminProductsTypeDef =
-  adminProductsTypeDef + adminQueryDefs + adminMutationDefs;
+adminTypeDef = adminTypeDef + adminQueryDefs + adminMutationDefs;
 
 module.exports = {
-  adminProductsTypeDef,
+  adminTypeDef,
 };
