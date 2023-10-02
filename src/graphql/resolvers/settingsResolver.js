@@ -154,6 +154,40 @@ const adminResolvers = {
         });
       }
     },
+
+    deleteSetting: async (_, { settingName }, contextValue) => {
+      if ("token" in contextValue && contextValue.token) {
+        try {
+          const tokenInfo = JSON.parse(
+            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
+          );
+          if (tokenInfo.role !== "admin") {
+            throw new GraphQLError("Forbidden", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+
+          const deletedSetting = await settingsController.deleteSetting(
+            settingName
+          );
+          if (deletedSetting) {
+            return deletedSetting.success;
+          } else {
+            throw new GraphQLError("Couldn't delete the setting", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
   },
 };
 
