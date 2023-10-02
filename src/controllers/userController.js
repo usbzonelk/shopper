@@ -83,9 +83,37 @@ const activateUserAdmin = async (email, adminEmail) => {
     outputMsg.success = true;
     outputMsg.message = "Successfully verified user";
   } catch (error) {
-    outputMsg.success = false;
-    outputMsg.message = "Error occured";
-    outputMsg.error = error.message;
+    throw error;
+  }
+  return outputMsg;
+};
+
+const deactivateUserAdmin = async (email, adminEmail) => {
+  let userEdited = null;
+  const outputMsg = {};
+  if (!validateMail(email) || !validateMail(adminEmail)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const mailValidity = await users.getOneUserInfo({ email: email });
+    if (!mailValidity) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    const adminValidity = await adminController.getAdminStatus(adminMail);
+
+    if (adminValidity.status) {
+      userEdited = await users.editOneUser(
+        { email: email },
+        { status: "deactivated" }
+      );
+    } else {
+      throw new Error((message = "Privilege escalation is required"));
+    }
+    outputMsg.user = { email: userEdited.email, status: userEdited.status };
+    outputMsg.success = true;
+    outputMsg.message = "Successfully deactivated user";
+  } catch (error) {
+    throw error;
   }
   return outputMsg;
 };
@@ -601,4 +629,5 @@ module.exports = {
   getAllUsers,
   changePasswordAdmin,
   activateUserAdmin,
+  deactivateUserAdmin,
 };
