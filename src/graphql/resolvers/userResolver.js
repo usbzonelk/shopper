@@ -317,16 +317,20 @@ const adminResolvers = {
     ChangeUserPassword: async (_, { newPassword, email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
-          const email = JSON.parse(
+          const tokenInfo = JSON.parse(
             Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          ).email;
-          console.log(email);
-          const userUpdateInfo = await userController.changePassword(
-            email,
-            oldPassword,
-            newPassword
           );
-          console.log(userUpdateInfo);
+          if (tokenInfo.role !== "admin") {
+            throw new GraphQLError("Forbidden", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+          const adminEmail = tokenInfo.email;
+          const userUpdateInfo = await userController.changePasswordAdmin(
+            email,
+            newPassword,
+            adminEmail
+          );
           if ("user" in userUpdateInfo) {
             if (userUpdateInfo.user) {
               return { success: true };
