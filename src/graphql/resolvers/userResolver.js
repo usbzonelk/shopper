@@ -366,19 +366,17 @@ const adminResolvers = {
             });
           }
           const adminEmail = tokenInfo.email;
-          
-          const userUpdateInfo = await userController.changePersonalInfo(
+
+          const userUpdateInfo = userController.activateUserAdmin(
             email,
-            fullName,
-            address,
-            phone
+            adminEmail
           );
-          console.log(userUpdateInfo);
+
           if ("user" in userUpdateInfo) {
             if (userUpdateInfo.user) {
-              return { success: true };
+              return true;
             } else {
-              return { success: false };
+              return false;
             }
           } else {
             throw new GraphQLError("Failed to update", {
@@ -396,6 +394,7 @@ const adminResolvers = {
         });
       }
     },
+
     DeactivateUser: async (_, { email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
