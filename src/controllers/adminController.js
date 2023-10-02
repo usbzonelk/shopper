@@ -94,8 +94,8 @@ const verifyAdmin = async (email, verifierAdminEmail) => {
       if (adminInfo.status == "verified") {
         throw new Error((message = "Account is already verified"));
       } else {
-        const verifiedAdmin = admins.editOneAdmin(
-          { email: "email" },
+        const verifiedAdmin = await admins.editOneAdmin(
+          { email: email },
           { status: "verified" }
         );
       }
@@ -129,7 +129,7 @@ const deactivateAdmin = async (email, verifierEmail) => {
       if (verifierInfo.addedBy !== "root") {
         throw new Error((message = "Privelege escalation is required"));
       } else if (verifierInfo.addedBy == "root") {
-        const verifiedAdmin = admins.editOneAdmin(
+        const verifiedAdmin = await admins.editOneAdmin(
           { email: "email" },
           { status: "deactivated" }
         );

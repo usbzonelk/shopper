@@ -105,7 +105,6 @@ const adminsManager = {
         new: true,
       }
     );
-
     return updatedAdmin;
   },
 

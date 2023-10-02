@@ -43,7 +43,7 @@ const adminResolvers = {
       }
     },
 
-    VerifyAdmin: async (_, { password, email }, contextValue) => {
+    VerifyAdmin: async (_, { email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(
