@@ -17,7 +17,7 @@ type AdminLogin{
 
 const adminMutationDefs = `
 type Mutation {
-  CreateAdmin(email: String!, password: String) : Boolean!
+  CreateAdmin(email: String!, password: String!) : Boolean!
   VerifyAdmin(email: String!) : Boolean!
   DeactivateAdmin(email: String!) : Boolean!
 }

@@ -17,7 +17,7 @@ const adminRegister = async (email, enteredPassword, createdBy) => {
     if (adminInfo) {
       throw new Error((message = "Account already exists"));
     } else {
-      const newAccount = admins.createNewAdmin(
+      const newAccount = await admins.createNewAdmin(
         newAdminEmail,
         enteredPassword,
         createdBy
