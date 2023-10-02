@@ -274,16 +274,22 @@ const adminResolvers = {
     },
   },
   Mutation: {
-    ChangeUserEmail: async (_, { newMail, email }, contextValue) => {
+    ChangeUserEmail: async (_, { newEmail, email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
-          const adminInfo = JSON.parse(
+          const tokenInfo = JSON.parse(
             Buffer.from(contextValue.token.split(".")[1], "base64").toString()
           );
-          const userUpdateInfo = await userController.changeMail(
-            oldEmail,
-            newMail,
-            password
+          if (tokenInfo.role !== "admin") {
+            throw new GraphQLError("Forbidden", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+          const adminEmail = tokenInfo.email;
+          const userUpdateInfo = await userController.changeMailAdmin(
+            email,
+            newEmail,
+            adminEmail
           );
           if ("user" in userUpdateInfo) {
             if (userUpdateInfo.user) {
