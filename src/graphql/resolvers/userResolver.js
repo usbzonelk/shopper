@@ -333,9 +333,9 @@ const adminResolvers = {
           );
           if ("user" in userUpdateInfo) {
             if (userUpdateInfo.user) {
-              return { success: true };
+              return true;
             } else {
-              return { success: false };
+              return false;
             }
           } else {
             throw new GraphQLError("Failed to update", {
