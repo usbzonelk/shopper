@@ -22,7 +22,7 @@ type Mutation {
 
 const publicQueryDefs = `
 type Query {
-    AdminLogin : AdminLogin!
+    AdminLogin(email: String!, enteredPassword: String!) : AdminLogin!
 }
 `;
 

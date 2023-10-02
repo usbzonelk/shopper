@@ -30,12 +30,14 @@ type Result{
 `;
 
 let adminTypeDefs = `
+scalar DateTime
+
 type User {
     email: String!
     fullName: String
     address: Address
     phoneNumber: String
-    registrationDate: String
+    registrationDate: DateTime
     status: String!
     password: String
 }
