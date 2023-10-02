@@ -146,9 +146,35 @@ const deactivateAdmin = async (email, verifierEmail) => {
   return outputMsg;
 };
 
+const getAdminStatus = async (email) => {
+  const outputMsg = {};
+
+  if (!validateMail(email)) {
+    throw new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const adminInfo = await admins.getOneAdminInfo({ email: email });
+    if (!adminInfo) {
+      throw new Error((message = "Account not found"));
+    }
+    if (adminInfo.status === "verified") {
+      outputMsg.status = true;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved";
+    } else {
+      outputMsg.status = false;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved";
+    }
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
 module.exports = {
   adminRegister,
   adminLogin,
   verifyAdmin,
   deactivateAdmin,
+  getAdminStatus,
 };

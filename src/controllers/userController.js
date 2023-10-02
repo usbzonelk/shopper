@@ -1,4 +1,6 @@
 const User = require("../models/Users");
+const adminController = require("./adminController");
+
 const bcrypt = require("../utils/bcrypt");
 const validateMail = require("../utils/stringValidators").validateMail;
 const auth = require("../utils/auth");
@@ -152,9 +154,50 @@ const changeMail = async (oldEmail, newEmail, password) => {
     outputMsg.success = true;
     outputMsg.message = "Successfully changed email";
   } catch (error) {
-    outputMsg.success = false;
-    outputMsg.message = "Error occured";
-    outputMsg.error = error.message;
+    throw error;
+  }
+  return outputMsg;
+};
+
+const changeMailAdmin = async (oldEmail, newEmail, adminMail) => {
+  let userEdited = null;
+  const outputMsg = {};
+  if (
+    !validateMail(oldEmail) ||
+    !validateMail(newEmail) ||
+    !validateMail(adminMail)
+  ) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const userInfo = await users.getOneUserInfo({ email: oldEmail });
+    if (!userInfo) {
+      throw new Error((message = "Account doesn't exist"));
+    }
+    const adminValidity = await adminController.getAdminStatus(adminMail);
+
+    if (!adminValidity.status) {
+      throw new Error((message = "Privilege escalation is required"));
+    }
+
+    if (adminValidity.status) {
+      const newMailInfo = await users.getOneUserInfo({ email: newEmail });
+      if (newMailInfo) {
+        throw new Error((message = "An account already exists"));
+      }
+      if (userInfo.status != "verified") {
+        throw new Error((message = "Account is not active"));
+      }
+      userEdited = await users.editOneUser(
+        { email: oldEmail },
+        { email: newEmail }
+      );
+    }
+    outputMsg.user = { email: userEdited.email, status: userEdited.status };
+    outputMsg.success = true;
+    outputMsg.message = "Successfully changed email";
+  } catch (error) {
+    throw error;
   }
   return outputMsg;
 };
@@ -487,6 +530,7 @@ module.exports = {
   deactivateUser,
   changePassword,
   changeMail,
+  changeMailAdmin,
   changePersonalInfo,
   userLogin,
   userLogout,

@@ -277,9 +277,9 @@ const adminResolvers = {
     ChangeUserEmail: async (_, { newMail, email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
-          const oldEmail = JSON.parse(
+          const adminInfo = JSON.parse(
             Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          ).email;
+          );
           const userUpdateInfo = await userController.changeMail(
             oldEmail,
             newMail,
