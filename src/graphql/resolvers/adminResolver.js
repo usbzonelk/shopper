@@ -229,9 +229,31 @@ const adminResolvers = {
     },
   },
 };
+
 const publicResolvers = {
-  Query: {},
+  Query: {
+    AdminLogin: async (_, args) => {
+      const { email, enteredPassword } = args;
+      let isAdminValid = null;
+      try {
+        isUserValid = await adminController.adminLogin(email, enteredPassword);
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+
+      if (isUserValid.error) {
+        throw new GraphQLError(isUserValid.error, {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      } else if (isUserValid.user) {
+        return isUserValid.user;
+      }
+    },
+  },
 };
+
 module.exports = {
   publicResolvers,
   adminResolvers,
