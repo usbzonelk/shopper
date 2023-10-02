@@ -205,12 +205,11 @@ const changeMailAdmin = async (oldEmail, newEmail, adminMail) => {
     if (!userInfo) {
       throw new Error((message = "Account doesn't exist"));
     }
-    //const adminValidity = await adminController.getAdminStatus(adminMail);
-    const adminValidity = { status: true };
+    const adminValidity = await adminController.getAdminStatus(adminMail);
 
     if (adminValidity.status) {
       const newMailInfo = await users.getOneUserInfo({ email: newEmail });
-      console.log(newMailInfo)
+      console.log(newMailInfo);
       if (newMailInfo) {
         throw new Error((message = "An account already exists"));
       }

@@ -280,7 +280,7 @@ const adminResolvers = {
           const tokenInfo = JSON.parse(
             Buffer.from(contextValue.token.split(".")[1], "base64").toString()
           );
-          if (tokenInfo.role == "admin") {
+          if (tokenInfo.role !== "admin") {
             throw new GraphQLError("Forbidden", {
               extensions: { code: "UNAUTHENTICATED" },
             });
