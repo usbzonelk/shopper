@@ -14,10 +14,6 @@ input Product{
     customAttributes : [customAttributeInput]
 }
 
-input Slugs{
-    slugs : [String]!
-}
-
 type ProductOutput{
   title: String!
   slug:  String!
@@ -90,7 +86,7 @@ const adminMutationDefs = `
 type Mutation {
   CreateANewProduct(newProduct: Product!) : ProductOutput!
   EditProduct(editedProduct: Product!) : ProductOutput!
-  DeleteProducts(slugs: Slugs!) : Boolean!
+  DeleteProducts(slugs: [String]!) : Boolean!
 }
 `;
 
