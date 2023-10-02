@@ -402,7 +402,7 @@ const products = {
 
       outputMsg.deleted = deletedProduct;
       outputMsg.success = true;
-      outputMsg.message = "Successfully retrieved the product slugs";
+      outputMsg.message = `Deleted: ${productSlugs}`;
     } catch (err) {
       throw err;
     }

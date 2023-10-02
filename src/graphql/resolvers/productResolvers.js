@@ -123,11 +123,11 @@ const adminResolvers = {
     },
 
     DeleteProducts: async (_, { slugs }, context) => {
-      const deletedInfo = await productController.removeTheProducts(slugs)
+      const deletedInfo = await productController.removeTheProducts(slugs);
       if (deletedInfo.error) {
         throw deletedInfo.error;
       }
-      return deletedInfo.success;
+      return deletedInfo.message;
     },
   },
 };

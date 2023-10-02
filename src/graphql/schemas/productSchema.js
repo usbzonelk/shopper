@@ -86,7 +86,7 @@ const adminMutationDefs = `
 type Mutation {
   CreateANewProduct(newProduct: Product!) : ProductOutput!
   EditProduct(editedProduct: Product!) : ProductOutput!
-  DeleteProducts(slugs: [String]!) : Boolean!
+  DeleteProducts(slugs: [String]!) : String!
 }
 `;
 
