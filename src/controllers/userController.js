@@ -115,9 +115,40 @@ const changePassword = async (email, oldPass, newPass) => {
     outputMsg.success = true;
     outputMsg.message = "Successfully changed password";
   } catch (error) {
-    outputMsg.success = false;
-    outputMsg.message = "Error occured";
-    outputMsg.error = error.message;
+    throw error;
+  }
+  return outputMsg;
+};
+
+const changePasswordAdmin = async (email, userPassword, adminMail) => {
+  let userEdited = null;
+  const outputMsg = {};
+  if (!validateMail(email) || !validateMail(adminMail)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const userInfo = await users.getOneUserInfo({ email: email });
+    if (!userInfo) {
+      throw new Error((message = "Account doesn't exist"));
+    }
+    const adminValidity = await adminController.getAdminStatus(adminMail);
+
+    if (!adminValidity.status) {
+      throw new Error((message = "Privilege escalation is required"));
+    }
+
+    if (adminValidity.status) {
+      const newPassHashed = await bcrypt.hashPassword(userPassword);
+      userEdited = await users.editOneUser(
+        { email: email },
+        { password: newPassHashed.pass }
+      );
+    }
+    outputMsg.user = { email: userEdited.email, status: userEdited.status };
+    outputMsg.success = true;
+    outputMsg.message = "Successfully changed password";
+  } catch (error) {
+    throw error;
   }
   return outputMsg;
 };
@@ -541,4 +572,5 @@ module.exports = {
   getVerificationCode,
   verifyUserAccount,
   getAllUsers,
+  changePasswordAdmin,
 };
