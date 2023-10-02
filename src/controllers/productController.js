@@ -386,6 +386,35 @@ const products = {
 
     return outputMsg;
   },
+
+  removeTheProducts: async function (productSlugs) {
+    let productToBeRemoved;
+    const outputMsg = {};
+    try {
+      productToBeRemoved = await productManager.getOneProduct(
+        { slug: { $in: productSlugs } },
+        {
+          slug: 1,
+          _id: 0,
+        }
+      );
+
+      if (!productToBeRemoved) {
+        throw new Error((message = "Slug is invalid"));
+      }
+      const deletedProduct = await productManager.deleteManyProducts({
+        slug: { $in: productSlugs },
+      });
+
+      outputMsg.deleted = deletedProduct;
+      outputMsg.success = true;
+      outputMsg.message = "Successfully retrieved the product slugs";
+    } catch (err) {
+      throw err;
+    }
+
+    return outputMsg;
+  },
 };
 
 const productTypes = {};

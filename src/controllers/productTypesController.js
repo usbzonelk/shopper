@@ -13,7 +13,7 @@ const productTypes = {
       let productTypeAttributes = productTypeData;
       if (!productTypeExists) {
         console.log(productTypeExists);
-        return new Error((message = "Product type doesn't exist"));
+        throw new Error((message = "Product type doesn't exist"));
       }
 
       const fullSavedProduct = await ProductTypes.productTypes.saveNewAttribute(
@@ -25,9 +25,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = "Successfully saved the product attributes";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
 
     return outputMsg;
