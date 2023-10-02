@@ -24,9 +24,12 @@ const userResolvers = {
 };
 
 const adminResolvers = {
-  
+  Query: {
+    ...userResolver.adminResolvers.Query,
+  },
   Mutation: {
     ...productResolver.adminResolvers.Mutation,
+    ...userResolver.adminResolvers.Mutation,
   },
 };
 
