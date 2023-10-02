@@ -22,6 +22,7 @@ const adminRegister = async (email, enteredPassword, createdBy) => {
         enteredPassword,
         createdBy
       );
+      outputMsg.admin = newAccount;
     }
   } catch (error) {
     throw error;

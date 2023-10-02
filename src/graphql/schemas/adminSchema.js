@@ -1,7 +1,10 @@
 let adminTypeDef = `
+
+scalar DateTime
+
 type Admin{
   email: String!
-  RegistrationDate:  String!
+  RegistrationDate:  DateTime!
   Status: String
   AddedBy: String
   }
@@ -14,7 +17,7 @@ type AdminLogin{
 
 const adminMutationDefs = `
 type Mutation {
-  CreateAdmin(email: String!, password: String) : Admin!
+  CreateAdmin(email: String!, password: String) : Boolean!
   VerifyAdmin(email: String!) : Boolean!
   DeactivateAdmin(email: String!) : Boolean!
 }
