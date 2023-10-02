@@ -408,7 +408,7 @@ const adminResolvers = {
           }
           const adminEmail = tokenInfo.email;
 
-          const userUpdateInfo = userController.activateUserAdmin(
+          const userUpdateInfo = userController.deactivateUserAdmin(
             email,
             adminEmail
           );
