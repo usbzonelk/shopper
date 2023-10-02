@@ -8,6 +8,14 @@ type ProductType {
 type ProductTypeAttribute {
     name: String!
     value: String!
+    search: Boolean!
+    sort: Boolean!
+    type: String!
+    qualitative: Boolean!
+    minValue: Float
+    maxValue: Float
+    defaultValue: String
+    values: [String] 
 }
 input ProductTypeInput {
     slugtype: String!
@@ -18,8 +26,15 @@ input ProductTypeInput {
 input ProductTypeAttributeInput {
     name: String!
     value: String!
+    search: Boolean!
+    sort: Boolean!
+    type: String!
+    qualitative: Boolean!
+    minValue: Float
+    maxValue: Float
+    defaultValue: String
+    values: [String] 
 }
-
 `;
 
 let publicTypeDefs = `
@@ -32,6 +47,14 @@ type ProductType {
 type ProductTypeAttribute {
     name: String!
     value: String!
+    search: Boolean!
+    sort: Boolean!
+    type: String!
+    qualitative: Boolean!
+    minValue: Float
+    maxValue: Float
+    defaultValue: String
+    values: [String] 
 }
 `;
 

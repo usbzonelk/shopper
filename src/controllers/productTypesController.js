@@ -43,10 +43,10 @@ const productTypes = {
         });
       let productTypeAttributes = {};
       if (productTypeExists) {
-        if (productTypeExists.error) {
+        if ("error" in productTypeExists) {
           throw new Error(productTypeExists.error);
         }
-        return new Error((message = "Product type already exists"));
+        throw new Error((message = "Product type already exists"));
       }
 
       savedProduct =
@@ -66,9 +66,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = "Successfully saved new product type";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
 
     return outputMsg;
@@ -86,9 +84,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the product types";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
 
     return outputMsg;
@@ -105,9 +101,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the attributes";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -129,9 +123,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully edited the attribute ${usersAttributeName}`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -152,9 +144,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully deleted the attribute ${usersAttributeName}`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -177,9 +167,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully retrieved all qualitative attributes`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -202,9 +190,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully retrieved all quantitative attributes`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -227,9 +213,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully retrieved all search positive attributes`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -252,9 +236,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully retrieved all sortable attributes`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -276,9 +258,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully retrieved all values of the given attribute`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -298,9 +278,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully added new values to the attribute ${usersAttributeName}`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
@@ -324,9 +302,7 @@ const productTypes = {
       outputMsg.success = true;
       outputMsg.message = `Successfully removed the values from the attribute ${usersAttributeName}`;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
     return outputMsg;
   },
