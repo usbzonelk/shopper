@@ -120,7 +120,7 @@ const adminResolvers = {
       }
     },
 
-    editSetting: async (_, { settingName, newSetting }, contextValue) => {
+    EditSetting: async (_, { settingName, newSetting }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(
@@ -131,7 +131,6 @@ const adminResolvers = {
               extensions: { code: "UNAUTHENTICATED" },
             });
           }
-
           const updatedSetting = await settingsController.editSetting(
             settingName,
             newSetting
@@ -155,7 +154,7 @@ const adminResolvers = {
       }
     },
 
-    deleteSetting: async (_, { settingName }, contextValue) => {
+    DeleteSetting: async (_, { settingName }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(

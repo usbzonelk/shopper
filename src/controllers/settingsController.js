@@ -77,7 +77,9 @@ const settings = {
       }
 
       editedSettings = await SettingsManager.editOneSetting(
-        settingName,
+        {
+          setting: settingName,
+        },
         newValue
       );
 

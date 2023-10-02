@@ -34,8 +34,8 @@ type Query {
 const adminMutationDefs = `
 type Mutation{
     AddSetting(setting: SettingInput!): Setting!
-    editSetting(settingName: String!, newSetting: SettingInput!): Setting!
-    deleteSetting(settingName: String!): Boolean!
+    EditSetting(settingName: String!, newSetting: SettingInput!): Setting!
+    DeleteSetting(settingName: String!): Boolean!
 }
 `;
 
