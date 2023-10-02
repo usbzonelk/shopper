@@ -84,7 +84,7 @@ const adminResolvers = {
     },
   },
   Mutation: {
-    /* ChangeUserEmail: async (_, { newEmail, email }, contextValue) => {
+    AddSetting: async (_, { settingInput }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(
@@ -95,21 +95,16 @@ const adminResolvers = {
               extensions: { code: "UNAUTHENTICATED" },
             });
           }
-          const adminEmail = tokenInfo.email;
-          const userUpdateInfo = await userController.changeMailAdmin(
-            email,
-            newEmail,
-            adminEmail
+
+          const addSetting = await settingsController.saveNewSetting(
+            settingInput.setting,
+            settingInput.value
           );
-          if ("user" in userUpdateInfo) {
-            if (userUpdateInfo.user) {
-              return true;
-            } else {
-              return false;
-            }
+          if (addSetting) {
+            return addSetting.setting;
           } else {
-            throw new GraphQLError("Failed to update", {
-              extensions: { code: "FAILED" },
+            throw new GraphQLError("Couldn't save the setting", {
+              extensions: { code: "NOT_FOUND" },
             });
           }
         } catch (error) {
@@ -123,128 +118,6 @@ const adminResolvers = {
         });
       }
     },
-
-    ChangeUserPassword: async (_, { newPassword, email }, contextValue) => {
-      if ("token" in contextValue && contextValue.token) {
-        try {
-          const tokenInfo = JSON.parse(
-            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          );
-          if (tokenInfo.role !== "admin") {
-            throw new GraphQLError("Forbidden", {
-              extensions: { code: "UNAUTHENTICATED" },
-            });
-          }
-          const adminEmail = tokenInfo.email;
-          const userUpdateInfo = await userController.changePasswordAdmin(
-            email,
-            newPassword,
-            adminEmail
-          );
-          if ("user" in userUpdateInfo) {
-            if (userUpdateInfo.user) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            throw new GraphQLError("Failed to update", {
-              extensions: { code: "FAILED" },
-            });
-          }
-        } catch (error) {
-          throw new GraphQLError(error.message, {
-            extensions: { code: "UNAUTHENTICATED" },
-          });
-        }
-      } else {
-        throw new GraphQLError("Invalid credentials", {
-          extensions: { code: "UNAUTHENTICATED" },
-        });
-      }
-    },
-
-    ActivateUser: async (_, { email }, contextValue) => {
-      if ("token" in contextValue && contextValue.token) {
-        try {
-          const tokenInfo = JSON.parse(
-            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          );
-          if (tokenInfo.role !== "admin") {
-            throw new GraphQLError("Forbidden", {
-              extensions: { code: "UNAUTHENTICATED" },
-            });
-          }
-          const adminEmail = tokenInfo.email;
-
-          const userUpdateInfo = userController.activateUserAdmin(
-            email,
-            adminEmail
-          );
-
-          if ("user" in userUpdateInfo) {
-            if (userUpdateInfo.user) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            throw new GraphQLError("Failed to update", {
-              extensions: { code: "FAILED" },
-            });
-          }
-        } catch (error) {
-          throw new GraphQLError(error.message, {
-            extensions: { code: "UNAUTHENTICATED" },
-          });
-        }
-      } else {
-        throw new GraphQLError("Invalid credentials", {
-          extensions: { code: "UNAUTHENTICATED" },
-        });
-      }
-    },
-
-    DeactivateUser: async (_, { email }, contextValue) => {
-      if ("token" in contextValue && contextValue.token) {
-        try {
-          const tokenInfo = JSON.parse(
-            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          );
-          if (tokenInfo.role !== "admin") {
-            throw new GraphQLError("Forbidden", {
-              extensions: { code: "UNAUTHENTICATED" },
-            });
-          }
-          const adminEmail = tokenInfo.email;
-
-          const userUpdateInfo = userController.deactivateUserAdmin(
-            email,
-            adminEmail
-          );
-
-          if ("user" in userUpdateInfo) {
-            if (userUpdateInfo.user) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            throw new GraphQLError("Failed to update", {
-              extensions: { code: "FAILED" },
-            });
-          }
-        } catch (error) {
-          throw new GraphQLError(error.message, {
-            extensions: { code: "UNAUTHENTICATED" },
-          });
-        }
-      } else {
-        throw new GraphQLError("Invalid credentials", {
-          extensions: { code: "UNAUTHENTICATED" },
-        });
-      }
-    }, */
   },
 };
 
