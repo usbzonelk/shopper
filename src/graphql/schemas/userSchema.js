@@ -29,7 +29,7 @@ type Result{
 }
 `;
 
-const adminUserTypeDefs = `
+let adminTypeDefs = `
 type User {
     email: String!
     fullName: String
@@ -92,11 +92,28 @@ type Mutation {
   ChangePersonalInfo(fullName: String, address: InputAddress, phone: String) : Result!
 }`;
 
+const adminQueryDefs = `
+type Query {
+  GetUserInfo(email: String!) : User!
+  GetAllUsers : [User]!
+}
+`;
+
+const adminMutationDefs = `
+type Mutation{
+  ActivateUser(email: String!) : Boolean!
+  DeactivateUser(email: String!) : Boolean!
+  ChangeUserEmail(email: String!) : Boolean!
+  ChangeUserPassword(email: String!) : Boolean!
+}
+`;
+
 publicTypeDefs = publicTypeDefs + publicQueryDefs + publicMutationDefs;
 userTypeDefs = userTypeDefs + userQueryDefs + userMutationDefs;
+adminTypeDefs = adminTypeDefs + adminQueryDefs + adminMutationDefs;
 
 module.exports = {
   publicTypeDefs,
-  adminUserTypeDefs,
+  adminTypeDefs,
   userTypeDefs,
 };
