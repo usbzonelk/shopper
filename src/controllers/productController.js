@@ -391,16 +391,11 @@ const products = {
     let productToBeRemoved;
     const outputMsg = {};
     try {
-      productToBeRemoved = await productManager.getOneProduct(
-        { slug: { $in: productSlugs } },
-        {
-          slug: 1,
-          _id: 0,
-        }
-      );
+      const checkTheSlugs = await this.getSlugs(productSlugs);
+      productToBeRemoved = checkTheSlugs.productIDs;
 
       if (!productToBeRemoved) {
-        throw new Error((message = "Slug is invalid"));
+        throw new Error((message = "Slugs are invalid"));
       }
       const deletedProduct = await productManager.deleteManyProducts({
         slug: { $in: productSlugs },
