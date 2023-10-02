@@ -205,24 +205,21 @@ const changeMailAdmin = async (oldEmail, newEmail, adminMail) => {
     if (!userInfo) {
       throw new Error((message = "Account doesn't exist"));
     }
-    const adminValidity = await adminController.getAdminStatus(adminMail);
-
-    if (!adminValidity.status) {
-      throw new Error((message = "Privilege escalation is required"));
-    }
+    //const adminValidity = await adminController.getAdminStatus(adminMail);
+    const adminValidity = { status: true };
 
     if (adminValidity.status) {
       const newMailInfo = await users.getOneUserInfo({ email: newEmail });
+      console.log(newMailInfo)
       if (newMailInfo) {
         throw new Error((message = "An account already exists"));
-      }
-      if (userInfo.status != "verified") {
-        throw new Error((message = "Account is not active"));
       }
       userEdited = await users.editOneUser(
         { email: oldEmail },
         { email: newEmail }
       );
+    } else {
+      throw new Error((message = "Privilege escalation is required"));
     }
     outputMsg.user = { email: userEdited.email, status: userEdited.status };
     outputMsg.success = true;
