@@ -15,6 +15,13 @@ type AdminLogin{
 }
 `;
 
+const adminPublicTypeDef = `
+type AdminLogin{
+  email: String!
+  token: String!
+}
+`;
+
 const adminMutationDefs = `
 type Mutation {
   CreateAdmin(email: String!, password: String!) : Boolean!
@@ -30,7 +37,7 @@ type Query {
 `;
 
 adminTypeDef = adminTypeDef + adminMutationDefs;
-let publicTypeDef = publicQueryDefs + adminTypeDef;
+let publicTypeDef = publicQueryDefs + adminPublicTypeDef;
 
 module.exports = {
   adminTypeDef,
