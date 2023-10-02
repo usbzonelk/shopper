@@ -2,11 +2,13 @@ const cartSchema = require("./cartSchema");
 const productSchema = require("./productSchema");
 const userSchema = require("./userSchema");
 const adminSchema = require("./adminSchema");
+const settingsSchema = require("./settingsSchema");
 
 const publicSchemas =
   productSchema.publicProductsTypeDef +
   userSchema.publicTypeDefs +
-  adminSchema.publicTypeDef;
+  adminSchema.publicTypeDef +
+  settingsSchema.publicTypeDefs;
 
 const adminSchemas =
   cartSchema.adminCartTypedefs +

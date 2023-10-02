@@ -18,8 +18,8 @@ const publicResolvers = {
 };
 
 const adminResolvers = {
- /*  Query: {
-    GetUserInfo: async (_, { email }, contextValue) => {
+  Query: {
+    /*  GetUserInfo: async (_, { email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(
@@ -79,10 +79,10 @@ const adminResolvers = {
           extensions: { code: "UNAUTHENTICATED" },
         });
       }
-    },
+    }, */
   },
   Mutation: {
-    ChangeUserEmail: async (_, { newEmail, email }, contextValue) => {
+    /* ChangeUserEmail: async (_, { newEmail, email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(
@@ -242,8 +242,8 @@ const adminResolvers = {
           extensions: { code: "UNAUTHENTICATED" },
         });
       }
-    },
-  }, */
+    }, */
+  },
 };
 
 module.exports = {
