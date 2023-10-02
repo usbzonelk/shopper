@@ -73,7 +73,7 @@ const adminLogin = async (email, enteredPassword) => {
 const verifyAdmin = async (email, verifierAdminEmail) => {
   const outputMsg = {};
 
-  if (!validateMail(email) && !validateMail(verifierAdminEmail)) {
+  if (!validateMail(email) || !validateMail(verifierAdminEmail)) {
     throw new Error((message = "Entered Email Address is invalid"));
   }
   try {
@@ -98,6 +98,47 @@ const verifyAdmin = async (email, verifierAdminEmail) => {
           { status: "verified" }
         );
       }
+      outputMsg.admin = { email: email };
+      outputMsg.success = true;
+      outputMsg.message = "Successfully verified";
+    }
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
+
+const deactivateAdmin = async (email, verifierEmail) => {
+  const outputMsg = {};
+
+  if (!validateMail(email) || !validateMail(verifierEmail)) {
+    throw new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const adminInfo = await admins.getOneAdminInfo({ email: email });
+    if (!adminInfo) {
+      throw new Error((message = "Account not found"));
+    }
+
+    const verifierInfo = await admins.getOneAdminInfo({ email: verifierEmail });
+    if (!verifierInfo) {
+      throw new Error((message = "Account not found"));
+    }
+    if (verifierInfo) {
+      if (verifierInfo.addedBy !== "root") {
+        throw new Error((message = "Privelege escalation is required"));
+      } else if (verifierInfo.addedBy == "root") {
+        const verifiedAdmin = admins.editOneAdmin(
+          { email: "email" },
+          { status: "deactivated" }
+        );
+        if ("error" in verifiedAdmin) {
+          throw verifiedAdmin.error;
+        }
+        outputMsg.admin = { email: email };
+        outputMsg.success = true;
+        outputMsg.message = "Successfully deactivated";
+      }
     }
   } catch (error) {
     throw error;
@@ -109,4 +150,5 @@ module.exports = {
   adminRegister,
   adminLogin,
   verifyAdmin,
+  deactivateAdmin,
 };
