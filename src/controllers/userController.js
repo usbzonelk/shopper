@@ -371,9 +371,7 @@ const getFullUserInfo = async (email) => {
     outputMsg.success = true;
     outputMsg.message = "Successfully retrieved user data";
   } catch (error) {
-    outputMsg.success = false;
-    outputMsg.message = "Error occured";
-    outputMsg.error = error.message;
+    throw error;
   }
   return outputMsg;
 };
