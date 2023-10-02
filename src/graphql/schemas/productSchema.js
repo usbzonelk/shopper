@@ -91,9 +91,6 @@ type Mutation {
 `;
 
 const adminQueryDefs = `
-type Query {
- GetProduct : ProductOutput! #Should be removed later
-}
 `;
 
 adminProductsTypeDef =
