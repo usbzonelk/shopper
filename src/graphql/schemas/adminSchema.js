@@ -5,6 +5,11 @@ type Admin{
   Status: String
   AddedBy: String
   }
+
+type AdminLogin{
+    email: String!
+    token: String!
+}
 `;
 
 const adminMutationDefs = `
@@ -15,14 +20,16 @@ type Mutation {
 }
 `;
 
-const adminQueryDefs = `
+const publicQueryDefs = `
 type Query {
-    AdminLogin : Admin!
+    AdminLogin : AdminLogin!
 }
 `;
 
-adminTypeDef = adminTypeDef + adminQueryDefs + adminMutationDefs;
+adminTypeDef = adminTypeDef + adminMutationDefs;
+let publicTypeDef = publicQueryDefs + adminTypeDef;
 
 module.exports = {
   adminTypeDef,
+  publicTypeDef,
 };
