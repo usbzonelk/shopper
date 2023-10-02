@@ -357,9 +357,16 @@ const adminResolvers = {
     ActivateUser: async (_, { email }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
-          const email = JSON.parse(
+          const tokenInfo = JSON.parse(
             Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          ).email;
+          );
+          if (tokenInfo.role !== "admin") {
+            throw new GraphQLError("Forbidden", {
+              extensions: { code: "UNAUTHENTICATED" },
+            });
+          }
+          const adminEmail = tokenInfo.email;
+          
           const userUpdateInfo = await userController.changePersonalInfo(
             email,
             fullName,

@@ -58,6 +58,38 @@ const verifyUserStatus = async (email) => {
   return outputMsg;
 };
 
+const activateUserAdmin = async (email, adminEmail) => {
+  let userEdited = null;
+  const outputMsg = {};
+  if (!validateMail(email) || !validateMail(adminEmail)) {
+    return new Error((message = "Entered Email Address is invalid"));
+  }
+  try {
+    const mailValidity = await users.getOneUserInfo({ email: email });
+    if (!mailValidity) {
+      return new Error((message = "Account doesn't exist"));
+    }
+    const adminValidity = await adminController.getAdminStatus(adminMail);
+
+    if (adminValidity.status) {
+      userEdited = await users.editOneUser(
+        { email: email },
+        { status: "verified" }
+      );
+    } else {
+      throw new Error((message = "Privilege escalation is required"));
+    }
+    outputMsg.user = { email: userEdited.email, status: userEdited.status };
+    outputMsg.success = true;
+    outputMsg.message = "Successfully verified user";
+  } catch (error) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = error.message;
+  }
+  return outputMsg;
+};
+
 const deactivateUser = async (email) => {
   let userEdited = null;
   const outputMsg = {};
@@ -209,7 +241,6 @@ const changeMailAdmin = async (oldEmail, newEmail, adminMail) => {
 
     if (adminValidity.status) {
       const newMailInfo = await users.getOneUserInfo({ email: newEmail });
-      console.log(newMailInfo);
       if (newMailInfo) {
         throw new Error((message = "An account already exists"));
       }
@@ -569,4 +600,5 @@ module.exports = {
   verifyUserAccount,
   getAllUsers,
   changePasswordAdmin,
+  activateUserAdmin,
 };
