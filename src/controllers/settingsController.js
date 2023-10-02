@@ -11,16 +11,14 @@ const settings = {
         setting: setting,
       });
       if (isSettingThere) {
-        return new Error((message = "Setting already exists"));
+        throw new Error((message = "Setting already exists"));
       }
       savedSetting = await SettingsManager.saveSetting(setting, value);
       outputMsg.setting = savedSetting;
       outputMsg.success = true;
       outputMsg.message = "Successfully saved the setting";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
+      throw err;
     }
 
     return outputMsg;
@@ -36,22 +34,19 @@ const settings = {
       });
 
       if (!savedSetting) {
-        return new Error((message = "Invalid slug"));
+        throw new Error((message = "Invalid setting name"));
       }
 
       outputMsg.setting = savedSetting;
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the setting";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
-      return outputMsg;
+      throw err;
     }
 
     return outputMsg;
   },
-  
+
   getAllSettings: async function () {
     let savedSettings = null;
     const outputMsg = {};
@@ -63,10 +58,7 @@ const settings = {
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the settings";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
-      return outputMsg;
+      throw err;
     }
 
     return outputMsg;
@@ -81,7 +73,7 @@ const settings = {
         setting: settingName,
       });
       if (!isSettingThere) {
-        return new Error((message = "There is no such a setting"));
+        throw new Error((message = "There is no such a setting"));
       }
 
       editedSettings = await SettingsManager.editOneSetting(
@@ -93,10 +85,7 @@ const settings = {
       outputMsg.success = true;
       outputMsg.message = "Successfully edited the setting";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
-      return outputMsg;
+      throw err;
     }
 
     return outputMsg;
@@ -111,7 +100,7 @@ const settings = {
         setting: settingName,
       });
       if (!isSettingThere) {
-        return new Error((message = "There is no such a setting"));
+        throw new Error((message = "There is no such a setting"));
       }
 
       deletedSetting = await SettingsManager.deleteOneSetting({
@@ -122,10 +111,7 @@ const settings = {
       outputMsg.success = true;
       outputMsg.message = "Successfully deleted the setting";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
-      return outputMsg;
+      throw err;
     }
 
     return outputMsg;
