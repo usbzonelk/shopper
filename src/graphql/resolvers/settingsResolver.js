@@ -19,7 +19,7 @@ const publicResolvers = {
 
 const adminResolvers = {
   Query: {
-    /*  GetUserInfo: async (_, { email }, contextValue) => {
+    GetSetting: async (_, { settingName }, contextValue) => {
       if ("token" in contextValue && contextValue.token) {
         try {
           const tokenInfo = JSON.parse(
@@ -31,11 +31,11 @@ const adminResolvers = {
             });
           }
 
-          const userInfo = await userController.getFullUserInfo(email);
-          if (userInfo) {
-            return userInfo.user;
+          const getSetting = await settingsController.getSetting(settingName);
+          if (getSetting) {
+            return getSetting.setting;
           } else {
-            throw new GraphQLError("Invalid user email", {
+            throw new GraphQLError("Invalid setting name", {
               extensions: { code: "NOT_FOUND" },
             });
           }
@@ -50,36 +50,6 @@ const adminResolvers = {
         });
       }
     },
-    GetAllUsers: async (_, args, contextValue) => {
-      if ("token" in contextValue && contextValue.token) {
-        try {
-          const tokenInfo = JSON.parse(
-            Buffer.from(contextValue.token.split(".")[1], "base64").toString()
-          );
-          if (tokenInfo.role !== "admin") {
-            throw new GraphQLError("Forbidden", {
-              extensions: { code: "UNAUTHENTICATED" },
-            });
-          }
-          const usersInfo = await userController.getAllUsers();
-          if (usersInfo) {
-            return usersInfo.users;
-          } else {
-            throw new GraphQLError("No users found", {
-              extensions: { code: "NOT_FOUND" },
-            });
-          }
-        } catch (error) {
-          throw new GraphQLError(error.message, {
-            extensions: { code: "UNAUTHENTICATED" },
-          });
-        }
-      } else {
-        throw new GraphQLError("Invalid credentials", {
-          extensions: { code: "UNAUTHENTICATED" },
-        });
-      }
-    }, */
   },
   Mutation: {
     /* ChangeUserEmail: async (_, { newEmail, email }, contextValue) => {

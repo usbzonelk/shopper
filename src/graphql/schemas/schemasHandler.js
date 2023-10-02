@@ -14,7 +14,8 @@ const adminSchemas =
   cartSchema.adminCartTypedefs +
   productSchema.adminProductsTypeDef +
   userSchema.adminTypeDefs +
-  adminSchema.adminTypeDef;
+  adminSchema.adminTypeDef +
+  settingsSchema.adminTypeDefs;
 
 const userSchemas =
   cartSchema.userCartTypeDefs +
