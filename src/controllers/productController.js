@@ -347,10 +347,7 @@ const products = {
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the product IDs";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
-      return outputMsg;
+      throw err;
     }
 
     return outputMsg;
@@ -378,10 +375,7 @@ const products = {
       outputMsg.success = true;
       outputMsg.message = "Successfully retrieved the product slugs";
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
-      return outputMsg;
+      throw err;
     }
 
     return outputMsg;
@@ -391,12 +385,17 @@ const products = {
     let productToBeRemoved;
     const outputMsg = {};
     try {
-      const checkTheSlugs = await this.getSlugs(productSlugs);
+      const checkTheSlugs = await this.getProductIDs(productSlugs);
       productToBeRemoved = checkTheSlugs.productIDs;
-
       if (!productToBeRemoved) {
         throw new Error((message = "Slugs are invalid"));
       }
+      if ("length" in productToBeRemoved) {
+        if (productToBeRemoved.length < 1) {
+          throw new Error((message = "Slugs are invalid"));
+        }
+      }
+
       const deletedProduct = await productManager.deleteManyProducts({
         slug: { $in: productSlugs },
       });
