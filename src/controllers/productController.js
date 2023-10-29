@@ -9,6 +9,10 @@ const products = {
     const productTypeName = productType;
 
     try {
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(productDetails.slug)) {
+        throw new Error((message = "Invalid slug"));
+      }
+
       let productType = await productTypeManager.getOneProductType({
         slugtype: productTypeName,
       });
@@ -274,6 +278,9 @@ const products = {
 
       if (!productInfo) {
         return new Error((message = "Slug is invalid"));
+      }
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(newProductInfo.slug)) {
+        throw new Error((message = "Invalid slug"));
       }
       editedProduct = await productManager.editOneProduct(
         { slug: slug },
