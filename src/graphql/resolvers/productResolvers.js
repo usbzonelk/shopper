@@ -112,14 +112,28 @@ const adminResolvers = {
       }
     },
 
-    EditProduct: async (_, { editedProduct }, context) => {
-      console.log(context);
-
+    EditProduct: async (_, { slug, editedProduct }, context) => {
       const slugInfo = await productController.slugCheck(slug);
-      if (slugInfo.error) {
-        throw slugInfo.error;
+      try {
+        if (slugInfo.error) {
+          throw slugInfo.error;
+        } else {
+          const newProductUpdated = await productController.editProduct(
+            slug,
+            editedProduct
+          );
+          if (newProductUpdated.error) {
+            throw new GraphQLError(newProductUpdated.error.message, {
+              extensions: { code: "FAILED" },
+            });
+          }
+          return newProductUpdated.productUpdated;
+        }
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: { code: "FAILED" },
+        });
       }
-      return slugInfo.valid;
     },
 
     DeleteProducts: async (_, { slugs }, context) => {

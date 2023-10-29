@@ -85,7 +85,7 @@ type Query {
 const adminMutationDefs = `
 type Mutation {
   CreateANewProduct(newProduct: Product!) : ProductOutput!
-  EditProduct(editedProduct: Product!) : ProductOutput!
+  EditProduct(slug: String!, editedProduct: Product!) : ProductOutput!
   DeleteProducts(slugs: [String]!) : String!
 }
 `;

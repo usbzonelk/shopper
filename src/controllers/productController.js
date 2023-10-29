@@ -277,8 +277,9 @@ const products = {
       productInfo = await productManager.getOneProduct({ slug: slug });
 
       if (!productInfo) {
-        return new Error((message = "Slug is invalid"));
+        throw new Error((message = "Slug is invalid"));
       }
+
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(newProductInfo.slug)) {
         throw new Error((message = "Invalid slug"));
       }
@@ -287,14 +288,10 @@ const products = {
         newProductInfo
       );
       outputMsg.success = true;
-      outputMsg.message = "Successfully retrieved the validity of slug.";
+      outputMsg.productUpdated = editedProduct;
     } catch (err) {
-      outputMsg.success = false;
-      outputMsg.message = "Error occured";
-      outputMsg.error = err.message;
-      return outputMsg;
+      throw err;
     }
-
     return outputMsg;
   },
 
