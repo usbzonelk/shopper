@@ -45,8 +45,20 @@ type CartProduct{
     price: Float,
 }
 
+input CartProductInput{
+  slug: String!
+  title: String
+  photo: String,
+  price: Float,
+}
+
 type Item{
   product: CartProduct!,
+  quantity: Int!
+  discount : Float
+}
+input ItemInput {
+  product: CartProductInput!,
   quantity: Int!
   discount : Float
 }
@@ -58,6 +70,7 @@ type Carts{
 const userQueryDefs = `
 type Query {
   GetFullCart : Cart
+  IsInTheCart(itemSlug: String!) : Boolean!
 }`;
 
 const userMutationDefs = `

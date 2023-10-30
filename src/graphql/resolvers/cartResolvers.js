@@ -14,6 +14,17 @@ const userResolvers = {
       }
       return null;
     },
+    IsInTheCart: async (_, { itemSlug }, context) => {
+      const token = context.token;
+      if (token) {
+        const email = JSON.parse(
+          Buffer.from(token.split(".")[1], "base64").toString()
+        ).email;
+        const isInTheCart = await cartController.isInTheCart(email, itemSlug);
+        return isInTheCart.isInTheCart;
+      }
+      return null;
+    },
   },
   Mutation: {
     AddToCart: async (_, args, context) => {
