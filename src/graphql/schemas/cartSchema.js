@@ -32,6 +32,16 @@ const userTypeDefs = `
     price: Float
 }
 
+input CartProductInputUser{
+  slug: String! 
+}
+
+input ItemInputUser {
+  product: CartProductInputUser!,
+  quantity: Int!
+  discount : Float
+}
+
 `;
 const adminTypedefs = `
 type Cart {
@@ -75,7 +85,7 @@ type Query {
 
 const userMutationDefs = `
 type Mutation {
-  AddToCart(items: [ItemInput]!): Cart!
+  AddToCart(items: [ItemInputUser]!): Cart!
   RemoveItems(items: [SimpleItemInput]!): Cart!
   ChangeQty(item: SimpleItemInput!, newQty: Int!): Cart!
 }`;
