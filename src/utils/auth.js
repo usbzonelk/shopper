@@ -30,11 +30,12 @@ const jwtAccessGenerator = async (refreshToken) => {
 };
 
 const jwtValidator = async (token) => {
-  let decodedToken = await new Promise((res, rej) => {
-    const yy = jwt.verify(token, jwtSecretKey);
-    res(yy);
-  });
-
+  const jwtSecretKeyEncoded = Buffer.from(jwtSecretKey).toString("base64");
+  console.log(jwtSecretKeyEncoded);
+  const yy = jwt.verify(token, jwtSecretKeyEncoded);
+  console.log(yy);
+  let decodedToken = yy;
+  console.log(decodedToken);
   return decodedToken;
 };
 

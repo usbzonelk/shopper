@@ -16,7 +16,7 @@ const validateUser = async (password, hash) => {
     const validity = await bcrypt.compare(password, hash);
     return validity;
   } catch (err) {
-    return err;
+    throw err;
   }
 };
 

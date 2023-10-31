@@ -338,10 +338,15 @@ const userLogin = async (email, enteredPassword) => {
   const outputMsg = {};
   const userEntredMail = email;
 
-  if (!validateMail(email)) {
-    throw new Error((message = "Entered Email Address is invalid"));
-  }
   try {
+    if (!validateMail(email)) {
+      throw new Error((message = "Entered Email Address is invalid"));
+    }
+
+    if (!email || !enteredPassword) {
+      throw new Error((message = "Password or email can't be empty"));
+    }
+
     const userInfo = await users.getOneUserInfo({ email: email });
     if (!userInfo) {
       throw new Error((message = "Account doesn't exist"));

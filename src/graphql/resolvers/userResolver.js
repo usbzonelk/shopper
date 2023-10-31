@@ -4,10 +4,10 @@ const GraphQLError = require("graphql").GraphQLError;
 const publicResolvers = {
   Query: {
     UserLogin: async (_, args, contextValue) => {
-      const { email, enteredPassword } = args;
+      const { email, password } = args;
       let isUserValid = null;
       try {
-        isUserValid = await userController.userLogin(email, enteredPassword);
+        isUserValid = await userController.userLogin(email, password);
       } catch (error) {
         throw new GraphQLError(error.message, {
           extensions: { code: "UNAUTHENTICATED" },
