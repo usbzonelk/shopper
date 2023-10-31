@@ -25,9 +25,9 @@ const publicResolvers = {
     GetAccessToken: async (_, args, context) => {
       let accessToken = null;
       if (context) {
-        let refreshToken = context.token.split("Bearer")[1];
+        let refreshToken = context.token.split("Bearer ")[1];
         try {
-          accessToken = userController.generateAccessToken(refreshToken);
+          accessToken = await userController.generateAccessToken(refreshToken);
         } catch (error) {
           throw new GraphQLError(error.message, {
             extensions: { code: "UNAUTHENTICATED" },

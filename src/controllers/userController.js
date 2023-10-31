@@ -387,15 +387,15 @@ const userLogin = async (email, enteredPassword) => {
 
 const generateAccessToken = async (refreshToken) => {
   let email = null;
-  const jwtValidity = await auth.jwtValidator(refreshToken);
-  if (jwtValidity) {
-    email = jwtValidity.email;
-  }
   const outputMsg = {};
-  if (!validateMail(email) || email == null) {
-    throw new Error((message = "Entered Email Address is invalid"));
-  }
   try {
+    const jwtValidity = await auth.jwtValidator(refreshToken);
+    if (jwtValidity) {
+      email = jwtValidity.email;
+    }
+    if (!validateMail(email) || email == null) {
+      throw new Error((message = "Entered Email Address is invalid"));
+    }
     const userInfo = await users.getOneUserInfo({ email: email });
     if (!userInfo) {
       throw new Error((message = "Account doesn't exist"));
@@ -406,8 +406,7 @@ const generateAccessToken = async (refreshToken) => {
           "Account is not active. Contact an administrator to reactivate your account")
       );
     }
-
-    const accessToken = auth.jwtAccessGenerator(refreshToken);
+    const accessToken = await auth.jwtAccessGenerator(refreshToken);
     if (accessToken) {
       const storeToken = await users.editOneUser(
         { email: userInfo.email },

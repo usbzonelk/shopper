@@ -6,14 +6,21 @@ const ACCESS_TOKEN_EXPIRATION = "3h";
 const REFRESH_TOKEN_EXPIRATION = "14d";
 
 const jwtRefreshGenerator = (email, role) => {
-  console.log(`email : ${email}`);
-  return jwt.sign({ email: email, access: false, role: role }, jwtSecretKey, {
-    expiresIn: REFRESH_TOKEN_EXPIRATION,
-  });
+  return jwt.sign(
+    {
+      email,
+      role,
+      type: "refresh",
+    },
+    jwtSecretKey,
+    {
+      expiresIn: REFRESH_TOKEN_EXPIRATION,
+    }
+  );
 };
 
 const jwtAccessGenerator = async (refreshToken) => {
-  const validateRefresh = await jwtValidator(refreshToken);
+  const validateRefresh = jwtValidator(refreshToken);
   if (validateRefresh) {
     return jwt.sign(
       {
@@ -29,14 +36,12 @@ const jwtAccessGenerator = async (refreshToken) => {
   }
 };
 
-const jwtValidator = async (token) => {
-  const jwtSecretKeyEncoded = Buffer.from(jwtSecretKey).toString("base64");
-  console.log(jwtSecretKeyEncoded);
-  const yy = jwt.verify(token, jwtSecretKeyEncoded);
-  console.log(yy);
-  let decodedToken = yy;
-  console.log(decodedToken);
-  return decodedToken;
+const jwtValidator = (token) => {
+  try {
+    return jwt.verify(token, jwtSecretKey);
+  } catch (err) {
+    throw new Error("Invalid token!");
+  }
 };
 
 module.exports = { jwtAccessGenerator, jwtRefreshGenerator, jwtValidator };
