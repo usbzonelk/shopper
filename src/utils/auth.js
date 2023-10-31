@@ -40,7 +40,7 @@ const jwtValidator = (token) => {
   try {
     return jwt.verify(token, jwtSecretKey);
   } catch (err) {
-    throw new Error("Invalid token!");
+    throw new Error("Invalid token");
   }
 };
 

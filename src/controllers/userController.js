@@ -390,6 +390,9 @@ const generateAccessToken = async (refreshToken) => {
   const outputMsg = {};
   try {
     const jwtValidity = await auth.jwtValidator(refreshToken);
+    if (jwtValidity && jwtValidity.access) {
+      throw new Error((message = "Invalid refresh token"));
+    }
     if (jwtValidity) {
       email = jwtValidity.email;
     }
