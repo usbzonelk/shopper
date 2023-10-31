@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { json } = require("body-parser");
 const { expressMiddleware } = require("@apollo/server/express4");
+const auth = require("./utils/auth");
 
 const connectToDatabase = require("./config/database").connectToDatabase;
 const checkDBConnection = require("./config/database").checkDbStatus;
@@ -46,6 +47,18 @@ const startServer = async () => {
     cors(),
     json(),
     (req, res, next) => {
+      try {
+        const accessToken = req.headers.authorization.split("Bearer ")[1];
+        const tokenValidity = auth.jwtValidator(accessToken);
+        if (tokenValidity) {
+          if (!tokenValidity.access) {
+            throw new Error((message = "Invalid access token"));
+          }
+        }
+      } catch (e) {
+        return res.status(403).send("Unauthorized");
+      }
+
       if (!checkDBConnection().status) {
         res.status(500).send(checkDBConnection().message);
       } else {
