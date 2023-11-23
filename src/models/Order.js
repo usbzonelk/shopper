@@ -86,7 +86,6 @@ const ordersManager = {
       return err;
     }
   },
-
   getAllOrders: async function () {
     try {
       const orderSchema = this.orderModel();
@@ -96,7 +95,6 @@ const ordersManager = {
       return err;
     }
   },
-
   getOneOrder: async function (params) {
     const orderSchema = this.orderModel();
     const getMatchedOrder = await orderSchema.findOne(params);
