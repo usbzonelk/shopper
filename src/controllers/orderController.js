@@ -6,10 +6,7 @@ const cartController = require("./cartController");
 
 /*
 todo:
-    get single orders
-    get all orders
     checkout and create order
-    get latest order
 */
 
 const getUserOrders = async (email) => {
@@ -38,4 +35,45 @@ const getUserOrders = async (email) => {
   return outputMsg;
 };
 
-module.exports = { getUserOrders };
+const getAllOrders = async () => {
+  const outputMsg = {};
+  let userID;
+  try {
+    const allOrders = await orderManager.getAllOrders();
+
+    outputMsg.orders = allOrders;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved all the orders";
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
+
+const getLatestOrder = async (email) => {
+  const outputMsg = {};
+  let userID;
+  try {
+    let userDetails = await userController.getUserID(email);
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
+      throw new Error((message = "Invalid Email"));
+    } else {
+      userID = userDetails.userID;
+    }
+    const latestOrder = await orderManager.getLatestOrder({
+      customer: { userID: `${userID}` },
+    });
+
+    outputMsg.order = latestOrder;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved the latest order";
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
+
+module.exports = { getUserOrders, getAllOrders, getLatestOrder };

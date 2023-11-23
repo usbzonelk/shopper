@@ -100,12 +100,20 @@ const ordersManager = {
     const getMatchedOrder = await orderSchema.findOne(params);
     return getMatchedOrder;
   },
-  getLatestOrder: async function () {
+  getLatestOrder: async function (params) {
     const orderSchema = this.orderModel();
-    const latestOrder = await orderSchema
-      .findOne()
-      .sort({ createdAt: -1 })
-      .select("orderNumber");
+    let latestOrder;
+    if (params) {
+      latestOrder = await orderSchema
+        .findOne(params)
+        .sort({ createdAt: -1 })
+        .select("orderNumber");
+    } else {
+      latestOrder = await orderSchema
+        .findOne()
+        .sort({ createdAt: -1 })
+        .select("orderNumber");
+    }
     return latestOrder;
   },
   getManyOrders: async function (params, selection = "") {
