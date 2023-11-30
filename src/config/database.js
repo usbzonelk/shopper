@@ -1,7 +1,9 @@
-const mongoUSER = "bartyslr";
-const mongoPass = "W4MZeyrsSEFJnilc";
-const dbName = "shopper";
-const collectionName = "shopperx";
+const dotenv = require("dotenv").config();
+
+const mongoUSER = process.env.MONGOUSER;
+const mongoPass = process.env.MONGOPASS;
+const dbName = process.env.DBNAME;
+const collectionName = process.env.COLLECTIONNAME;
 
 let dbConnectionStatus = false;
 
