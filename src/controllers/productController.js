@@ -441,7 +441,7 @@ const products = {
 
       outputMsg.quantities = quantities;
       outputMsg.success = true;
-      outputMsg.message = `Successfully retrieved the quantity of ${slugInput}`;
+      outputMsg.message = `Successfully retrieved the quantities`;
     } catch (err) {
       throw err;
     }

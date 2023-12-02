@@ -404,6 +404,46 @@ const removeCart = async (email) => {
   return outputMsg;
 };
 
+const getCartSlugs = async (email) => {
+  const outputMsg = {};
+
+  let userCart;
+  let itemIDs = [];
+  let cartSlugs = [];
+
+  try {
+    let cartOfEmail = await this.renderTheCart(email);
+
+    if (!cartOfEmail.cart) {
+      if (cartOfEmail.error) {
+        throw cartOfEmail.error;
+      }
+      throw new Error((message = "Invalid Email"));
+    } else {
+      userCart = cartOfEmail.cart;
+
+      userCart.forEach((cartItem) => {
+        itemIDs.push(cartItem.product.productID);
+      });
+
+      const cartSlugs = await productController.products.getSlugs(itemIDs);
+      if (cartSlugs.error) {
+        throw cartSlugs.error;
+      } else if (!cartSlugs.slugs) {
+        throw new Error((message = "Invalid cart slugs"));
+      } else {
+        outputMsg.cartSlugs = cartSlugs.slugs;
+      }
+    }
+
+    outputMsg.success = true;
+    outputMsg.message = "Successfully retrieved the cart slugs";
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
+
 module.exports = {
   generateNewCart,
   addItemsToCart,
@@ -412,4 +452,5 @@ module.exports = {
   isInTheCart,
   renderTheCart,
   removeCart,
+  getCartSlugs,
 };
