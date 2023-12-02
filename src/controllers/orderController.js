@@ -4,10 +4,40 @@ const userController = require("./userController");
 const productController = require("./productController");
 const cartController = require("./cartController");
 
-/*
-todo:
-    checkout and create order
-*/
+const checkoutUserCart = async (email) => {
+  const outputMsg = {};
+  let userCart;
+  let userID;
+  try {
+    let loadUserCart = await cartController.renderTheCart(email);
+
+    if (!loadUserCart.userID) {
+      if (loadUserCart.error) {
+        throw loadUserCart.error;
+      }
+      throw new Error((message = "Invalid Cart"));
+    } else {
+      userCart = loadUserCart;
+    }
+
+    let userDetails = await userController.getUserID(email);
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        return userDetails.error;
+      }
+      throw new Error((message = "Invalid Email"));
+    } else {
+      userID = userDetails.userID;
+    }
+
+    outputMsg.orders = userOrders;
+    outputMsg.success = true;
+    outputMsg.message = "Successfully checked out the cart";
+  } catch (error) {
+    throw error;
+  }
+  return outputMsg;
+};
 
 const getUserOrders = async (email) => {
   const outputMsg = {};
@@ -76,4 +106,9 @@ const getLatestOrder = async (email) => {
   return outputMsg;
 };
 
-module.exports = { getUserOrders, getAllOrders, getLatestOrder };
+module.exports = {
+  getUserOrders,
+  getAllOrders,
+  getLatestOrder,
+  checkoutUserCart,
+};

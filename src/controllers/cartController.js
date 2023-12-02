@@ -368,6 +368,42 @@ const renderTheCart = async (email) => {
   return outputMsg;
 };
 
+const removeCart = async (email) => {
+  const outputMsg = {};
+
+  try {
+    userDetails = await userController.getUserID(email);
+    if (!userDetails.userID) {
+      if (userDetails.error) {
+        throw userDetails.error;
+      }
+      throw new Error((message = "Invalid email"));
+    }
+
+    const cartDeletion = await cartManager.deleteOneCart({
+      userID: userDetails.userID,
+    });
+
+    if (cartDeletion.error) {
+      throw cartDeletion.error;
+    } else if (!cartDeletion) {
+      throw new Error((message = "Error removing cart"));
+    } else {
+      outputMsg.isCartDeleted = cartDeletion.deletedCount > 0 ? true : false;
+    }
+
+    outputMsg.success = true;
+    outputMsg.message = "Successfully deleted the cart";
+  } catch (err) {
+    outputMsg.success = false;
+    outputMsg.message = "Error occured";
+    outputMsg.error = err.message;
+    throw err;
+  }
+
+  return outputMsg;
+};
+
 module.exports = {
   generateNewCart,
   addItemsToCart,
@@ -375,4 +411,5 @@ module.exports = {
   changeQty,
   isInTheCart,
   renderTheCart,
+  removeCart,
 };

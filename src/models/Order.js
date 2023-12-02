@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const cartController = require("../controllers/cartController");
 
 const ordersManager = {
   orderModelGenerated: null,
@@ -85,6 +86,9 @@ const ordersManager = {
     } catch (err) {
       return err;
     }
+  },
+  checkoutCart: async function (email) {
+    
   },
   getAllOrders: async function () {
     try {
