@@ -414,24 +414,32 @@ const products = {
     return outputMsg;
   },
 
-  getProductQuantity: async function (slugInput) {
+  getProductQuantity: async function (slugs = []) {
+    let quantities = [];
     const outputMsg = {};
 
     try {
-      slugInput = await productManager.getOneProduct(
-        { slug: slugInput },
+      qtySlugs = await productManager.getManyProducts(
+        { slug: { $in: slugs } },
         (selection = {
-          slug: 1,
+          instock: 1,
         })
       );
 
-      if (slugInput.error) {
-        throw slugInput.error;
-      } else if (!slugInput || !slugInput._id) {
-        throw new Error((message = `Invalid slug ${slugInput}`));
+      if (qtySlugs.error) {
+        throw qtySlugs.error;
+      } else if (!qtySlugs) {
+        throw new Error((message = `Invalid slugs`));
       }
 
-      outputMsg.quantity = slugInput.instock;
+      qtySlugs.forEach((qty, idx) => {
+        if (!qty._id) {
+          throw new Error((message = `Invalid slug ${slugs[idx]}`));
+        }
+        quantities.push(qty.instock);
+      });
+
+      outputMsg.quantities = quantities;
       outputMsg.success = true;
       outputMsg.message = `Successfully retrieved the quantity of ${slugInput}`;
     } catch (err) {
