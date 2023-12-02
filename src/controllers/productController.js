@@ -413,6 +413,33 @@ const products = {
 
     return outputMsg;
   },
+
+  getProductQuantity: async function (slugInput) {
+    const outputMsg = {};
+
+    try {
+      slugInput = await productManager.getOneProduct(
+        { slug: slugInput },
+        (selection = {
+          slug: 1,
+        })
+      );
+
+      if (slugInput.error) {
+        throw slugInput.error;
+      } else if (!slugInput || !slugInput._id) {
+        throw new Error((message = `Invalid slug ${slugInput}`));
+      }
+
+      outputMsg.quantity = slugInput.instock;
+      outputMsg.success = true;
+      outputMsg.message = `Successfully retrieved the quantity of ${slugInput}`;
+    } catch (err) {
+      throw err;
+    }
+
+    return outputMsg;
+  },
 };
 
 const productTypes = {};
