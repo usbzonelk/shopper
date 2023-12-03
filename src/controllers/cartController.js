@@ -409,7 +409,6 @@ const getCartSlugs = async (email) => {
 
   let userCart;
   let itemIDs = [];
-  let cartSlugs = [];
 
   try {
     let cartOfEmail = await this.renderTheCart(email);

@@ -28,7 +28,7 @@ async function connectToDatabase() {
 }
 
 function checkDbStatus() {
-  if (dbConnectionStatus) {
+  if (mongoose.connection.readyState == 1) {
     return { status: true, message: "Connected to database" };
   } else {
     return { status: false, message: "Database connection error" };
