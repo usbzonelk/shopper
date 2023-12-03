@@ -411,7 +411,7 @@ const getCartSlugs = async (email) => {
   let itemIDs = [];
 
   try {
-    let cartOfEmail = await this.renderTheCart(email);
+    let cartOfEmail = await renderTheCart(email);
 
     if (!cartOfEmail.cart) {
       if (cartOfEmail.error) {

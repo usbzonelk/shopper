@@ -17,11 +17,21 @@ const checkoutUserCart = async (email) => {
       }
       throw new Error((message = "Invalid Cart"));
     } else {
-      userCart = loadUserCart;
+      userCart = loadUserCart.cart;
       userID = loadUserCart.userID;
     }
+    const cartSlugs = await cartController.getCartSlugs(email);
+    const availableQtys = await productController.products.getProductQuantity(
+      cartSlugs
+    );
 
-    outputMsg.orders = userOrders;
+    userCart.forEach((item, idx) => {
+/* if(item.)
+ */    });
+
+    const newOrder = await orderManager.checkoutTransaction();
+
+    outputMsg.orders = newOrder;
     outputMsg.success = true;
     outputMsg.message = "Successfully checked out the cart";
   } catch (error) {
