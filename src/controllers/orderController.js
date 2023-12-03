@@ -18,16 +18,7 @@ const checkoutUserCart = async (email) => {
       throw new Error((message = "Invalid Cart"));
     } else {
       userCart = loadUserCart;
-    }
-
-    let userDetails = await userController.getUserID(email);
-    if (!userDetails.userID) {
-      if (userDetails.error) {
-        return userDetails.error;
-      }
-      throw new Error((message = "Invalid Email"));
-    } else {
-      userID = userDetails.userID;
+      userID = loadUserCart.userID;
     }
 
     outputMsg.orders = userOrders;

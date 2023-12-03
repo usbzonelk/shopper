@@ -84,8 +84,11 @@ const ordersManager = {
             });
         });
       })
-      .then(() => {
-        orderSession.endSession();
+      .then(() => cartSchema.countDocuments())
+      .then((count) => assert.strictEqual(count, 1))
+      .then(() => session.endSession())
+      .then((modifiedCount) => {
+        return modifiedCount;
       })
       .catch((error) => {
         orderSession.endSession();
