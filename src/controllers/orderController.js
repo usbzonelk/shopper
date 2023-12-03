@@ -3,13 +3,14 @@ const orderManager = Order.ordersManager;
 const userController = require("./userController");
 const productController = require("./productController");
 const cartController = require("./cartController");
-const { errorMonitor } = require("ws");
 
-const checkoutUserCart = async (email) => {
+const checkoutUserCart = async (email, paymentMethod, paidAmount) => {
   const outputMsg = {};
   let userCart;
   let userID;
   let cartQts = [];
+  let fullUserInfo;
+
   try {
     let loadUserCart = await cartController.renderTheCart(email);
 
@@ -26,6 +27,13 @@ const checkoutUserCart = async (email) => {
     userCart.forEach((item) => {
       cartQts.push(item.quantity);
     });
+
+    const userInfo = userController.getFullUserInfo(email);
+    fullUserInfo = userInfo.user;
+    if (!("address" in fullUserInfo)) {
+      fullUserInfo.address = "Not Given";
+    }
+
     const availableQtys = await productController.products.getProductQuantity(
       cartSlugs
     );
@@ -43,7 +51,16 @@ const checkoutUserCart = async (email) => {
       cartQts,
       { userID: userID },
       {
-        
+        customer: {
+          userID: userID,
+          email: fullUserInfo.email,
+          address: fullUserInfo.address,
+        },
+        items: userCart,
+        totalAmount: paidAmount,
+        status: "confirmed",
+        paymentMethod: paymentMethod,
+        paymentStatus: "completed",
       }
     );
 
