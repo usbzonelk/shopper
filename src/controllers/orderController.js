@@ -9,6 +9,7 @@ const checkoutUserCart = async (email) => {
   const outputMsg = {};
   let userCart;
   let userID;
+  let cartQts = [];
   try {
     let loadUserCart = await cartController.renderTheCart(email);
 
@@ -22,6 +23,9 @@ const checkoutUserCart = async (email) => {
       userID = loadUserCart.userID;
     }
     const cartSlugs = await cartController.getCartSlugs(email);
+    userCart.forEach((item) => {
+      cartQts.push(item.quantity);
+    });
     const availableQtys = await productController.products.getProductQuantity(
       cartSlugs
     );
@@ -34,7 +38,14 @@ const checkoutUserCart = async (email) => {
       }
     });
 
-    const newOrder = await orderManager.checkoutTransaction();
+    const newOrder = await orderManager.checkoutTransaction(
+      cartSlugs,
+      cartQts,
+      { userID: userID },
+      {
+        
+      }
+    );
 
     outputMsg.orders = newOrder;
     outputMsg.success = true;
