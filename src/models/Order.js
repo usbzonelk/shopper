@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const cartController = require("../controllers/cartController");
 const cartDB = require("../models/Cart");
+const productDB = require("../models/Product").newProductManager;
 
 const ordersManager = {
   orderModelGenerated: null,
@@ -65,18 +66,38 @@ const ordersManager = {
     return this.orderModelGenerated;
   },
 
-  checkoutTransaction: async function (cartParams, orderStorage) {
+  checkoutTransaction: async function (
+    itemSlugs,
+    cartQtys,
+    cartParams,
+    orderStorage
+  ) {
     const orderSchema = this.orderModel();
     const cartSchema = cartDB.cartManager.cartModel();
+    const productSchema = productDB.productModel();
 
     let orderSession;
     return orderSchema
       .startSession()
-      .then((_session) => {
+      .then(async (_session) => {
         orderSession = _session;
-        return orderSession.withTransaction(() => {
+        return orderSession.withTransaction(async () => {
+          itemSlugs.forEach(async (itemSlug, idx) => {
+            try {
+              await productSchema.findOneAndUpdate(
+                { slug: itemSlug },
+                { $inc: { instock: -cartQtys[idx] } },
+                { session: orderSession, new: true }
+              );
+            } catch (err) {
+              throw err;
+            }
+          });
+
           return cartSchema
-            .deleteOne(cartParams, { session: orderSession })
+            .deleteOne(cartParams, {
+              session: orderSession,
+            })
             .then(() => {
               return orderSchema.create([orderStorage], {
                 session: orderSession,

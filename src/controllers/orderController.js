@@ -3,6 +3,7 @@ const orderManager = Order.ordersManager;
 const userController = require("./userController");
 const productController = require("./productController");
 const cartController = require("./cartController");
+const { errorMonitor } = require("ws");
 
 const checkoutUserCart = async (email) => {
   const outputMsg = {};
@@ -26,8 +27,12 @@ const checkoutUserCart = async (email) => {
     );
 
     userCart.forEach((item, idx) => {
-/* if(item.)
- */    });
+      if (item.quantity > availableQtys[idx]) {
+        throw new Error(
+          (message = `Item Quantity is not available right now for ${slug}`)
+        );
+      }
+    });
 
     const newOrder = await orderManager.checkoutTransaction();
 
