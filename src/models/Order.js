@@ -77,6 +77,7 @@ const ordersManager = {
     const productSchema = productDB.productModel();
 
     let orderSession;
+
     return orderSchema
       .startSession()
       .then(async (_session) => {
@@ -99,9 +100,7 @@ const ordersManager = {
               session: orderSession,
             })
             .then(() => {
-              return orderSchema.create([orderStorage], {
-                session: orderSession,
-              });
+              return this.saveNewOrder(orderStorage, orderSession);
             });
         });
       })
@@ -117,7 +116,7 @@ const ordersManager = {
       });
   },
 
-  saveNewOrder: async function (orderInfo) {
+  saveNewOrder: async function (orderInfo, session) {
     const newOrderInfo = orderInfo;
 
     const orderSchema = this.orderModel();
@@ -134,13 +133,14 @@ const ordersManager = {
     try {
       const newOrder = new orderSchema(newOrderInfo);
 
-      const savedOrder = await newOrder.save();
+      const savedOrder = await newOrder.save({ session: session });
       return savedOrder;
     } catch (err) {
       return err;
     }
   },
   checkoutCart: async function (email) {},
+
   getAllOrders: async function () {
     try {
       const orderSchema = this.orderModel();
