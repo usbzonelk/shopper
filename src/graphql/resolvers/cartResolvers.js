@@ -1,4 +1,5 @@
 const cartController = require("../../controllers/cartController");
+const orderController = require("../../controllers/orderController");
 const GraphQLError = require("graphql").GraphQLError;
 
 const userResolvers = {
@@ -83,6 +84,36 @@ const userResolvers = {
         } catch (err) {
           throw new GraphQLError(err.message, {
             extensions: { code: "SERVER_ERROR" },
+          });
+        }
+      } else {
+        throw new GraphQLError("Invalid credentials", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
+    },
+    CheckoutCart: async (_, { paymentMethod, payment }, context) => {
+      const token = context.token;
+      if (token) {
+        const email = JSON.parse(
+          Buffer.from(token.split(".")[1], "base64").toString()
+        ).email;
+        try {
+          const checkoutInfo = await orderController.checkoutUserCart(
+            email,
+            paymentMethod,
+            payment
+          );
+          if ("orders" in checkoutInfo) {
+            return true;
+          } else if ("error" in checkoutInfo) {
+            throw checkoutInfo.error;
+          } else {
+            return false;
+          }
+        } catch (err) {
+          throw new GraphQLError(err.message, {
+            extensions: { code: "ERROR" },
           });
         }
       } else {
