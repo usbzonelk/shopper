@@ -35,4 +35,13 @@ function checkDbStatus() {
   }
 }
 
-module.exports = { connectToDatabase, checkDbStatus };
+function dbCheckMiddleware(req, res, next) {
+  const dbStatus = checkDbStatus();
+  if (!dbStatus.status) {
+    res.status(500).send(dbStatus.message);
+  } else {
+    next();
+  }
+}
+
+module.exports = { connectToDatabase, checkDbStatus, dbCheckMiddleware };

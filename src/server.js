@@ -5,7 +5,7 @@ const { expressMiddleware } = require("@apollo/server/express4");
 const auth = require("./utils/auth");
 
 const connectToDatabase = require("./config/database").connectToDatabase;
-const checkDBConnection = require("./config/database").checkDbStatus;
+const checkDBConnection = require("./config/database").dbCheckMiddleware;
 
 const { publicServer } = require("./graphql/publicServer");
 const { userServer } = require("./graphql/userServer");
@@ -14,6 +14,10 @@ const { adminServer } = require("./graphql/adminServer");
 const PORT = 12345;
 
 const app = express();
+
+app.use(auth.authyMiddleware);
+
+app.use(checkDBConnection);
 
 const startServer = async () => {
   await userServer.start();
@@ -28,13 +32,6 @@ const startServer = async () => {
     "/public",
     cors(),
     json(),
-    (req, res, next) => {
-      if (!checkDBConnection().status) {
-        res.status(500).send(checkDBConnection().message);
-      } else {
-        next();
-      }
-    },
     expressMiddleware(publicServer, {
       context: async ({ req, res }) => ({
         token: req.headers.authorization,
@@ -47,7 +44,7 @@ const startServer = async () => {
     cors(),
     json(),
     (req, res, next) => {
-  /*     try {
+      /*     try {
         const accessToken = req.headers.authorization.split("Bearer ")[1];
         const tokenValidity = auth.jwtValidator(accessToken);
         if (tokenValidity) {
@@ -59,11 +56,6 @@ const startServer = async () => {
         return res.status(403).send("Unauthorized");
       }
  */
-      if (!checkDBConnection().status) {
-        res.status(500).send(checkDBConnection().message);
-      } else {
-        next();
-      }
     },
     expressMiddleware(userServer, {
       context: async ({ req, res }) => ({
@@ -76,19 +68,16 @@ const startServer = async () => {
     "/admin",
     cors(),
     json(),
-    (req, res, next) => {
-      if (!checkDBConnection().status) {
-        res.status(500).send(checkDBConnection().message);
-      } else {
-        next();
-      }
-    },
     expressMiddleware(adminServer, {
       context: async ({ req, res }) => ({
         token: req.headers.authorization,
       }),
     })
   );
+
+  app.use((req, res) => {
+    res.status(404).send("Not Found");
+  });
 
   app.listen(PORT, () => {
     console.log(`Server fired up on port http://127.0.12.3:${PORT}/gq !`);

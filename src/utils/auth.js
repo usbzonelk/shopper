@@ -44,4 +44,33 @@ const jwtValidator = (token) => {
   }
 };
 
-module.exports = { jwtAccessGenerator, jwtRefreshGenerator, jwtValidator };
+const authyMiddleware = (req, res, next) => {
+  req.auth = {
+    auth: false,
+    token: null,
+  };
+  try {
+    if ("headers.authorization" in req) {
+      const accessToken = req.headers.authorization.split("Bearer ")[1];
+      const tokenValidity = auth.jwtValidator(accessToken);
+      if (tokenValidity) {
+        if (tokenValidity.access) {
+          req.auth = {
+            auth: true,
+            token: accessToken,
+          };
+        }
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  next();
+};
+
+module.exports = {
+  jwtAccessGenerator,
+  jwtRefreshGenerator,
+  jwtValidator,
+  authyMiddleware,
+};
