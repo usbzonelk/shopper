@@ -39,8 +39,9 @@ const startServer = async () => {
     "/user",
     cors(),
     json(),
+    /* 
     (req, res, next) => {
-      /*     try {
+          try {
         const accessToken = req.headers.authorization.split("Bearer ")[1];
         const tokenValidity = auth.jwtValidator(accessToken);
         if (tokenValidity) {
@@ -51,8 +52,8 @@ const startServer = async () => {
       } catch (e) {
         return res.status(403).send("Unauthorized");
       }
- */
-    },
+ 
+    },*/
     expressMiddleware(userServer, {
       context: async ({ req, res }) => ({
         token: req.headers.authorization,
