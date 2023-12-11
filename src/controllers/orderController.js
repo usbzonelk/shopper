@@ -10,6 +10,7 @@ const checkoutUserCart = async (email, paymentMethod, paidAmount) => {
   let userID;
   let cartQts = [];
   let fullUserInfo;
+  let cartPrice = 0;
 
   try {
     let loadUserCart = await cartController.renderTheCart(email);
@@ -39,6 +40,7 @@ const checkoutUserCart = async (email, paymentMethod, paidAmount) => {
     );
 
     userCart.forEach((item, idx) => {
+      cartPrice += item.product.price;
       if (item.quantity > availableQtys[idx]) {
         throw new Error(
           (message = `Item Quantity is not available right now for ${slug}`)
@@ -46,6 +48,9 @@ const checkoutUserCart = async (email, paymentMethod, paidAmount) => {
       }
     });
 
+    if (cartPrice > paidAmount) {
+      throw new Error((message = `Your payment is not sufficient`));
+    }
     const newOrder = await orderManager.checkoutTransaction(
       cartSlugs,
       cartQts,
