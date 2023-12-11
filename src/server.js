@@ -24,10 +24,6 @@ const startServer = async () => {
   await publicServer.start();
   await adminServer.start();
 
-  app.use("/expressOnly", (req, res) => {
-    res.send("Hello from my custom endpoint!");
-  });
-
   app.use(
     "/public",
     cors(),
