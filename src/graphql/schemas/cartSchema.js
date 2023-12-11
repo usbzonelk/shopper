@@ -88,6 +88,7 @@ type Mutation {
   AddToCart(items: [ItemInputUser]!): Cart!
   RemoveItems(items: [SimpleItemInput]!): Cart!
   ChangeQty(item: SimpleItemInput!, newQty: Int!): Cart!
+  CheckoutCart(paymentMethod: String!, payment: Float!) : Boolean!
 }`;
 
 const userCartTypeDefs = userTypeDefs + userQueryDefs + userMutationDefs;
