@@ -16,7 +16,7 @@ const checkoutUserCart = async (email, paymentMethod, paidAmount) => {
     let loadUserCart = await cartController.renderTheCart(email);
 
     if (!loadUserCart.userID) {
-      if (loadUserCart.error) {
+      if ("error" in loadUserCart) {
         throw loadUserCart.error;
       }
       throw new Error((message = "Invalid Cart"));
@@ -25,6 +25,10 @@ const checkoutUserCart = async (email, paymentMethod, paidAmount) => {
       userID = loadUserCart.userID;
     }
     const cartSlugs = await cartController.getCartSlugs(email);
+
+    if (cartSlugs.length < 1) {
+      throw new Error((message = "No items in the cart"));
+    }
     userCart.forEach((item) => {
       cartQts.push(item.quantity);
     });
